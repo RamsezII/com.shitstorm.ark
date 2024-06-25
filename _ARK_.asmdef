@@ -1,0 +1,19 @@
+{
+    "name": "_ARK_",
+    "rootNamespace": "_ARK_",
+    "references": [
+        "GUID:ec96f6dc48fee4244bcebc247464e471",
+        "GUID:bbe9aa3166ca8c44594363c47e4daa65",
+        "GUID:fde3f11d556c00a47a542e879642aabb",
+        "GUID:02bff2b282f91b84680849955c7860bc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
