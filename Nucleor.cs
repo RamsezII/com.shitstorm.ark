@@ -14,6 +14,7 @@ namespace _ARK_
         public static Action
             onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
             onNetworkPull, 
+            onInputs,
             onUpdate1, onUpdate2, onUpdate3,
             onLateUpdate, 
             onEndOfFrame,
@@ -100,6 +101,7 @@ namespace _ARK_
             averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
 
             onNetworkPull?.Invoke();
+            onInputs?.Invoke();
             onUpdate1?.Invoke();
             onUpdate2?.Invoke();
             onUpdate3?.Invoke();
@@ -148,7 +150,7 @@ namespace _ARK_
             scheduler.Dispose();
             crongod.Dispose();
 
-            if (instance == this)
+            if (this == instance)
                 instance = null;
 
             if (Directory.Exists(temp_path))
