@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed class NUCLEOR : MonoBehaviour
+    public sealed partial class NUCLEOR : MonoBehaviour
     {
         public static NUCLEOR instance;
         public readonly ParallelScheduler subScheduler = new();
@@ -63,6 +63,7 @@ namespace _ARK_
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+            AwakeUserGroups();
         }
 
 #if PLATFORM_STANDALONE_LINUX
@@ -99,6 +100,8 @@ namespace _ARK_
             mainThreadLock.Lock();
 
             averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
+
+            UpdateUserGroups();
 
             onNetworkPull?.Invoke();
             onInputs?.Invoke();
