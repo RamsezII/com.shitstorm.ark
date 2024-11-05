@@ -15,15 +15,14 @@ namespace _ARK_
     {
         public static readonly UserGroup<IMouseUser> mouseUsers = new();
         public static readonly UserGroup<IInputsUser> inputsUsers = new();
-        
+
         float lastMouseBlockKey;
 
         //----------------------------------------------------------------------------------------------------------
 
         void AwakeUserGroups()
         {
-            mouseUsers.Clear();
-            inputsUsers.Clear();
+            ClearUserGroups();
 
             mouseUsers.isUsed.onChange += value =>
             {
@@ -44,6 +43,16 @@ namespace _ARK_
                     mouseUsers.ToggleUser(this);
                 lastMouseBlockKey = time;
             }
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public static void ClearUserGroups()
+        {
+            mouseUsers.Clear();
+            inputsUsers.Clear();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

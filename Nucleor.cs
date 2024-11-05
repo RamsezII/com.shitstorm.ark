@@ -132,6 +132,7 @@ namespace _ARK_
         {
             if (File.Exists(temp_path))
                 Directory.Delete(temp_path, true);
+            ClearUserGroups();
         }
 
         //----------------------------------------------------------------------------------------------------------
