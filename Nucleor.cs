@@ -20,6 +20,8 @@ namespace _ARK_
             onEndOfFrame,
             onNetworkPush;
 
+        public static bool applicationQuit;
+
         public int fixedFrameCount;
         [Range(0, .1f)] public float averageDeltatime = 1;
 
@@ -35,6 +37,7 @@ namespace _ARK_
         static void OnBeforeSceneLoad()
         {
             onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
+            applicationQuit = false;
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -130,6 +133,7 @@ namespace _ARK_
 
         private void OnApplicationQuit()
         {
+            applicationQuit = true;
             if (File.Exists(temp_path))
                 Directory.Delete(temp_path, true);
             ClearUserGroups();
