@@ -7,6 +7,10 @@ namespace _ARK_
     {
     }
 
+    public interface IKeyboardUser : IUserGroup
+    {
+    }
+
     public interface IInputsUser : IUserGroup
     {
     }
@@ -14,6 +18,7 @@ namespace _ARK_
     partial class NUCLEOR : IMouseUser, IInputsUser
     {
         public static readonly UserGroup<IMouseUser> mouseUsers = new();
+        public static readonly UserGroup<IKeyboardUser> keyboardUsers = new();
         public static readonly UserGroup<IInputsUser> inputsUsers = new();
 
         float lastMouseBlockKey;
@@ -50,6 +55,7 @@ namespace _ARK_
         public static void ClearUserGroups()
         {
             mouseUsers.Clear();
+            keyboardUsers.Clear();
             inputsUsers.Clear();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
