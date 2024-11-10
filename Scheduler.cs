@@ -9,6 +9,7 @@ namespace _ARK_
 {
     public abstract class Scheduler : Disposable
     {
+        public bool IsBusy => list.Count > 0;
         protected readonly List<ISchedulable> list = new();
 
         //----------------------------------------------------------------------------------------------------------
