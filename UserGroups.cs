@@ -29,11 +29,11 @@ namespace _ARK_
         {
             ClearUserGroups();
 
-            mouseUsers.isUsed.onChange += value =>
+            mouseUsers.isUsed.AddOnChange(value =>
             {
                 Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
                 Cursor.visible = value;
-            };
+            });
         }
 
         //----------------------------------------------------------------------------------------------------------
