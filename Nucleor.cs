@@ -13,10 +13,10 @@ namespace _ARK_
 
         public static Action
             onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
-            onNetworkPull, 
+            onNetworkPull,
             onInputs,
             onUpdate1, onUpdate2, onUpdate3,
-            onLateUpdate, 
+            onLateUpdate,
             onEndOfFrame,
             onNetworkPush;
 
@@ -67,15 +67,9 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
             AwakeUserGroups();
+            scheduler.list.Clear();
+            subScheduler.list.Clear();
         }
-
-#if PLATFORM_STANDALONE_LINUX
-        private void Start()
-        {
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 75;
-        }
-#endif
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -138,6 +132,14 @@ namespace _ARK_
                 Directory.Delete(temp_path, true);
             ClearUserGroups();
         }
+
+#if UNITY_EDITOR
+        [ContextMenu(nameof(LogSequentialScheduler))]
+        void LogSequentialScheduler() => scheduler.LogStatus();
+
+        [ContextMenu(nameof(LogParallelScheduler))]
+        void LogParallelScheduler() => subScheduler.LogStatus();
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
