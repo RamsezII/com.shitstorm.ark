@@ -29,7 +29,7 @@ namespace _ARK_
         {
             ClearUserGroups();
 
-            mouseUsers.isUsed.AddOnChange(value =>
+            mouseUsers.isUsed.AddListener(value =>
             {
                 Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
                 Cursor.visible = value;
