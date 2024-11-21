@@ -16,6 +16,13 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        static IEnumerator EWaitForFrames(int frames, Action action)
+        {
+            for (int i = 0; i < frames; i++)
+                yield return null;
+            action();
+        }
+
         public void LogStatus()
         {
             StringBuilder log = new();
@@ -35,6 +42,7 @@ namespace _ARK_
             return schedulable;
         }
 
+        public Schedulable WaitForFrames(int frames, Action action, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { routine = EWaitForFrames(frames, action) });
         public Schedulable AddAction(in Action action, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { action = action });
         public Schedulable AddFunc(in Func<bool> moveNext, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { moveNext = moveNext });
         public Schedulable AddRoutine(in IEnumerator routine, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { routine = routine });
