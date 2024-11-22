@@ -54,24 +54,17 @@ namespace _ARK_
         {
             this.callerName = callerName;
 
-            if (ArkOS.instance.settings.keepSchedulableStackTraces)
+            StringBuilder log = new();
+            StackTrace stackTrace = new();
+
+            for (int i = stackTrace.FrameCount - 1; i > 0; i--)
             {
-                StringBuilder log = new();
-                StackTrace stackTrace = new();
-
-                for (int i = stackTrace.FrameCount - 1; i > 0; i--)
-                {
-                    StackFrame stackFrame = stackTrace.GetFrame(i);
-                    var method = stackFrame.GetMethod();
-                    log.AppendLine($"{new string(' ', 2 + 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
-                }
-
-                description = log.ToString()[..^1];
-                if (ArkOS.instance.settings.logNewSchedulables)
-                    UnityEngine.Debug.Log(description.ToSubLog());
+                StackFrame stackFrame = stackTrace.GetFrame(i);
+                var method = stackFrame.GetMethod();
+                log.AppendLine($"{new string(' ', 2 + 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
             }
-            else if (ArkOS.instance.settings.logNewSchedulables)
-                UnityEngine.Debug.Log($"{GetType().FullName}[{id}](\"{callerName}\")".ToSubLog());
+
+            description = log.ToString()[..^1];
         }
 
         //----------------------------------------------------------------------------------------------------------

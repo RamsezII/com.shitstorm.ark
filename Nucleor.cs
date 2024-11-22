@@ -36,21 +36,16 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
-            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
-            applicationQuit = false;
-        }
-
-        //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void OnAfterSceneLoad()
-        {
-            Util.InstantiateOrCreate<NUCLEOR>();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
+            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
+            applicationQuit = false;
+            Util.InstantiateOrCreate<NUCLEOR>();
         }
+
+        //----------------------------------------------------------------------------------------------------------
 
 #if UNITY_EDITOR
         private static void LogPlayModeState(UnityEditor.PlayModeStateChange state)

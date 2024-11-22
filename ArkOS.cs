@@ -10,8 +10,6 @@ namespace _ARK_
         public class Settings : SettingsFile
         {
             public bool
-                logNewSchedulables = false,
-                keepSchedulableStackTraces = true,
                 logFileActivity = false;
         }
 
