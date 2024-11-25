@@ -106,8 +106,8 @@ namespace _ARK_
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogError($"{this}.{nameof(OnTick)}() -> {nameof(description)}:\n{description}");
                 UnityEngine.Debug.LogException(e);
+                UnityEngine.Debug.LogError($"{this}.{nameof(OnTick)}() -> {nameof(description)}:\n{description}");
                 Dispose();
             }
         }
