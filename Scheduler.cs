@@ -98,18 +98,32 @@ namespace _ARK_
                     ISchedulable schedulable = list[0];
                     isTick.Value = true;
 
-                    lock (schedulable)
+                    try
                     {
-                        if (!schedulable.Scheduled)
+                        lock (schedulable)
                         {
-                            schedulable.Scheduled = true;
-                            schedulable.OnSchedule();
+                            if (!schedulable.Scheduled)
+                            {
+                                schedulable.Scheduled = true;
+                                schedulable.OnSchedule();
+                            }
+
+                            schedulable.OnTick();
+
+                            if (schedulable.Disposed)
+                                list.RemoveAt(0);
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        list.RemoveAt(0);
 
-                        schedulable.OnTick();
+                        if (schedulable is Schedulable s)
+                            Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{s.description}");
+                        else
+                            Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}: {schedulable}");
 
-                        if (schedulable.Disposed)
-                            list.Remove(schedulable);
+                        Debug.LogException(e);
                     }
 
                     isTick.Value = false;
@@ -126,18 +140,31 @@ namespace _ARK_
                     for (int i = 0; i < list.Count; i++)
                     {
                         ISchedulable schedulable = list[i];
-                        lock (schedulable)
+
+                        try
                         {
-                            if (!schedulable.Scheduled)
+                            lock (schedulable)
                             {
-                                schedulable.Scheduled = true;
-                                schedulable.OnSchedule();
+                                if (!schedulable.Scheduled)
+                                {
+                                    schedulable.Scheduled = true;
+                                    schedulable.OnSchedule();
+                                }
+
+                                schedulable.OnTick();
+
+                                if (schedulable.Disposed)
+                                    list.RemoveAt(i--);
                             }
-
-                            schedulable.OnTick();
-
-                            if (schedulable.Disposed)
-                                list.RemoveAt(i--);
+                        }
+                        catch (Exception e)
+                        {
+                            list.RemoveAt(i--);
+                            if (schedulable is Schedulable s)
+                                Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{s.description}");
+                            else
+                                Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}: {schedulable}");
+                            Debug.LogException(e);
                         }
                     }
         }
