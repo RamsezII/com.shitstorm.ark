@@ -16,7 +16,8 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public void LogStatus()
+        public void LogStatus() => Debug.Log(GetStatus());
+        public string GetStatus()
         {
             StringBuilder log = new();
             log.AppendLine($"{this} -> {list.Count} schedulables");
@@ -26,7 +27,7 @@ namespace _ARK_
                         log.AppendLine($"{i}. {schedulable.GetType().FullName}.{nameof(schedulable.description)}:\n{schedulable.description}");
                     else
                         log.AppendLine($"{i}. {list[i].GetType().FullName}");
-            Debug.Log(log);
+            return log.ToString()[..^1];
         }
 
         public T AddSchedulable<T>(in T schedulable) where T : ISchedulable
