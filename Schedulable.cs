@@ -9,33 +9,14 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public interface ISchedulable : IDisposable
-    {
-        bool Scheduled { set; get; }
-        bool Disposed { get; }
-        void OnSchedule();
-        void OnTick();
-    }
-
-    public class Schedulock : Disposable, ISchedulable
-    {
-        bool ISchedulable.Scheduled { get; set; }
-        void ISchedulable.OnTick()
-        {
-        }
-        void ISchedulable.OnSchedule()
-        {
-        }
-    }
-
-    public class Schedulable : Disposable, ISchedulable
+    public class Schedulable : Disposable
     {
         public string callerName, description;
         public IEnumerator routine;
         public Func<bool> moveNext;
         public Action action, _task;
         public Task task;
-        public bool Scheduled { get; set; }
+        public readonly ThreadSafe<bool> scheduled = new();
 
         static int _id;
         [SerializeField] int id = ++_id;
@@ -81,14 +62,11 @@ namespace _ARK_
 
                 if (_task != null)
                     task = Task.Run(_task);
-
-                moveNext?.Invoke();
-                routine?.MoveNext();
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogError($"{this}.{nameof(OnSchedule)}() -> {nameof(description)}:\n{description}");
                 UnityEngine.Debug.LogException(e);
+                UnityEngine.Debug.LogError($"{this}.{nameof(OnSchedule)}() -> {nameof(description)}:\n{description}");
                 Dispose();
             }
         }
@@ -98,11 +76,22 @@ namespace _ARK_
             try
             {
                 if (moveNext != null && !moveNext())
+                {
+                    moveNext = null;
                     Dispose();
+                }
+
                 if (routine != null && !routine.MoveNext())
+                {
+                    routine = null;
                     Dispose();
+                }
+
                 if (task != null && task.IsCompleted)
+                {
+                    task = null;
                     Dispose();
+                }
             }
             catch (Exception e)
             {
