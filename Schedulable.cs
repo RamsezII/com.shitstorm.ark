@@ -42,7 +42,7 @@ namespace _ARK_
             {
                 StackFrame stackFrame = stackTrace.GetFrame(i);
                 var method = stackFrame.GetMethod();
-                log.AppendLine($"{new string(' ', 2 + 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
+                log.AppendLine($"{new string(' ', 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
             }
 
             description = log.ToString()[..^1];
