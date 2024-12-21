@@ -13,6 +13,7 @@ namespace _ARK_
 
         public static Action
             onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
+            updateVehicleVisuals,
             onNetworkPull,
             onInputs,
             onUpdate1, onUpdate2, onUpdate3,
@@ -40,7 +41,7 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
-            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
+            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = updateVehicleVisuals = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
             applicationQuit = false;
             Util.InstantiateOrCreate<NUCLEOR>();
         }
@@ -89,26 +90,28 @@ namespace _ARK_
 
         private void Update()
         {
-            mainThreadLock.Lock();
-
-            averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
-
-            UpdateUserGroups();
-
-            onNetworkPull?.Invoke();
-            onInputs?.Invoke();
-            onUpdate1?.Invoke();
-            onUpdate2?.Invoke();
-            onUpdate3?.Invoke();
-
-            subScheduler.Tick();
-            scheduler.Tick();
-            crongod.Tick();
-
-            lock (this)
+            lock (mainThreadLock)
             {
-                onMainThread?.Invoke();
-                onMainThread = null;
+                averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
+
+                UpdateUserGroups();
+
+                updateVehicleVisuals?.Invoke();
+                onNetworkPull?.Invoke();
+                onInputs?.Invoke();
+                onUpdate1?.Invoke();
+                onUpdate2?.Invoke();
+                onUpdate3?.Invoke();
+
+                subScheduler.Tick();
+                scheduler.Tick();
+                crongod.Tick();
+
+                lock (this)
+                {
+                    onMainThread?.Invoke();
+                    onMainThread = null;
+                }
             }
         }
 
@@ -140,11 +143,13 @@ namespace _ARK_
 
         private void LateUpdate()
         {
-            onLateUpdate?.Invoke();
-            mainThreadLock.Unlock();
-            onEndOfFrame?.Invoke();
-            onEndOfFrame = null;
-            onNetworkPush?.Invoke();
+            lock (mainThreadLock)
+            {
+                onLateUpdate?.Invoke();
+                onEndOfFrame?.Invoke();
+                onEndOfFrame = null;
+                onNetworkPush?.Invoke();
+            }
         }
 
         //----------------------------------------------------------------------------------------------------------
