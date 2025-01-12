@@ -19,6 +19,7 @@ namespace _ARK_
             onInputs,
             onUpdate1, onUpdate2, onUpdate3,
             onLateUpdate,
+            onStartOfFrame,
             onEndOfFrame,
             onNetworkPush;
 
@@ -42,7 +43,7 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
-            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = updateVehiclePhysics = updateVehicleVisuals = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onEndOfFrame = null;
+            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = updateVehiclePhysics = updateVehicleVisuals = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onStartOfFrame = onEndOfFrame = null;
             applicationQuit = false;
             Util.InstantiateOrCreate<NUCLEOR>();
         }
@@ -97,6 +98,9 @@ namespace _ARK_
                 averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
 
                 UpdateUserGroups();
+
+                onStartOfFrame?.Invoke();
+                onStartOfFrame = null;
 
                 updateVehicleVisuals?.Invoke();
                 onNetworkPull?.Invoke();
