@@ -28,7 +28,6 @@ namespace _ARK_
         void AwakeUserGroups()
         {
             ClearUserGroups();
-
             mouseUsers.isUsed.AddListener(value =>
             {
                 Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
