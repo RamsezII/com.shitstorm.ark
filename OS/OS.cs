@@ -24,23 +24,20 @@ namespace _ARK_
         {
             if (focus)
                 OnLoadTexts(false);
-            else
-                OnSaveTexts(false);
-        }
-
-#if UNITY_EDITOR
-        [ContextMenu(nameof(LoadTexts))]
-        void LoadTexts() => OnLoadTexts(true);
-#endif
-        protected virtual void OnLoadTexts(in bool log)
-        {
         }
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(SaveTexts))]
-        void SaveTexts() => OnSaveTexts(true);
+        void SaveTexts() => OnSaveTexts();
+
+        [ContextMenu(nameof(LoadTexts))]
+        void LoadTexts() => OnLoadTexts(true);
 #endif
-        protected virtual void OnSaveTexts(in bool log)
+        protected virtual void OnSaveTexts()
+        {
+        }
+
+        protected virtual void OnLoadTexts(in bool log)
         {
         }
 

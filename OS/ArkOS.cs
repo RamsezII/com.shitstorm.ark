@@ -35,10 +35,10 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        protected override void OnSaveTexts(in bool log)
+        protected override void OnSaveTexts()
         {
             settings ??= new();
-            settings.Save(log);
+            settings.Save();
         }
 
         protected override void OnLoadTexts(in bool log)
