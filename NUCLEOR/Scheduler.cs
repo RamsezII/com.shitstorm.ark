@@ -113,12 +113,12 @@ namespace _ARK_
                                 schedulable.OnTick();
 
                                 if (schedulable.Disposed)
-                                    list.RemoveAt(0);
+                                    list.Remove(schedulable);
                             }
                         }
                         catch (Exception e)
                         {
-                            list.RemoveAt(0);
+                            list.Remove(schedulable);
                             Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{schedulable.description}");
                             Debug.LogException(e);
                         }
