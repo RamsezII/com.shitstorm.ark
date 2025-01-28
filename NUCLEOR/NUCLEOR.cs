@@ -13,7 +13,7 @@ namespace _ARK_
 
         public static Action
             onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
-            updateVehiclePhysics,
+            fixedUpdateVehiclePhysics,
             updateVehicleVisuals,
             onNetworkPull,
             onInputs,
@@ -43,7 +43,7 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
-            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = updateVehiclePhysics = updateVehicleVisuals = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onStartOfFrame = onEndOfFrame = null;
+            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = fixedUpdateVehiclePhysics = updateVehicleVisuals = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onStartOfFrame = onEndOfFrame = null;
             applicationQuit = false;
             Util.InstantiateOrCreate<NUCLEOR>();
         }
@@ -79,7 +79,7 @@ namespace _ARK_
                 onFixedUpdate1?.Invoke();
                 onFixedUpdate2?.Invoke();
                 onFixedUpdate3?.Invoke();
-                updateVehiclePhysics?.Invoke();
+                fixedUpdateVehiclePhysics?.Invoke();
             }
         }
 
