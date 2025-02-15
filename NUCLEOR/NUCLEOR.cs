@@ -11,18 +11,22 @@ namespace _ARK_
         public readonly SequentialScheduler scheduler = new();
         public readonly CronGod crongod = new();
 
-        public static Action
-            onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
-            fixedUpdateVehiclePhysics,
-            updateVehicleAiming,
-            updateVehicleVisuals,
-            onNetworkPull,
-            onInputs,
-            onUpdate1, onUpdate2, onUpdate3,
-            onLateUpdate,
-            onStartOfFrame,
-            onEndOfFrame,
-            onNetworkPush;
+        public struct Delegates
+        {
+            public Action onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
+                fixedUpdateVehiclePhysics,
+                updateVehicleAiming,
+                updateVehicleVisuals,
+                onNetworkPull,
+                onInputs,
+                onUpdate1, onUpdate2, onUpdate3,
+                onLateUpdate,
+                onStartOfFrame,
+                onEndOfFrame,
+                onNetworkPush;
+        }
+
+        public static Delegates delegates;
 
         public static bool applicationQuit;
 
@@ -44,7 +48,7 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
-            onFixedUpdate1 = onFixedUpdate2 = onFixedUpdate3 = fixedUpdateVehiclePhysics = updateVehicleVisuals = updateVehicleAiming = onNetworkPull = onUpdate1 = onUpdate2 = onUpdate3 = onLateUpdate = onNetworkPush = onStartOfFrame = onEndOfFrame = null;
+            delegates = default;
             applicationQuit = false;
             Util.InstantiateOrCreate<NUCLEOR>();
         }
@@ -77,10 +81,10 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 ++fixedFrameCount;
-                onFixedUpdate1?.Invoke();
-                onFixedUpdate2?.Invoke();
-                onFixedUpdate3?.Invoke();
-                fixedUpdateVehiclePhysics?.Invoke();
+                delegates.onFixedUpdate1?.Invoke();
+                delegates.onFixedUpdate2?.Invoke();
+                delegates.onFixedUpdate3?.Invoke();
+                delegates.fixedUpdateVehiclePhysics?.Invoke();
             }
         }
 
@@ -100,16 +104,16 @@ namespace _ARK_
 
                 UpdateUserGroups();
 
-                onStartOfFrame?.Invoke();
-                onStartOfFrame = null;
+                delegates.onStartOfFrame?.Invoke();
+                delegates.onStartOfFrame = null;
 
-                updateVehicleVisuals?.Invoke();
-                onNetworkPull?.Invoke();
-                onInputs?.Invoke();
-                onUpdate1?.Invoke();
-                onUpdate2?.Invoke();
-                onUpdate3?.Invoke();
-                updateVehicleAiming?.Invoke();
+                delegates.updateVehicleVisuals?.Invoke();
+                delegates.onNetworkPull?.Invoke();
+                delegates.onInputs?.Invoke();
+                delegates.onUpdate1?.Invoke();
+                delegates.onUpdate2?.Invoke();
+                delegates.onUpdate3?.Invoke();
+                delegates.updateVehicleAiming?.Invoke();
 
                 subScheduler.Tick();
                 scheduler.Tick();
@@ -153,10 +157,10 @@ namespace _ARK_
         {
             lock (mainThreadLock)
             {
-                onLateUpdate?.Invoke();
-                onEndOfFrame?.Invoke();
-                onEndOfFrame = null;
-                onNetworkPush?.Invoke();
+                delegates.onLateUpdate?.Invoke();
+                delegates.onEndOfFrame?.Invoke();
+                delegates.onEndOfFrame = null;
+                delegates.onNetworkPush?.Invoke();
             }
         }
 
