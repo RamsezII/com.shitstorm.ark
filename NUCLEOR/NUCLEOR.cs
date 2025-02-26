@@ -37,7 +37,7 @@ namespace _ARK_
         public readonly object mainThreadLock = new();
 
         public static readonly string temp_path = Path.Combine(Util.home_path, "TEMP");
-        public static DirectoryInfo TEMP_DIR => temp_path.GetDir();
+        public static DirectoryInfo TEMP_DIR => temp_path.ForceDir();
 
         //----------------------------------------------------------------------------------------------------------
 
