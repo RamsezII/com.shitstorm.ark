@@ -69,7 +69,9 @@ namespace _ARK_
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+
             AwakeUserGroups();
+
             scheduler.list.Clear();
             subScheduler.list.Clear();
         }
