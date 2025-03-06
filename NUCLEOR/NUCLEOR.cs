@@ -13,7 +13,9 @@ namespace _ARK_
 
         public struct Delegates
         {
-            public Action onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
+            public Action 
+                onFixedUpdateMuonRigidbodies,
+                onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 fixedUpdateVehiclePhysics,
                 updateVehicleAiming,
                 updateVehicleVisuals,
@@ -83,6 +85,7 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 ++fixedFrameCount;
+                delegates.onFixedUpdateMuonRigidbodies?.Invoke();
                 delegates.onFixedUpdate1?.Invoke();
                 delegates.onFixedUpdate2?.Invoke();
                 delegates.onFixedUpdate3?.Invoke();
