@@ -32,7 +32,7 @@ namespace _ARK_
 
         public Schedulable AddAction(in Action action, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { action = action });
         public Schedulable AddFunc(in Func<bool> moveNext, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { moveNext = moveNext });
-        public Schedulable AddRoutine(in IEnumerator routine, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { routine = routine });
+        public Schedulable AddRoutine(in IEnumerator<float> routine, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { routine = routine });
         public Schedulable AddTask(in Action task, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { _task = task });
         public Schedulable AddTask(in Task task, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { task = task });
 
@@ -70,7 +70,7 @@ namespace _ARK_
 
         public Schedulable InsertAction(in Action action, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { action = action });
         public Schedulable InsertFunc(in Func<bool> moveNext, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { moveNext = moveNext });
-        public Schedulable InsertRoutine(in IEnumerator routine, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { routine = routine });
+        public Schedulable InsertRoutine(in IEnumerator<float> routine, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { routine = routine });
         public Schedulable InsertTask(in Action task, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { _task = task });
         public Schedulable InsertTask(in Task task, [CallerMemberName] string callerName = null) => InsertSchedulable(new Schedulable(callerName) { task = task });
 

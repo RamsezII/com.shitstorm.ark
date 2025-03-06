@@ -1,6 +1,6 @@
 ﻿using _UTIL_;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -9,14 +9,17 @@ using UnityEngine;
 
 namespace _ARK_
 {
+    [Serializable]
     public class Schedulable : Disposable
     {
         public string callerName, description;
-        public IEnumerator routine;
+        public IEnumerator<float> routine;
         public Func<bool> moveNext;
         public Action action, _task;
         public Task task;
         public readonly ThreadSafe<bool> scheduled = new();
+        [Range(0, 1)] float progress;
+        public string progressBar;
 
         static int _id;
         [SerializeField] int id = ++_id;
@@ -81,11 +84,19 @@ namespace _ARK_
                     Dispose();
                 }
 
-                if (routine != null && !routine.MoveNext())
-                {
-                    routine = null;
-                    Dispose();
-                }
+                if (routine != null)
+                    if (!routine.MoveNext())
+                    {
+                        progress = routine.Current;
+                        routine = null;
+                        Dispose();
+                    }
+                    else if (routine.Current > progress)
+                    {
+                        const int max = 100;
+                        int count = (int)(routine.Current * max);
+                        progressBar = new string('▓', count) + new string('░', max - count);
+                    }
 
                 if (task != null && task.IsCompleted)
                 {
