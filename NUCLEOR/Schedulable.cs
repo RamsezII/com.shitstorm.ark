@@ -94,7 +94,7 @@ namespace _ARK_
                     else if (routine.Current > progress)
                     {
                         const int max = 100;
-                        int count = (int)(routine.Current * max);
+                        int count = (int)(Mathf.Clamp01(routine.Current) * max);
                         progressBar = new string('▓', count) + new string('░', max - count);
                     }
 
