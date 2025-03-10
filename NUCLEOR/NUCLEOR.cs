@@ -1,3 +1,4 @@
+using _UTIL_;
 using System;
 using System.IO;
 using UnityEngine;
@@ -13,19 +14,25 @@ namespace _ARK_
 
         public struct Delegates
         {
-            public Action 
+            public Action
                 onFixedUpdateMuonRigidbodies,
                 onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 fixedUpdateVehiclePhysics,
+
+                onNetworkPull,
+                onStartOfFrame,
                 updateVehicleAiming,
                 updateVehicleVisuals,
-                onNetworkPull,
                 onInputs,
                 onUpdate1, onUpdate2, onUpdate3,
+
                 onLateUpdate,
-                onStartOfFrame,
                 onEndOfFrame,
-                onNetworkPush;
+                onNetworkPush,
+
+                onApplicationFocus,
+                onApplicationUnfocused,
+                onApplicationQuit;
         }
 
         public static Delegates delegates;
@@ -52,6 +59,7 @@ namespace _ARK_
 #endif
             delegates = default;
             applicationQuit = false;
+
             Util.InstantiateOrCreate<NUCLEOR>();
         }
 
@@ -138,10 +146,15 @@ namespace _ARK_
 
         private void OnApplicationFocus(bool focus)
         {
+            if (focus)
+                delegates.onApplicationFocus?.Invoke();
+            else
+                delegates.onApplicationUnfocused?.Invoke();
         }
 
         private void OnApplicationQuit()
         {
+            delegates.onApplicationQuit?.Invoke();
             applicationQuit = true;
             if (File.Exists(temp_path))
                 Directory.Delete(temp_path, true);
