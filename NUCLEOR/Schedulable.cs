@@ -18,7 +18,7 @@ namespace _ARK_
         public Action action, _task;
         public Task task;
         public readonly ThreadSafe<bool> scheduled = new();
-        [Range(0, 1)] float progress;
+        [Range(0, 1)] float progress = -1;
         public string progressBar;
 
         static int _id;
@@ -93,8 +93,9 @@ namespace _ARK_
                     }
                     else if (routine.Current > progress)
                     {
+                        progress = routine.Current;
                         const int max = 100;
-                        int count = (int)(Mathf.Clamp01(routine.Current) * max);
+                        int count = (int)(Mathf.Clamp01(progress) * max);
                         progressBar = new string('▓', count) + new string('░', max - count);
                     }
 
