@@ -14,8 +14,8 @@ namespace _ARK_
         
         protected virtual void Start()
         {
-            NUCLEOR.delegates.onInputs -= UpdateInputs;
-            NUCLEOR.delegates.onInputs += UpdateInputs;
+            NUCLEOR.delegates.onButtonsAndKeys -= UpdateInputs;
+            NUCLEOR.delegates.onButtonsAndKeys += UpdateInputs;
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ namespace _ARK_
 
         protected virtual void OnDestroy()
         {
-            NUCLEOR.delegates.onInputs -= UpdateInputs;
+            NUCLEOR.delegates.onButtonsAndKeys -= UpdateInputs;
         }
     }
 }

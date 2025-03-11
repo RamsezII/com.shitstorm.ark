@@ -21,9 +21,9 @@ namespace _ARK_
 
                 onNetworkPull,
                 onStartOfFrame,
-                updateVehicleAiming,
+                onButtonsAndKeys,
+                updateVehicleInputs,
                 updateVehicleVisuals,
-                onInputs,
                 onUpdate1, onUpdate2, onUpdate3,
 
                 onLateUpdate,
@@ -120,13 +120,13 @@ namespace _ARK_
                 delegates.onStartOfFrame?.Invoke();
                 delegates.onStartOfFrame = null;
 
+                delegates.updateVehicleInputs?.Invoke();
                 delegates.updateVehicleVisuals?.Invoke();
                 delegates.onNetworkPull?.Invoke();
-                delegates.onInputs?.Invoke();
+                delegates.onButtonsAndKeys?.Invoke();
                 delegates.onUpdate1?.Invoke();
                 delegates.onUpdate2?.Invoke();
                 delegates.onUpdate3?.Invoke();
-                delegates.updateVehicleAiming?.Invoke();
 
                 subScheduler.Tick();
                 scheduler.Tick();
