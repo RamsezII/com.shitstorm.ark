@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace _ARK_
 {
+#if UNITY_EDITOR
+    [UnityEditor.InitializeOnLoad]
+#endif
     public sealed partial class NUCLEOR : MonoBehaviour
     {
         public static NUCLEOR instance;
@@ -44,9 +47,40 @@ namespace _ARK_
 
         Action onMainThread;
         public readonly object mainThreadLock = new();
-
-        public static readonly string temp_path = Path.Combine(Util.home_path, "TEMP");
         public static DirectoryInfo TEMP_DIR => temp_path.ForceDir();
+
+        public static bool game_path_is_working_path;
+        public static string game_path, working_path, home_path, temp_path, terminal_path;
+
+        //----------------------------------------------------------------------------------------------------------
+
+        static NUCLEOR()
+        {
+            Debug.Log($"{typeof(NUCLEOR)} static constructor");
+            InitPaths();
+        }
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(InitPaths))]
+#endif
+        static void InitPaths()
+        {
+            game_path = Directory.GetParent(Application.dataPath).FullName;
+            working_path = Directory.GetCurrentDirectory();
+            game_path_is_working_path = Util.Equals_path(working_path, game_path);
+            working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
+            home_path = Path.Combine(working_path, "Home");
+            temp_path = Path.Combine(working_path, "TEMP");
+
+            if (game_path_is_working_path)
+                terminal_path = Path.GetFileNameWithoutExtension(game_path);
+            else
+            {
+                string root_dir = Directory.GetCurrentDirectory();
+                terminal_path = Path.GetRelativePath(root_dir, game_path);
+            }
+            Debug.Log($"{nameof(game_path_is_working_path)}: {game_path_is_working_path}, {nameof(terminal_path)}: {terminal_path}");
+        }
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -156,8 +190,6 @@ namespace _ARK_
         {
             delegates.onApplicationQuit?.Invoke();
             applicationQuit = true;
-            if (File.Exists(temp_path))
-                Directory.Delete(temp_path, true);
             ClearUserGroups();
         }
 
@@ -193,8 +225,8 @@ namespace _ARK_
             if (this == instance)
                 instance = null;
 
-            if (Directory.Exists(temp_path))
-                Directory.Delete(temp_path, true);
+            //if (Directory.Exists(temp_path))
+            //    Directory.Delete(temp_path, true);
         }
     }
 }
