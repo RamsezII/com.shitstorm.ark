@@ -208,9 +208,9 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 delegates.onLateUpdate?.Invoke();
+                delegates.onNetworkPush?.Invoke();
                 delegates.onEndOfFrame?.Invoke();
                 delegates.onEndOfFrame = null;
-                delegates.onNetworkPush?.Invoke();
             }
         }
 
