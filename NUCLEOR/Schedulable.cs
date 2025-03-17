@@ -48,7 +48,7 @@ namespace _ARK_
                 log.AppendLine($"{new string(' ', 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
             }
 
-            description = log.ToString()[..^1];
+            description = log.TroncatedForLog();
         }
 
         //----------------------------------------------------------------------------------------------------------

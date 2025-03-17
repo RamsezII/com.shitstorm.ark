@@ -27,7 +27,7 @@ namespace _ARK_
                         log.AppendLine($"{i}. {schedulable.GetType().FullName}.{nameof(schedulable.description)}:\n{schedulable.description}");
                     else
                         log.AppendLine($"{i}. {list[i].GetType().FullName}");
-            return log.ToString()[..^1];
+            return log.TroncatedForLog();
         }
 
         public Schedulable AddAction(in Action action, [CallerMemberName] string callerName = null) => AddSchedulable(new Schedulable(callerName) { action = action });
