@@ -174,10 +174,6 @@ namespace _ARK_
             }
         }
 
-#if PLATFORM_STANDALONE_LINUX
-        private void OnApplicationQuit() => OnApplicationFocus(false);
-#endif
-
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
@@ -188,6 +184,10 @@ namespace _ARK_
 
         private void OnApplicationQuit()
         {
+#if PLATFORM_STANDALONE_LINUX
+            OnApplicationFocus(false);
+#endif
+
             delegates.onApplicationQuit?.Invoke();
             applicationQuit = true;
             ClearUserGroups();
