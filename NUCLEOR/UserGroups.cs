@@ -15,6 +15,10 @@ namespace _ARK_
     {
     }
 
+    public sealed class GroupUser : IMouseUser, IKeyboardUser, IInputsUser
+    {
+    }
+
     partial class NUCLEOR : IMouseUser, IInputsUser
     {
         public static readonly UserGroup<IMouseUser> mouseUsers = new();
