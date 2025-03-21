@@ -22,11 +22,13 @@ namespace _ARK_
                 onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 fixedUpdateVehiclePhysics,
 
-                onNetworkPull,
                 onStartOfFrame,
+                onNetworkPull,
                 onButtonsAndKeys,
                 updateVehicleInputs,
                 updateVehicleVisuals,
+                computeCameraCrons,
+
                 onUpdate1, onUpdate2, onUpdate3,
 
                 onLateUpdate,
@@ -158,6 +160,8 @@ namespace _ARK_
                 delegates.updateVehicleVisuals?.Invoke();
                 delegates.onNetworkPull?.Invoke();
                 delegates.onButtonsAndKeys?.Invoke();
+                delegates.computeCameraCrons?.Invoke();
+
                 delegates.onUpdate1?.Invoke();
                 delegates.onUpdate2?.Invoke();
                 delegates.onUpdate3?.Invoke();
