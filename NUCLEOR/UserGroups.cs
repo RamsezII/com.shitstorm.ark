@@ -35,7 +35,7 @@ namespace _ARK_
             mouseUsers.isUsed.AddListener(value =>
             {
                 Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
-                Cursor.visible = value;
+                Cursor.visible = value && Application.isEditor;
             });
         }
 
