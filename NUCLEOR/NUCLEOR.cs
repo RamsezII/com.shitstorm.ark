@@ -17,19 +17,22 @@ namespace _ARK_
 
         public struct Delegates
         {
+            [Obsolete]
+            public Action
+                onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
+                onUpdate1, onUpdate2, onUpdate3;
+
             public Action
                 onFixedUpdateMuonRigidbodies,
-                onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 fixedUpdateVehiclePhysics,
 
                 onStartOfFrame,
                 onNetworkPull,
-                onButtonsAndKeys,
-                updateVehicleInputs,
+                getInputs,
+                onPlayerInputs,
+                onMuonInputs,
                 updateVehicleVisuals,
                 computeCameraCrons,
-
-                onUpdate1, onUpdate2, onUpdate3,
 
                 onLateUpdate,
                 onEndOfFrame,
@@ -156,10 +159,11 @@ namespace _ARK_
                 delegates.onStartOfFrame?.Invoke();
                 delegates.onStartOfFrame = null;
 
-                delegates.updateVehicleInputs?.Invoke();
-                delegates.updateVehicleVisuals?.Invoke();
                 delegates.onNetworkPull?.Invoke();
-                delegates.onButtonsAndKeys?.Invoke();
+                delegates.getInputs?.Invoke();
+                delegates.onPlayerInputs?.Invoke();
+                delegates.onMuonInputs?.Invoke();
+                delegates.updateVehicleVisuals?.Invoke();
                 delegates.computeCameraCrons?.Invoke();
 
                 delegates.onUpdate1?.Invoke();

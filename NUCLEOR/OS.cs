@@ -11,14 +11,6 @@ namespace _ARK_
         }
 
         //--------------------------------------------------------------------------------------------------------------
-        
-        protected virtual void Start()
-        {
-            NUCLEOR.delegates.onButtonsAndKeys -= UpdateInputs;
-            NUCLEOR.delegates.onButtonsAndKeys += UpdateInputs;
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
 
         protected virtual void OnApplicationFocus(bool focus)
         {
@@ -41,15 +33,10 @@ namespace _ARK_
         {
         }
 
-        protected virtual void UpdateInputs()
-        {
-        }
-
         //--------------------------------------------------------------------------------------------------------------
 
         protected virtual void OnDestroy()
         {
-            NUCLEOR.delegates.onButtonsAndKeys -= UpdateInputs;
         }
     }
 }
