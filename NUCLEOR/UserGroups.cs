@@ -25,7 +25,7 @@ namespace _ARK_
         public static readonly UserGroup<IKeyboardUser> keyboardUsers = new();
         public static readonly UserGroup<IInputsUser> inputsUsers = new();
 
-        float lastMouseBlockKey;
+        float last_ALT;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -41,15 +41,14 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        void UpdateUserGroups()
+        void UpdateAltPress()
         {
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 float time = Time.unscaledTime;
-                float delta = time - lastMouseBlockKey;
-                if (delta < 0.3f)
+                if (time - last_ALT < 0.3f)
                     mouseUsers.ToggleUser(this);
-                lastMouseBlockKey = time;
+                last_ALT = time;
             }
         }
 

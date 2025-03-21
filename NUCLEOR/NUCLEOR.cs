@@ -154,7 +154,7 @@ namespace _ARK_
             {
                 averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
 
-                UpdateUserGroups();
+                UpdateAltPress();
 
                 delegates.onStartOfFrame?.Invoke();
                 delegates.onStartOfFrame = null;
