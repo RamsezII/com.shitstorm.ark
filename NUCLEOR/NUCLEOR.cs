@@ -34,6 +34,9 @@ namespace _ARK_
                 updateVehicleVisuals,
                 computeCameraCrons,
 
+                onUpdatePlayers,
+                onCronsApplied,
+
                 onLateUpdate,
                 onEndOfFrame,
                 onNetworkPush,
@@ -169,6 +172,9 @@ namespace _ARK_
                 delegates.onUpdate1?.Invoke();
                 delegates.onUpdate2?.Invoke();
                 delegates.onUpdate3?.Invoke();
+
+                delegates.onUpdatePlayers?.Invoke();
+                delegates.onCronsApplied?.Invoke();
 
                 subScheduler.Tick();
                 scheduler.Tick();
