@@ -204,7 +204,6 @@ namespace _ARK_
 
             delegates.onApplicationQuit?.Invoke();
             applicationQuit = true;
-            ClearUserGroups();
         }
 
 #if UNITY_EDITOR
