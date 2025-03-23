@@ -71,7 +71,7 @@ namespace _ARK_
             }
         }
 
-        public static void ToggleUser(in object user, in bool toggle, in Usages usages)
+        public static void ToggleUser(object user, bool toggle, Usages usages)
         {
             if (usages.HasFlag(Usages.IngameMouse))
                 users_ingameMouse.ToggleElement(user, toggle);
@@ -85,7 +85,7 @@ namespace _ARK_
                 users_blockPlayers.ToggleElement(user, toggle);
         }
 
-        public static void RemoveUser(in object user)
+        public static void RemoveUser(object user)
         {
             users_ingameMouse.RemoveElement(user);
             users_trueMouse.RemoveElement(user);
