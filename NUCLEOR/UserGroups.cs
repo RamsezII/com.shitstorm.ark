@@ -14,6 +14,7 @@ namespace _ARK_
             Keyboard = 4,
             Typing = 8,
             BlockPlayers = 16,
+            IMGUI = 32,
             _all_ = byte.MaxValue
         }
 
@@ -22,6 +23,7 @@ namespace _ARK_
         public static readonly ListListener users_keyboards = new();
         public static readonly ListListener users_typing = new();
         public static readonly ListListener users_blockPlayers = new();
+        public static readonly ListListener users_IMGUI = new();
 
         float last_ALT;
 
@@ -34,6 +36,7 @@ namespace _ARK_
             users_keyboards.Reset();
             users_typing.Reset();
             users_blockPlayers.Reset();
+            users_IMGUI.Reset();
 
             users_trueMouse.AddListener1(_ => UpdateCursorState());
             users_ingameMouse.AddListener1(_ => UpdateCursorState());
@@ -83,6 +86,8 @@ namespace _ARK_
                 users_typing.ToggleElement(user, toggle);
             if (usages.HasFlag(Usages.BlockPlayers))
                 users_blockPlayers.ToggleElement(user, toggle);
+            if (usages.HasFlag(Usages.IMGUI))
+                users_IMGUI.ToggleElement(user, toggle);
         }
 
         public static void RemoveUser(object user)
@@ -92,6 +97,7 @@ namespace _ARK_
             users_keyboards.RemoveElement(user);
             users_typing.RemoveElement(user);
             users_blockPlayers.RemoveElement(user);
+            users_IMGUI.RemoveElement(user);
         }
     }
 }
