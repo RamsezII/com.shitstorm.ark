@@ -122,8 +122,6 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            AwakeUserGroups();
-
             scheduler.list.Clear();
             subScheduler.list.Clear();
         }
@@ -157,7 +155,7 @@ namespace _ARK_
             {
                 averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
 
-                UpdateAltPress();
+                USAGES.UpdateAltPress();
 
                 delegates.onStartOfFrame?.Invoke();
                 delegates.onStartOfFrame = null;

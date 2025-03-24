@@ -1,48 +1,44 @@
 ﻿using _UTIL_;
-using System;
 using UnityEngine;
 
 namespace _ARK_
 {
-    partial class NUCLEOR
+    public enum UsageGroups : byte
     {
-        [Flags]
-        public enum Usages : byte
-        {
-            IngameMouse = 1,
-            TrueMouse = 2,
-            Keyboard = 4,
-            Typing = 8,
-            BlockPlayers = 16,
-            IMGUI = 32,
-            _all_ = byte.MaxValue
-        }
+        IngameMouse,
+        TrueMouse,
+        Keyboard,
+        Typing,
+        BlockPlayers,
+        IMGUI,
+        _last_
+    }
 
-        public static readonly ListListener users_ingameMouse = new();
-        public static readonly ListListener users_trueMouse = new();
-        public static readonly ListListener users_keyboards = new();
-        public static readonly ListListener users_typing = new();
-        public static readonly ListListener users_blockPlayers = new();
-        public static readonly ListListener users_IMGUI = new();
+    public static partial class USAGES
+    {
+        public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
-        float last_ALT;
+        static float last_ALT;
+
+        static readonly object mouse_user = new();
 
         //----------------------------------------------------------------------------------------------------------
 
-        void AwakeUserGroups()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void OnBeforeSceneLoad()
         {
-            users_ingameMouse.Reset();
-            users_trueMouse.Reset();
-            users_keyboards.Reset();
-            users_typing.Reset();
-            users_blockPlayers.Reset();
-            users_IMGUI.Reset();
+            for (int i = 0; i < (int)UsageGroups._last_; i++)
+                usages[i] = new ListListener();
 
-            users_trueMouse.AddListener1(_ => UpdateCursorState());
-            users_ingameMouse.AddListener1(_ => UpdateCursorState());
+            usages[(int)UsageGroups.IngameMouse].AddListener1(_ => UpdateCursorState());
+            usages[(int)UsageGroups.TrueMouse].AddListener1(_ => UpdateCursorState());
 
             static void UpdateCursorState()
             {
+                ListListener
+                    users_ingameMouse = usages[(int)UsageGroups.IngameMouse],
+                    users_trueMouse = usages[(int)UsageGroups.TrueMouse];
+
                 if (users_ingameMouse.IsEmpty && users_trueMouse.IsEmpty)
                 {
                     Cursor.lockState = CursorLockMode.Locked;
@@ -63,41 +59,27 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        void UpdateAltPress()
+        public static void UpdateAltPress()
         {
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 float time = Time.unscaledTime;
                 if (time - last_ALT < 0.3f)
-                    users_trueMouse.ToggleElement(this);
+                    usages[(int)UsageGroups.TrueMouse].ToggleElement(mouse_user);
                 last_ALT = time;
             }
         }
 
-        public static void ToggleUser(object user, bool toggle, Usages usages)
+        public static void ToggleUser(object user, bool toggle, params UsageGroups[] groups)
         {
-            if (usages.HasFlag(Usages.IngameMouse))
-                users_ingameMouse.ToggleElement(user, toggle);
-            if (usages.HasFlag(Usages.TrueMouse))
-                users_trueMouse.ToggleElement(user, toggle);
-            if (usages.HasFlag(Usages.Keyboard))
-                users_keyboards.ToggleElement(user, toggle);
-            if (usages.HasFlag(Usages.Typing))
-                users_typing.ToggleElement(user, toggle);
-            if (usages.HasFlag(Usages.BlockPlayers))
-                users_blockPlayers.ToggleElement(user, toggle);
-            if (usages.HasFlag(Usages.IMGUI))
-                users_IMGUI.ToggleElement(user, toggle);
+            for (int i = 0; i < groups.Length; i++)
+                usages[(int)groups[i]].ToggleElement(user, toggle);
         }
 
         public static void RemoveUser(object user)
         {
-            users_ingameMouse.RemoveElement(user);
-            users_trueMouse.RemoveElement(user);
-            users_keyboards.RemoveElement(user);
-            users_typing.RemoveElement(user);
-            users_blockPlayers.RemoveElement(user);
-            users_IMGUI.RemoveElement(user);
+            for (int i = 0; i < (int)UsageGroups._last_; i++)
+                usages[i].RemoveElement(user);
         }
     }
 }
