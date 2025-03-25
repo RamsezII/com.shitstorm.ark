@@ -55,10 +55,12 @@ namespace _ARK_
 
         Action onMainThread;
         public readonly object mainThreadLock = new();
-        public static DirectoryInfo TEMP_DIR => temp_path.ForceDir();
 
         public static bool game_path_is_working_path;
         public static string game_path, working_path, home_path, plugins_path, temp_path, terminal_path;
+
+        public static DirectoryInfo TempDir() => temp_path.ForceDir();
+        public static string TempPath() => TempDir().FullName;
 
         //----------------------------------------------------------------------------------------------------------
 
