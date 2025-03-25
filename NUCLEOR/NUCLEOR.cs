@@ -58,7 +58,7 @@ namespace _ARK_
         public static DirectoryInfo TEMP_DIR => temp_path.ForceDir();
 
         public static bool game_path_is_working_path;
-        public static string game_path, working_path, home_path, temp_path, terminal_path;
+        public static string game_path, working_path, home_path, plugins_path, temp_path, terminal_path;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -78,6 +78,7 @@ namespace _ARK_
             game_path_is_working_path = Util.Equals_path(working_path, game_path);
             working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
             home_path = Path.Combine(working_path, "Home");
+            plugins_path = Path.Combine(working_path, "Plugins");
             temp_path = Path.Combine(working_path, "TEMP");
 
             if (game_path_is_working_path)
