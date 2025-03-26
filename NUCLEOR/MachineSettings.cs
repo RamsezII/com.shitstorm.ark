@@ -17,52 +17,52 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
-            ReadInfos();
+            ReadInfos(true);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
-            NUCLEOR.delegates.onApplicationFocus += ReadInfos;
-            NUCLEOR.delegates.onApplicationUnfocused += SaveInfos;
+            NUCLEOR.delegates.onApplicationFocus += ReadInfosNoLog;
+            NUCLEOR.delegates.onApplicationUnfocused += SaveInfosNoLog;
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        static void SaveInfos()
+        static void SaveInfosNoLog() => SaveInfos(false);
+        static void SaveInfos(in bool log)
         {
             File.WriteAllText(GetFilePath(), machine_name.Value);
-            Debug.Log($"{typeof(MachineSettings).FullName}.WRITE {nameof(machine_name)}: \"{machine_name.Value}\" {GetFilePath()}".ToSubLog());
+            if (log)
+                Debug.Log($"{typeof(MachineSettings).FullName}.WRITE {nameof(machine_name)}: \"{machine_name.Value}\" {GetFilePath()}".ToSubLog());
         }
 
-        static void ReadInfos()
+        static void ReadInfosNoLog() => ReadInfos(false);
+        static void ReadInfos(in bool log)
         {
             if (File.Exists(GetFilePath()))
             {
                 string value = File.ReadAllText(GetFilePath());
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Debug.Log($"empty {nameof(machine_name)} found in \"{GetFilePath()}\", fallback to {nameof(default_name)} \"{default_name}\"");
+                    if (log)
+                        Debug.Log($"empty {nameof(machine_name)} found in \"{GetFilePath()}\", fallback to {nameof(default_name)} \"{default_name}\"");
                     machine_name.Update(default_name);
                 }
                 else
                 {
-                    Debug.Log($"{typeof(MachineSettings).FullName}.READ {nameof(machine_name)}: \"{value}\" ({GetFilePath()})".ToSubLog());
+                    if (log)
+                        Debug.Log($"{typeof(MachineSettings).FullName}.READ {nameof(machine_name)}: \"{value}\" ({GetFilePath()})".ToSubLog());
                     machine_name.Update(value);
                 }
             }
             else
             {
-                Debug.Log($"could not find \"{GetFilePath()}\", fallback to default {nameof(machine_name)}: \"{default_name}\"");
+                if (log)
+                    Debug.Log($"could not find \"{GetFilePath()}\", fallback to default {nameof(machine_name)}: \"{default_name}\"");
                 machine_name.Update(default_name);
-                SaveInfos();
+                SaveInfos(log);
             }
-        }
-
-        public static void ChangeMachineName(in string name)
-        {
-            machine_name.Update(name);
-            SaveInfos();
         }
     }
 }

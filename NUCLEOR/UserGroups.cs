@@ -81,5 +81,21 @@ namespace _ARK_
             for (int i = 0; i < (int)UsageGroups._last_; i++)
                 usages[i].RemoveElement(user);
         }
+
+        public static bool AreEmpty(params UsageGroups[] groups)
+        {
+            for (int i = 0; i < groups.Length; i++)
+                if (!usages[(int)groups[i]].IsEmpty)
+                    return false;
+            return true;
+        }
+
+        public static bool AreEmptyOrLast(in object user, params UsageGroups[] groups)
+        {
+            for (int i = 0; i < groups.Length; i++)
+                if (!usages[(int)groups[i]].IsEmptyOrLast(user))
+                    return false;
+            return true;
+        }
     }
 }
