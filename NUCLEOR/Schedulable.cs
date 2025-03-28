@@ -118,6 +118,11 @@ namespace _ARK_
         protected override void OnDispose()
         {
             base.OnDispose();
+
+            routine?.Dispose();
+            moveNext = null;
+            _task = null;
+
             try
             {
                 task?.Dispose();

@@ -24,7 +24,7 @@ namespace _ARK_
         static void OnAfterSceneLoad()
         {
             NUCLEOR.delegates.onApplicationFocus += ReadInfosNoLog;
-            NUCLEOR.delegates.onApplicationUnfocused += SaveInfosNoLog;
+            NUCLEOR.delegates.onApplicationUnfocus += SaveInfosNoLog;
         }
 
         //----------------------------------------------------------------------------------------------------------

@@ -42,7 +42,7 @@ namespace _ARK_
                 onNetworkPush,
 
                 onApplicationFocus,
-                onApplicationUnfocused,
+                onApplicationUnfocus,
                 onApplicationQuit;
         }
 
@@ -194,7 +194,7 @@ namespace _ARK_
             if (focus)
                 delegates.onApplicationFocus?.Invoke();
             else
-                delegates.onApplicationUnfocused?.Invoke();
+                delegates.onApplicationUnfocus?.Invoke();
         }
 
         private void OnApplicationQuit()
