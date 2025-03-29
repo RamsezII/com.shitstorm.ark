@@ -108,7 +108,7 @@ namespace _ARK_
             delegates = default;
             applicationQuit = false;
 
-            Util.InstantiateOrCreate<NUCLEOR>();
+            Util.InstantiateOrCreateIfAbsent<NUCLEOR>();
         }
 
         //----------------------------------------------------------------------------------------------------------
