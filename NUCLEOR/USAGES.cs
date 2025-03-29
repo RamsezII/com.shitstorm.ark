@@ -14,7 +14,7 @@ namespace _ARK_
         _last_
     }
 
-    public static partial class USAGES
+    public static class USAGES
     {
         public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
