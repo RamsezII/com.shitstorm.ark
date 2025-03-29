@@ -48,6 +48,9 @@ namespace _ARK_
 
         public static Delegates delegates;
 
+        public Camera camera_UI;
+        public Canvas canvas3D, canvas2D;
+
         public static bool applicationQuit;
 
         public int fixedFrameCount;
@@ -127,6 +130,10 @@ namespace _ARK_
 
             scheduler.list.Clear();
             subScheduler.list.Clear();
+
+            camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
+            canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
+            canvas2D = transform.Find("Canvas2D").GetComponent<Canvas>();
         }
 
         //----------------------------------------------------------------------------------------------------------
