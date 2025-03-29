@@ -17,7 +17,7 @@ namespace _ARK_
         public Func<bool> moveNext;
         public Action action, _task;
         public Task task;
-        public readonly ThreadSafe<bool> scheduled = new();
+        public readonly ThreadSafe_struct<bool> scheduled = new();
         [Range(0, 1)] float progress = -1;
         public string progressBar;
 

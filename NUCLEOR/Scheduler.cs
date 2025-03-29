@@ -63,7 +63,7 @@ namespace _ARK_
 
     public class SequentialScheduler : Scheduler
     {
-        public readonly ThreadSafe<bool> isTick = new();
+        public readonly ThreadSafe_struct<bool> isTick = new();
 
         //----------------------------------------------------------------------------------------------------------
 
