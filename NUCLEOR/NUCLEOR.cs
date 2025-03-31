@@ -26,7 +26,7 @@ namespace _ARK_
                 onFixedUpdateMuonRigidbodies,
                 fixedUpdateVehiclePhysics,
 
-                onStartOfFrame,
+                onStartOfFrame_once,
                 onNetworkPull,
                 getInputs,
                 onPlayerInputs,
@@ -38,7 +38,7 @@ namespace _ARK_
                 onCronsApplied,
 
                 onLateUpdate,
-                onEndOfFrame,
+                onEndOfFrame_once,
                 onNetworkPush,
 
                 onApplicationFocus,
@@ -167,8 +167,8 @@ namespace _ARK_
 
                 USAGES.UpdateAltPress();
 
-                delegates.onStartOfFrame?.Invoke();
-                delegates.onStartOfFrame = null;
+                delegates.onStartOfFrame_once?.Invoke();
+                delegates.onStartOfFrame_once = null;
 
                 delegates.onNetworkPull?.Invoke();
                 delegates.getInputs?.Invoke();
@@ -230,8 +230,8 @@ namespace _ARK_
             {
                 delegates.onLateUpdate?.Invoke();
                 delegates.onNetworkPush?.Invoke();
-                delegates.onEndOfFrame?.Invoke();
-                delegates.onEndOfFrame = null;
+                delegates.onEndOfFrame_once?.Invoke();
+                delegates.onEndOfFrame_once = null;
             }
         }
 
