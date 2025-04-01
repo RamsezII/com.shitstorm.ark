@@ -1,7 +1,18 @@
-﻿namespace _ARK_
+﻿using UnityEngine;
+
+namespace _ARK_
 {
     public static class Util_ark
     {
+        public static char GetRotator(in float speed = 10) => ((int)(Time.unscaledTime * speed) % 4) switch
+        {
+            0 => '|',
+            1 => '/',
+            2 => '-',
+            3 => '\\',
+            _ => '?',
+        };
+
         public static bool TryReadArgument(this string text, ref int start_i, ref int read_i, out string argument)
         {
             SkipCharactersUntil(text, ref read_i, true);
