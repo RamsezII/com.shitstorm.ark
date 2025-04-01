@@ -10,8 +10,8 @@ namespace _ARK_
 {
     public abstract class Scheduler : Disposable
     {
-        public bool IsBusy => list.Count > 0;
-        public readonly List<Schedulable> list = new();
+        public bool IsBusy => list._list.Count > 0;
+        public readonly ListListener<Schedulable> list = new();
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ namespace _ARK_
         public string GetStatus()
         {
             StringBuilder log = new();
-            log.AppendLine($"{this} -> {list.Count} schedulables");
+            log.AppendLine($"{this} -> {list._list.Count} schedulables");
             lock (list)
-                for (int i = 0; i < list.Count; i++)
-                    if (list[i] is Schedulable schedulable)
+                for (int i = 0; i < list._list.Count; i++)
+                    if (list._list[i] is Schedulable schedulable)
                         log.AppendLine($"{i}. {schedulable.GetType().FullName}.{nameof(schedulable.description)}:\n{schedulable.description}");
                     else
-                        log.AppendLine($"{i}. {list[i].GetType().FullName}");
+                        log.AppendLine($"{i}. {list._list[i].GetType().FullName}");
             return log.TroncatedForLog();
         }
 
@@ -38,10 +38,10 @@ namespace _ARK_
         public T AddSchedulable<T>(in T schedulable) where T : Schedulable
         {
             lock (list)
-                if (list.Contains(schedulable))
+                if (list._list.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
-                    list.Add(schedulable);
+                    list.AddElement(schedulable);
             return schedulable;
         }
 
@@ -54,9 +54,9 @@ namespace _ARK_
             base.OnDispose();
             lock (list)
             {
-                foreach (Schedulable schedulable in list)
+                foreach (Schedulable schedulable in list._list)
                     schedulable.Dispose();
-                list.Clear();
+                list.ClearList();
             }
         }
     }
@@ -76,22 +76,22 @@ namespace _ARK_
         public T InsertSchedulable<T>(in T schedulable) where T : Schedulable
         {
             lock (list)
-                if (list.Contains(schedulable))
+                if (list._list.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
-                    list.Insert(0, schedulable);
+                    list.InsertElementAt(0, schedulable);
             return schedulable;
         }
 
         public override void Tick()
         {
             lock (list)
-                if (list.Count > 0)
+                if (list._list.Count > 0)
                 {
-                    Schedulable schedulable = list[0];
+                    Schedulable schedulable = list._list[0];
                     if (schedulable == null)
                     {
-                        list.RemoveAt(0);
+                        list.RemoveElementAt(0);
                         Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(list)}[0] was null");
                     }
                     else
@@ -112,12 +112,12 @@ namespace _ARK_
                                 schedulable.OnTick();
 
                                 if (schedulable.Disposed)
-                                    list.Remove(schedulable);
+                                    list.RemoveElement(schedulable);
                             }
                         }
                         catch (Exception e)
                         {
-                            list.Remove(schedulable);
+                            list.RemoveElement(schedulable);
                             Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{schedulable.description}");
                             Debug.LogException(e);
                         }
@@ -133,10 +133,10 @@ namespace _ARK_
         public override void Tick()
         {
             lock (list)
-                if (list.Count > 0)
-                    for (int i = 0; i < list.Count; i++)
+                if (list._list.Count > 0)
+                    for (int i = 0; i < list._list.Count; i++)
                     {
-                        Schedulable schedulable = list[i];
+                        Schedulable schedulable = list._list[i];
 
                         try
                         {
@@ -152,12 +152,12 @@ namespace _ARK_
                                 schedulable.OnTick();
 
                                 if (schedulable.Disposed)
-                                    list.RemoveAt(i--);
+                                    list.RemoveElementAt(i--);
                             }
                         }
                         catch (Exception e)
                         {
-                            list.RemoveAt(i--);
+                            list.RemoveElementAt(i--);
                             Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{schedulable.description}");
                             Debug.LogException(e);
                         }

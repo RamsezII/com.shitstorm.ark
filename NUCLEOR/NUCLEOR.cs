@@ -128,8 +128,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            scheduler.list.Clear();
-            subScheduler.list.Clear();
+            scheduler.list.ClearList();
+            subScheduler.list.ClearList();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
