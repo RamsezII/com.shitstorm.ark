@@ -10,7 +10,6 @@ namespace _ARK_
 {
     public abstract class Scheduler : Disposable
     {
-        public bool IsBusy => list._list.Count > 0;
         public readonly ListListener<Schedulable> list = new();
 
         //----------------------------------------------------------------------------------------------------------
