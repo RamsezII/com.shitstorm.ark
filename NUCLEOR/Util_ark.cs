@@ -4,6 +4,17 @@ namespace _ARK_
 {
     public static class Util_ark
     {
+        public const char
+            CHAR_PIPE = '|',
+            CHAR_BACKPIPE = '!',
+            CHAR_TAB = '\t',
+            CHAR_RETURN = '\r',
+            CHAR_NEWLINE = '\n',
+            CHAR_SPACE = ' ',
+            CHAR_BACKSLASH = '\\';
+
+        //--------------------------------------------------------------------------------------------------------------
+
         public static char GetRotator(in float speed = 10) => ((int)(Time.unscaledTime * speed) % 4) switch
         {
             0 => '|',
@@ -13,22 +24,6 @@ namespace _ARK_
             _ => '?',
         };
 
-        public static bool TryReadArgument(this string text, ref int start_i, ref int read_i, out string argument)
-        {
-            SkipCharactersUntil(text, ref read_i, true);
-            start_i = read_i;
-            SkipCharactersUntil(text, ref read_i, false);
-
-            if (start_i < read_i)
-            {
-                argument = text[start_i..read_i];
-                return true;
-            }
-
-            argument = string.Empty;
-            return false;
-        }
-
         public static void SkipCharactersUntil(this string text, ref int read_i, in bool positive)
         {
             while (read_i < text.Length)
@@ -36,6 +31,9 @@ namespace _ARK_
                 char c = text[read_i];
                 switch (c)
                 {
+                    case '|':
+                        return;
+
                     case '\t':
                     case '\r':
                     case '\n':
@@ -56,6 +54,18 @@ namespace _ARK_
             }
             if (read_i > text.Length)
                 read_i = text.Length;
+        }
+
+        public static bool TryReadPipe(this string text, ref int read_i)
+        {
+            SkipCharactersUntil(text, ref read_i, true);
+            if (read_i < text.Length && text[read_i] == CHAR_PIPE)
+            {
+                ++read_i;
+                return true;
+            }
+            else
+                return false;
         }
     }
 }
