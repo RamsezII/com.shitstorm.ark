@@ -57,12 +57,22 @@ namespace _ARK_
 
         public static bool TryReadPipe(this string text, ref int read_i)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
             SkipCharactersUntil(text, ref read_i, true, CHAR_CHAIN, CHAR_PIPE);
             if (read_i < text.Length && text[read_i] == CHAR_PIPE)
             {
+                ++read_i;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public static bool TryReadChain(this string text, ref int read_i)
+        {
+            SkipCharactersUntil(text, ref read_i, true, CHAR_CHAIN, CHAR_PIPE);
+            if (read_i + 1 < text.Length && text[read_i] == CHAR_CHAIN && text[read_i + 1] == CHAR_CHAIN)
+            {
+                ++read_i;
                 ++read_i;
                 return true;
             }
