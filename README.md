@@ -1,2 +1,3 @@
 # _ARK_
-more building blocks (Unity)
+
+Erazmus brought NUCLEOR, both fragile and immense, seed and tree — seed as central Heart. And the realm waiteth...
