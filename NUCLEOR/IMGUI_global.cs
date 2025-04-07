@@ -8,8 +8,7 @@ namespace _ARK_
     {
         public static IMGUI_global instance;
 
-        public readonly DictListener<Func<Event, bool>, object> users_keydown = new();
-        public readonly DictListener<Action, object> users_ongui = new();
+        public readonly DictListener<Func<Event, bool>, object> users = new();
 
         //--------------------------------------------------------------------------------------------------------------
 
@@ -30,39 +29,32 @@ namespace _ARK_
 
         private void Start()
         {
-            users_keydown.AddListener1(isNotEmpty => Refresh());
-            users_ongui.AddListener1(isNotEmpty => Refresh());
-
-            void Refresh()
-            {
-                enabled = users_keydown.IsNotEmpty || users_ongui.IsNotEmpty;
-            }
+            users.AddListener1(isNotEmpty => useGUILayout = isNotEmpty);
         }
 
         //--------------------------------------------------------------------------------------------------------------
 
+        [SerializeField] int _frame, _gui_frame;
+
+        private void Update()
+        {
+            _frame = Time.frameCount;
+        }
+
         private void OnGUI()
         {
+            ++_gui_frame;
             Event e = Event.current;
-
-            if (e.type == EventType.KeyDown)
-                foreach (var pair in users_keydown._dict)
-                {
-                    if (pair.Value == null)
-                        Debug.LogWarning($"[ERROR] found nul {users_keydown.value_type} in {GetType().FullName}.{nameof(users_keydown)} ({users_keydown.GetType().FullName})");
-
-                    if (pair.Key(e))
-                    {
-                        e.Use();
-                        return;
-                    }
-                }
-
-            foreach (var pair in users_ongui._dict)
+            foreach (var pair in users._dict)
             {
                 if (pair.Value == null)
-                    Debug.LogWarning($"[ERROR] found nul key in {GetType().FullName}.{nameof(users_ongui)} ({users_ongui.GetType().FullName})");
-                pair.Key();
+                    Debug.LogWarning($"[ERROR] found nul {users.value_type} in {GetType().FullName}.{nameof(users)} ({users.GetType().FullName})");
+
+                if (pair.Key(e))
+                {
+                    e.Use();
+                    return;
+                }
             }
         }
 
@@ -70,8 +62,7 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            users_keydown.Dispose();
-            users_ongui.Dispose();
+            users.Dispose();
         }
     }
 }
