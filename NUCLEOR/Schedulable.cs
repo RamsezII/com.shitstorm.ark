@@ -88,6 +88,7 @@ namespace _ARK_
                     if (!routine.MoveNext())
                     {
                         progress = routine.Current;
+                        routine.Dispose();
                         routine = null;
                         Dispose();
                     }
