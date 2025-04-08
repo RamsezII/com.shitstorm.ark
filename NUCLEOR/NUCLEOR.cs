@@ -10,11 +10,6 @@ namespace _ARK_
 #endif
     public sealed partial class NUCLEOR : MonoBehaviour
     {
-        public static NUCLEOR instance;
-        public readonly ParallelScheduler subScheduler = new();
-        public readonly SequentialScheduler scheduler = new();
-        public readonly CronGod crongod = new();
-
         public struct Delegates
         {
             [Obsolete]
@@ -47,6 +42,12 @@ namespace _ARK_
         }
 
         public static Delegates delegates;
+
+        public static NUCLEOR instance;
+
+        public readonly ParallelScheduler subScheduler = new();
+        public readonly SequentialScheduler scheduler = new();
+        public readonly CronGod crongod = new();
 
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
