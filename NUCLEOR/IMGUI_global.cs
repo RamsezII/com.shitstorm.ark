@@ -14,9 +14,10 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void OnAfterSceneLoad()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void OnBeforeSceneLoad()
         {
+            instance = FindAnyObjectByType<IMGUI_global>();
             Util.InstantiateOrCreateIfAbsent<IMGUI_global>();
         }
 
