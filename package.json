@@ -4,6 +4,6 @@
     "displayName": "ram16._ARK_",
     "description": "Fragile and immense, seed and tree — seed as central Heart.",
     "dependencies": {
-        "com.ram16.util": "https://github.com/RamsezII/com.ram16.util.git#main"
+        "com.ram16.util": "v7.7.7"
     }
 }
