@@ -22,7 +22,7 @@ namespace _ARK_
                 fixedUpdateVehiclePhysics,
 
                 onStartOfFrame_once,
-                update_shells,
+                shell_tick,
                 onNetworkPull,
                 getInputs,
                 onPlayerInputs,
@@ -172,7 +172,7 @@ namespace _ARK_
                 delegates.onStartOfFrame_once?.Invoke();
                 delegates.onStartOfFrame_once = null;
 
-                delegates.update_shells?.Invoke();
+                delegates.shell_tick?.Invoke();
                 delegates.onNetworkPull?.Invoke();
                 delegates.getInputs?.Invoke();
                 delegates.onPlayerInputs?.Invoke();
