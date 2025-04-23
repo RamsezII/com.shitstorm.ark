@@ -37,6 +37,8 @@ namespace _ARK_
 
             void Refresh()
             {
+                if (this == null)
+                    return;
                 useGUILayout = users_ongui.IsNotEmpty || users_inputs.IsNotEmpty;
             }
         }

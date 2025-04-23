@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace _ARK_
 {
@@ -12,5 +15,12 @@ namespace _ARK_
             3 => '\\',
             _ => '?',
         };
+
+        public static IEnumerator<float> ESchedulize(this IEnumerator enumerator, Action<object> onDone = null)
+        {
+            while (enumerator.MoveNext())
+                yield return 0;
+            onDone?.Invoke(enumerator.Current);
+        }
     }
 }
