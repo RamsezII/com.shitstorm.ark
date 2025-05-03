@@ -26,6 +26,7 @@ namespace _ARK_
         private void Awake()
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -45,16 +46,21 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
+#if UNITY_EDITOR
         [SerializeField] int _frame, _gui_frame;
 
         private void Update()
         {
             _frame = Time.frameCount;
         }
+#endif
 
         private void OnGUI()
         {
+#if UNITY_EDITOR
             ++_gui_frame;
+#endif
+
             Event e = Event.current;
 
             switch (e.type)
