@@ -30,8 +30,8 @@ namespace _ARK_
             for (int i = 0; i < (int)UsageGroups._last_; i++)
                 usages[i] = new ListListener();
 
-            usages[(int)UsageGroups.IngameMouse].AddListener1(_ => UpdateCursorState());
-            usages[(int)UsageGroups.TrueMouse].AddListener1(_ => UpdateCursorState());
+            usages[(int)UsageGroups.IngameMouse].AddListener1(null, _ => UpdateCursorState());
+            usages[(int)UsageGroups.TrueMouse].AddListener1(null, _ => UpdateCursorState());
 
             static void UpdateCursorState()
             {
