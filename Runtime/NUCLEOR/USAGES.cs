@@ -1,4 +1,5 @@
 ﻿using _UTIL_;
+using System.Text;
 using UnityEngine;
 
 namespace _ARK_
@@ -21,6 +22,26 @@ namespace _ARK_
         static float last_ALT;
 
         static readonly object mouse_user = new();
+
+        //----------------------------------------------------------------------------------------------------------
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(_LogUsages))]
+        static void _LogUsages()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine("USAGES :");
+            for (int i = 0; i < (int)UsageGroups._last_; i++)
+            {
+                sb.AppendLine($"[{i}] {(UsageGroups)i} : {usages[i]._list.Count}");
+                for (int j = 0; j < usages[i]._list.Count; j++)
+                    sb.AppendLine($"    [{j}] {usages[i]._list[j]}");
+            }
+
+            Debug.Log(sb);
+        }
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -74,6 +95,12 @@ namespace _ARK_
         {
             for (int i = 0; i < groups.Length; i++)
                 usages[(int)groups[i]].ToggleElement(user, toggle);
+        }
+        
+        public static void AddUser(object user, params UsageGroups[] groups)
+        {
+            for (int i = 0; i < groups.Length; i++)
+                usages[(int)groups[i]].AddElement(user);
         }
 
         public static void RemoveUser(object user)
