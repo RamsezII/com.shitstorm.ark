@@ -1,4 +1,5 @@
 ﻿using _UTIL_;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -6,63 +7,82 @@ namespace _ARK_
 {
     public static class MachineSettings
     {
-        public static readonly string FILE_NAME = typeof(MachineSettings).FullName + JSon.txt;
-        public static string GetFilePath() => Path.Combine(NUCLEOR.home_path.ForceDir().FullName, FILE_NAME);
+        [Serializable]
+        class Infos : JSon
+        {
+            static readonly string FILE_NAME = typeof(MachineSettings).TypeToFileName() + txt;
+            public static string GetFilePath() => Path.Combine(NUCLEOR.home_path.ForceDir().FullName, FILE_NAME);
 
-        public static readonly OnValue<string> machine_name = new();
-        const string default_name = "default_user";
+            public string last_user;
+        }
+
+        public static DirectoryInfo GetUsersFolder() => Path.Combine(NUCLEOR.home_path, "Users").ForceDir();
+        public static string GetPlayerFolder() => Path.Combine(GetUsersFolder().FullName, user_name.Value).ForceDir().FullName;
+
+        public static readonly OnValue<string> user_name = new("default_user");
+
+        public static bool user_ready;
+        static Action on_user_ready;
+
+        static Infos infos;
+
+        public static DirectoryInfo[] users;
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
-            ReadInfos(true);
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void OnAfterSceneLoad()
-        {
-            NUCLEOR.delegates.onApplicationFocus += ReadInfosNoLog;
-            NUCLEOR.delegates.onApplicationUnfocus += SaveInfosNoLog;
+            infos = new();
+            user_name.Reset();
+            user_ready = false;
+            on_user_ready = null;
+            users = GetUsersFolder().GetDirectories();
+            TryReadUserName();
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        static void SaveInfosNoLog() => SaveInfos(false);
-        static void SaveInfos(in bool log)
+        static void TryReadUserName()
         {
-            File.WriteAllText(GetFilePath(), machine_name.Value);
-            if (log)
-                Debug.Log($"{typeof(MachineSettings).FullName}.WRITE {nameof(machine_name)}: \"{machine_name.Value}\" {GetFilePath()}".ToSubLog());
+            string file_path = Infos.GetFilePath();
+
+            if (JSon.Read(ref infos, file_path, false, true))
+                if (!string.IsNullOrWhiteSpace(infos.last_user))
+                {
+                    Debug.Log($"[READ] {nameof(infos.last_user)}: \"{infos.last_user}\" ({file_path})".ToSubLog());
+                    user_name.Update(infos.last_user);
+                    OnUserReady();
+                }
         }
 
-        static void ReadInfosNoLog() => ReadInfos(false);
-        static void ReadInfos(in bool log)
+        public static void SaveUserName(in string value)
         {
-            if (File.Exists(GetFilePath()))
-            {
-                string value = File.ReadAllText(GetFilePath());
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    if (log)
-                        Debug.Log($"empty {nameof(machine_name)} found in \"{GetFilePath()}\", fallback to {nameof(default_name)} \"{default_name}\"");
-                    machine_name.Update(default_name);
-                }
-                else
-                {
-                    if (log)
-                        Debug.Log($"{typeof(MachineSettings).FullName}.READ {nameof(machine_name)}: \"{value}\" ({GetFilePath()})".ToSubLog());
-                    machine_name.Update(value);
-                }
-            }
+            string file_path = Infos.GetFilePath();
+
+            infos.last_user = value;
+            infos.Save(file_path, true);
+
+            user_name.Update(value);
+            OnUserReady();
+        }
+
+        public static void AddListener(Action listener)
+        {
+            if (user_ready)
+                listener();
             else
+                Util.AddAction(ref on_user_ready, listener);
+        }
+
+        static void OnUserReady()
+        {
+            if (!user_ready)
             {
-                if (log)
-                    Debug.Log($"could not find \"{GetFilePath()}\", fallback to default {nameof(machine_name)}: \"{default_name}\"");
-                machine_name.Update(default_name);
-                SaveInfos(log);
+                user_ready = true;
+                on_user_ready?.Invoke();
             }
+            on_user_ready = null;
         }
     }
 }
