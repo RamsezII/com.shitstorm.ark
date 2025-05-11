@@ -62,7 +62,7 @@ namespace _ARK_
         public readonly object mainThreadLock = new();
 
         public static bool game_path_is_working_path;
-        public static string game_path, working_path, home_path, plugins_path, temp_path, terminal_path;
+        public static string game_path, working_path, home_path, bundles_path, plugins_path, temp_path, terminal_path;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -83,6 +83,7 @@ namespace _ARK_
             working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
             home_path = Path.Combine(working_path, "Home");
             plugins_path = Path.Combine(working_path, "Plugins");
+            bundles_path = Path.Combine(working_path, "Bundles");
             temp_path = Path.Combine(working_path, "TEMP");
 
             if (game_path_is_working_path)
