@@ -15,7 +15,7 @@ namespace _ARK_
         _last_
     }
 
-    public static class USAGES
+    public static class UsageManager
     {
         public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
