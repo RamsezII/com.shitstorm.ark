@@ -64,9 +64,6 @@ namespace _ARK_
         public static bool game_path_is_working_path;
         public static string game_path, working_path, home_path, plugins_path, temp_path, terminal_path;
 
-        public static DirectoryInfo TempDir() => temp_path.ForceDir();
-        public static string TempPath() => TempDir().FullName;
-
         //----------------------------------------------------------------------------------------------------------
 
         static NUCLEOR()

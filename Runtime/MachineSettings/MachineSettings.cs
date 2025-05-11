@@ -7,9 +7,10 @@ namespace _ARK_
 {
     public static partial class MachineSettings
     {
-        public static DirectoryInfo ForceUsersFolder() => Path.Combine(NUCLEOR.home_path, "Users").ForceDir();
-        public static DirectoryInfo ForceUserFolder(in string user_name) => Path.Combine(ForceUsersFolder().FullName, user_name).ForceDir();
-        public static DirectoryInfo ForceUserFolder() => ForceUserFolder(user_name.Value);
+        public static DirectoryInfo ForceUsersFolder() => Path.Combine(NUCLEOR.home_path, "Users").GetDir(true);
+        public static DirectoryInfo GetUserFolder(in bool force) => GetUserFolder(user_name.Value, force);
+        public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
+
 
         public static readonly OnValue<string> user_name = new("default_user");
 
@@ -28,6 +29,7 @@ namespace _ARK_
             on_user_ready = null;
             users.Reset();
             ScanUsers();
+            ReadInfos();
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -41,8 +43,10 @@ namespace _ARK_
         public static void SetUserName(in string value)
         {
             user_name.Update(value);
-            ForceUserFolder();
+            GetUserFolder(true);
+            ScanUsers();
             OnUserReady();
+            SaveInfos();
         }
 
         public static bool TryRemoveUser(in string value, out string error)
@@ -62,22 +66,28 @@ namespace _ARK_
             return true;
         }
 
-        public static bool TryRenameUser(in string value, out string error)
+        public static bool TryRenameUser(in string old_name, in string new_name, out string error)
         {
-            string new_path = Path.Combine(ForceUsersFolder().FullName, value);
-
-            if (Directory.Exists(new_path))
+            DirectoryInfo old_user = GetUserFolder(old_name, false);
+            if (!old_user.Exists)
             {
-                error = $"User '{value}' already exists!";
+                error = $"User '{old_name}' does not exist!";
                 return false;
             }
 
-            string old_path = ForceUserFolder().FullName;
-            Directory.Move(old_path, new_path);
+            DirectoryInfo new_user = GetUserFolder(new_name, false);
+            if (new_user.Exists)
+            {
+                error = $"User '{new_name}' already exists!";
+                return false;
+            }
 
-            user_name.Update(value);
+            old_user.MoveTo(new_user.FullName);
 
-            ForceUserFolder();
+            if (old_name.Equals(user_name.Value, StringComparison.Ordinal))
+                user_name.Update(new_name);
+
+            GetUserFolder(true);
             ScanUsers();
 
             error = null;
