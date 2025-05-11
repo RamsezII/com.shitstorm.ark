@@ -33,6 +33,7 @@ namespace _ARK_
         public static void SaveUserName(in string value)
         {
             user_name.Update(value);
+            GetPlayerFolder();
             OnUserReady();
         }
 
