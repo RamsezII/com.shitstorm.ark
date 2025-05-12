@@ -8,7 +8,7 @@ namespace _ARK_
         [Serializable]
         public class Infos : JSon
         {
-            static readonly string FILE_NAME = typeof(MachineSettings).TypeToFileName() + json;
+            static readonly string FILE_NAME = typeof(MachineSettings).FullName + json;
             public static string GetFilePath() => Path.Combine(NUCLEOR.home_path.GetDir(true).FullName, FILE_NAME);
 
             public string last_user;
