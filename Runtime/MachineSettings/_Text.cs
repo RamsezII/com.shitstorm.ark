@@ -16,7 +16,7 @@ namespace _ARK_
 
         static void ReadInfos()
         {
-            ArkJSon.Read(ref infos, false, true);
+            ArkJSon.Read(ref infos, true, true);
         }
 
         static void SaveInfos()

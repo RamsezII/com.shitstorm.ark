@@ -6,10 +6,11 @@ namespace _ARK_
 {
     public abstract class ArkJSon : JSon
     {
-        public string GetFilePath() => Path.Combine(MachineSettings.GetUserFolder(true).FullName, GetType().FullName + json);
+        public string GetFilePath() => Path.Combine(IsUserFile ? MachineSettings.GetUserFolder(true).FullName : NUCLEOR.home_path.GetDir(true).FullName, GetType().FullName + json);
         public string GetExtension() => "." + GetType().FullName + json;
         public void SaveArkJSon(in bool log) => Save(GetFilePath(), log);
         public static bool Read<T>(ref T json, in bool force, in bool log) where T : ArkJSon, new() => Read(ref json, json.GetFilePath(), force, log);
+        protected virtual bool IsUserFile => false;
     }
 
 
