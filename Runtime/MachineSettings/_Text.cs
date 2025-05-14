@@ -1,28 +1,31 @@
-﻿using System;
+﻿using _UTIL_;
+using System;
 
 namespace _ARK_
 {
     partial class MachineSettings
     {
         [Serializable]
-        public class Infos : ArkJSon
+        public class Settings : ArkJSon
         {
             public string last_user;
+            public bool no_smooth;
         }
 
-        public static Infos infos = new();
+        public static Settings settings = new();
 
         //----------------------------------------------------------------------------------------------------------
 
         static void ReadInfos()
         {
-            ArkJSon.Read(ref infos, true, true);
+            ArkJSon.Read(ref settings, true, true);
+            Util_smooths.NO_SMOOTH = settings.no_smooth;
         }
 
         static void SaveInfos()
         {
-            infos.last_user = user_name.Value;
-            infos.SaveArkJSon(true);
+            settings.last_user = user_name.Value;
+            settings.SaveArkJSon(true);
         }
     }
 }
