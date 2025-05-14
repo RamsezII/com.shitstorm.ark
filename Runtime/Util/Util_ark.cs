@@ -22,5 +22,8 @@ namespace _ARK_
                 yield return 0;
             onDone?.Invoke(enumerator.Current);
         }
+
+        public static string GetArkFileName(this Type type) => type.FullName + ArkJSon.arkjson;
+        public static string GetArkExtension(this Type type) => "." + GetArkFileName(type);
     }
 }

@@ -84,7 +84,10 @@ namespace _ARK_
             home_path = Path.Combine(working_path, "Home");
             plugins_path = Path.Combine(working_path, "Plugins");
             bundles_path = Path.Combine(working_path, "Bundles");
-            temp_path = Path.Combine(working_path, "TEMP");
+            temp_path = Path.Combine(home_path, "TEMP");
+
+            if (Directory.Exists(temp_path))
+                Directory.Delete(temp_path, true);
 
             if (game_path_is_working_path)
                 terminal_path = Path.GetFileNameWithoutExtension(game_path);
@@ -248,8 +251,8 @@ namespace _ARK_
             if (this == instance)
                 instance = null;
 
-            //if (Directory.Exists(temp_path))
-            //    Directory.Delete(temp_path, true);
+            if (Directory.Exists(temp_path))
+                Directory.Delete(temp_path, true);
         }
     }
 }

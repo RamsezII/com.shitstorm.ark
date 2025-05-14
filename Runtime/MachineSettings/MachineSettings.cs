@@ -102,6 +102,14 @@ namespace _ARK_
                 Util.AddAction(ref on_user_ready, listener);
         }
 
+        public static void UserListener(in Action on_user_ready)
+        {
+            if (user_ready)
+                on_user_ready();
+            else
+                Util.AddAction(ref MachineSettings.on_user_ready, on_user_ready);
+        }
+
         static void OnUserReady()
         {
             if (!user_ready)
