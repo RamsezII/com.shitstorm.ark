@@ -30,20 +30,17 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        static LogManager()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void OnBeforeSceneLoad()
         {
+            on_log = null;
+
             Application.logMessageReceivedThreaded -= OnLogMessage;
             Application.logMessageReceivedThreaded += OnLogMessage;
 
             Debug.Log(typeof(LogManager).FullName + " initialized.");
-
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.quitting -= last_logs.Clear;
-            UnityEditor.EditorApplication.quitting += last_logs.Clear;
-            UnityEditor.EditorApplication.update -= last_logs.Clear;
-            UnityEditor.EditorApplication.update += last_logs.Clear;
-#endif
         }
+
 
         //--------------------------------------------------------------------------------------------------------------
 
