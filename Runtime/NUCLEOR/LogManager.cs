@@ -9,6 +9,8 @@ namespace _ARK_
         [Serializable]
         public readonly struct LogInfos
         {
+            internal static ulong _id;
+            public readonly ulong id;
             public readonly string message;
             public readonly string stackTrace;
             public readonly LogType type;
@@ -17,6 +19,7 @@ namespace _ARK_
 
             public LogInfos(in string item1, in string item2, in LogType item3)
             {
+                id = _id++;
                 message = item1;
                 stackTrace = item2;
                 type = item3;
@@ -90,7 +93,10 @@ namespace _ARK_
         internal static void ClearLogs()
         {
             lock (last_logs)
+            {
+                LogInfos._id = 0;
                 last_logs.Clear();
+            }
         }
     }
 }
