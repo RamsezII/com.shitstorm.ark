@@ -249,7 +249,10 @@ namespace _ARK_
             crongod.Dispose();
 
             if (this == instance)
+            {
                 instance = null;
+                LogManager.ClearLogs();
+            }
 
             if (Directory.Exists(temp_path))
                 Directory.Delete(temp_path, true);

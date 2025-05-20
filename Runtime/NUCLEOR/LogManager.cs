@@ -86,5 +86,11 @@ namespace _ARK_
                 }
             }
         }
+
+        internal static void ClearLogs()
+        {
+            lock (last_logs)
+                last_logs.Clear();
+        }
     }
 }
