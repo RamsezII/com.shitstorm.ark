@@ -46,10 +46,9 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnBeforeSceneLoad()
+        internal static void Init(in Languages value)
         {
-            language.Reset(GetSystemLanguage());
+            language.Reset(value);
             language.AddListener(langage =>
             {
                 foreach (Traductable self in instances)

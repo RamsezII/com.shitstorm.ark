@@ -29,7 +29,16 @@ namespace _ARK_
             on_user_ready = null;
             users.Reset();
             ScanUsers();
-            ReadInfos();
+            LoadSettings(true);
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void OnAfterSceneLoad()
+        {
+            NUCLEOR.delegates.onApplicationFocus += () => LoadSettings(false);
+            NUCLEOR.delegates.onApplicationUnfocus += () => SaveSettings(false);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -46,7 +55,7 @@ namespace _ARK_
             GetUserFolder(true);
             ScanUsers();
             OnUserReady();
-            SaveInfos();
+            SaveSettings(true);
         }
 
         public static bool TryRemoveUser(in string value, out string error)

@@ -17,17 +17,19 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        static void ReadInfos()
+        static void LoadSettings(in bool init)
         {
             StaticJSon.ReadStaticJSon(ref settings, true, true);
             Util_smooths.NO_SMOOTH = settings.no_smooth;
-            Traductable.language.Update(settings.language);
+
+            if (init)
+                Traductable.Init(settings.language);
         }
 
-        static void SaveInfos()
+        static void SaveSettings(in bool log)
         {
             settings.last_user = user_name.Value;
-            settings.SaveStaticJSon(true);
+            settings.SaveStaticJSon(log);
         }
     }
 }
