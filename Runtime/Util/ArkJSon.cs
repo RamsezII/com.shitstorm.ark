@@ -10,15 +10,33 @@ namespace _ARK_
         public string GetFileName() => GetType().FullName + arkjson;
         public string GetExtension() => "." + GetFileName();
         public string GetFilePath() => Path.Combine(IsUserFile ? MachineSettings.GetUserFolder(true).FullName : NUCLEOR.home_path.GetDir(true).FullName, GetFileName());
-
         public void SaveArkJSon(in bool log) => Save(GetFilePath(), log);
         public static bool Read<T>(ref T json, in bool force, in bool log) where T : ArkJSon, new() => Read(ref json, json.GetFilePath(), force, log);
         protected virtual bool IsUserFile => false;
     }
 
+    public abstract class StaticJSon : ArkJSon
+    {
+
+    }
+
+    public abstract class MachineJSon : StaticJSon
+    {
+
+    }
+
+    public abstract class UserJSon : StaticJSon
+    {
+
+    }
+
+    public abstract class AssetJSon : ArkJSon
+    {
+
+    }
 
     [Serializable]
-    public class ArkJSonArray<T> : ArkJSon where T : IBytes
+    public class ArkJSonArray<T> : AssetJSon where T : IBytes
     {
         public T[] array;
 
