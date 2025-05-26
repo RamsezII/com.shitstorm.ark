@@ -19,7 +19,7 @@ namespace _ARK_
 
         static void LoadSettings(in bool init)
         {
-            StaticJSon.ReadStaticJSon(ref settings, true, true);
+            StaticJSon.ReadStaticJSon(ref settings, true, init);
             Util_smooths.NO_SMOOTH = settings.no_smooth;
 
             if (init)
