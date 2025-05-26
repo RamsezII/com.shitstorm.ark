@@ -10,6 +10,7 @@ namespace _ARK_
         {
             public string last_user;
             public bool no_smooth;
+            public Languages language = Traductable.GetSystemLanguage();
         }
 
         public static Settings settings = new();
@@ -20,6 +21,7 @@ namespace _ARK_
         {
             StaticJSon.ReadStaticJSon(ref settings, true, true);
             Util_smooths.NO_SMOOTH = settings.no_smooth;
+            Traductable.language.Update(settings.language);
         }
 
         static void SaveInfos()
