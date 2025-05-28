@@ -1,5 +1,6 @@
 ﻿using _UTIL_;
 using System;
+using UnityEngine;
 
 namespace _ARK_
 {
@@ -10,26 +11,33 @@ namespace _ARK_
         {
             public string last_user;
             public bool no_smooth;
-            public Languages language = Traductable.GetSystemLanguage();
+
+            public Languages language = Application.systemLanguage switch
+            {
+                SystemLanguage.French => Languages.French,
+                _ => Languages.English,
+            };
         }
 
         public static Settings settings = new();
 
         //----------------------------------------------------------------------------------------------------------
 
-        static void LoadSettings(in bool init)
+        public static void LoadSettings(in bool init)
         {
             StaticJSon.ReadStaticJSon(ref settings, true, init);
-            Util_smooths.NO_SMOOTH = settings.no_smooth;
-
-            if (init)
-                Traductable.Init(settings.language);
+            ApplySettings();
         }
 
-        static void SaveSettings(in bool log)
+        public static void SaveSettings(in bool log)
         {
-            settings.last_user = user_name.Value;
             settings.SaveStaticJSon(log);
+        }
+
+        public static void ApplySettings()
+        {
+            Util_smooths.NO_SMOOTH = settings.no_smooth;
+            Traductable.language.Update(settings.language);
         }
     }
 }

@@ -29,7 +29,6 @@ namespace _ARK_
             on_user_ready = null;
             users.Reset();
             ScanUsers();
-            LoadSettings(true);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -37,6 +36,13 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
+            LoadSettings(true);
+
+            user_name.AddListener(value =>
+            {
+                settings.last_user = value;
+            });
+
             NUCLEOR.delegates.onApplicationFocus += () => LoadSettings(false);
             NUCLEOR.delegates.onApplicationUnfocus += () => SaveSettings(false);
         }

@@ -46,9 +46,10 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        internal static void Init(in Languages value)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void OnBeforeSceneLoad()
         {
-            language.Reset(value);
+            language.Reset();
             language.AddListener(langage =>
             {
                 foreach (Traductable self in instances)
@@ -75,12 +76,6 @@ namespace _ARK_
         }
 
         //----------------------------------------------------------------------------------------------------------
-
-        public static Languages GetSystemLanguage() => Application.systemLanguage switch
-        {
-            SystemLanguage.French => Languages.French,
-            _ => Languages.English,
-        };
 
         public IEnumerable<TextMeshProUGUI> AllTmps()
         {

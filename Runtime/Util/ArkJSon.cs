@@ -6,7 +6,11 @@ namespace _ARK_
     {
         public abstract string GetFilePath();
         public void SaveStaticJSon(in bool log) => Save(GetFilePath(), log);
-        public static bool ReadStaticJSon<T>(ref T json, in bool force, in bool log) where T : StaticJSon, new() => Read(ref json, json.GetFilePath(), force, log);
+        public static bool ReadStaticJSon<T>(ref T json, in bool force, in bool log) where T : StaticJSon, new()
+        {
+            json ??= new T();
+            return Read(ref json, json.GetFilePath(), force, log);
+        }
     }
 
     public abstract class MachineJSon : StaticJSon
