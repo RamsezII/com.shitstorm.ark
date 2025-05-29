@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public static partial class MachineSettings
+    public static partial class ArkMachine
     {
         public static DirectoryInfo ForceUsersFolder() => Path.Combine(NUCLEOR.home_path, "Users").GetDir(true);
         public static DirectoryInfo GetUserFolder(in bool force) => GetUserFolder(user_name.Value, force);
@@ -122,7 +122,7 @@ namespace _ARK_
             if (user_ready)
                 on_user_ready();
             else
-                Util.AddAction(ref MachineSettings.on_user_ready, on_user_ready);
+                Util.AddAction(ref ArkMachine.on_user_ready, on_user_ready);
         }
 
         static void OnUserReady()

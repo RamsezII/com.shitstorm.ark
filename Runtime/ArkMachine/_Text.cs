@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    partial class MachineSettings
+    partial class ArkMachine
     {
         [Serializable]
         public class Settings : MachineJSon
