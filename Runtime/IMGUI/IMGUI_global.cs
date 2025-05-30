@@ -66,6 +66,7 @@ namespace _ARK_
             switch (e.type)
             {
                 case EventType.KeyDown:
+                case EventType.MouseDown:
                 case EventType.ScrollWheel:
                     foreach (var pair in users_inputs._dict)
                     {
