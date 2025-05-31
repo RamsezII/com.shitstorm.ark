@@ -19,13 +19,13 @@ namespace _ARK_
         public string GetStatus()
         {
             StringBuilder log = new();
-            log.AppendLine($"{this} -> {list._list.Count} schedulables");
+            log.AppendLine($"{this} -> {list._collection.Count} schedulables");
             lock (list)
-                for (int i = 0; i < list._list.Count; i++)
-                    if (list._list[i] is Schedulable schedulable)
+                for (int i = 0; i < list._collection.Count; i++)
+                    if (list._collection[i] is Schedulable schedulable)
                         log.AppendLine($"{i}. {schedulable.GetType().FullName}.{nameof(schedulable.description)}:\n{schedulable.description}");
                     else
-                        log.AppendLine($"{i}. {list._list[i].GetType().FullName}");
+                        log.AppendLine($"{i}. {list._collection[i].GetType().FullName}");
             return log.TroncatedForLog();
         }
 
@@ -39,7 +39,7 @@ namespace _ARK_
         public T AddSchedulable<T>(in T schedulable) where T : Schedulable
         {
             lock (list)
-                if (list._list.Contains(schedulable))
+                if (list._collection.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
                     list.AddElement(schedulable);
@@ -55,9 +55,10 @@ namespace _ARK_
             base.OnDispose();
             lock (list)
             {
-                foreach (Schedulable schedulable in list._list)
-                    schedulable.Dispose();
-                list.ClearList();
+                for (int i = 0; i < list._collection.Count; i++)
+                    list._collection[i].Dispose();
+
+                list.Clear();
             }
         }
     }
@@ -77,7 +78,7 @@ namespace _ARK_
         public T InsertSchedulable<T>(in T schedulable) where T : Schedulable
         {
             lock (list)
-                if (list._list.Contains(schedulable))
+                if (list._collection.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
                     list.InsertElementAt(0, schedulable);
@@ -87,9 +88,9 @@ namespace _ARK_
         public override void Tick()
         {
             lock (list)
-                if (list._list.Count > 0)
+                if (list._collection.Count > 0)
                 {
-                    Schedulable schedulable = list._list[0];
+                    Schedulable schedulable = list._collection[0];
                     if (schedulable == null)
                     {
                         list.RemoveElementAt(0);
@@ -134,10 +135,10 @@ namespace _ARK_
         public override void Tick()
         {
             lock (list)
-                if (list._list.Count > 0)
-                    for (int i = 0; i < list._list.Count; i++)
+                if (list._collection.Count > 0)
+                    for (int i = 0; i < list._collection.Count; i++)
                     {
-                        Schedulable schedulable = list._list[i];
+                        Schedulable schedulable = list._collection[i];
 
                         try
                         {

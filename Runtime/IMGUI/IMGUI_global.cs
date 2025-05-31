@@ -33,8 +33,8 @@ namespace _ARK_
 
         private void Start()
         {
-            users_ongui.AddListener1(isNotEmpty => Refresh());
-            users_inputs.AddListener1(isNotEmpty => Refresh());
+            users_ongui.AddListener1(this, isNotEmpty => Refresh());
+            users_inputs.AddListener1(this, isNotEmpty => Refresh());
 
             void Refresh()
             {
@@ -53,6 +53,22 @@ namespace _ARK_
         {
             _frame = Time.frameCount;
         }
+
+        [ContextMenu(nameof(ShowUsers))]
+        void ShowUsers()
+        {
+            System.Text.StringBuilder sb = new();
+            Populate(nameof(users_inputs), users_inputs);
+            Populate(nameof(users_ongui), users_ongui);
+            Debug.Log(sb.ToString(), this);
+
+            void Populate(in string name, in DictListener<Func<Event, bool>, object> dict)
+            {
+                sb.AppendLine($"{name}.{nameof(dict._collection.Count)}: {dict._collection.Count}");
+                foreach (var pair in dict._collection)
+                    sb.AppendLine($" - {name}: {{ {pair.Key} : {pair.Value} }}");
+            }
+        }
 #endif
 
         private void OnGUI()
@@ -68,7 +84,7 @@ namespace _ARK_
                 case EventType.KeyDown:
                 case EventType.MouseDown:
                 case EventType.ScrollWheel:
-                    foreach (var pair in users_inputs._dict)
+                    foreach (var pair in users_inputs._collection)
                     {
                         if (pair.Value == null)
                             Debug.LogWarning($"[ERROR] found nul {users_inputs.value_type} in {GetType().FullName}.{nameof(users_inputs)} ({users_inputs.GetType().FullName})");
@@ -81,7 +97,7 @@ namespace _ARK_
                     break;
             }
 
-            foreach (var pair in users_ongui._dict)
+            foreach (var pair in users_ongui._collection)
             {
                 if (pair.Value == null)
                     Debug.LogWarning($"[ERROR] found nul {users_ongui.value_type} in {GetType().FullName}.{nameof(users_ongui)} ({users_ongui.GetType().FullName})");
@@ -98,7 +114,7 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            users_ongui.Dispose();
+            users_ongui.Reset();
         }
     }
 }

@@ -34,9 +34,9 @@ namespace _ARK_
             sb.AppendLine("USAGES :");
             for (int i = 0; i < (int)UsageGroups._last_; i++)
             {
-                sb.AppendLine($"[{i}] {(UsageGroups)i} : {usages[i]._list.Count}");
-                for (int j = 0; j < usages[i]._list.Count; j++)
-                    sb.AppendLine($"    [{j}] {usages[i]._list[j]}");
+                sb.AppendLine($"[{i}] {(UsageGroups)i} : {usages[i]._collection.Count}");
+                for (int j = 0; j < usages[i]._collection.Count; j++)
+                    sb.AppendLine($"    [{j}] {usages[i]._collection[j]}");
             }
 
             Debug.Log(sb);

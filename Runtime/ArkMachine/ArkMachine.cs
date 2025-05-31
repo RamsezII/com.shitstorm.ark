@@ -49,7 +49,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        static void ScanUsers() => users.ModifyList(list =>
+        static void ScanUsers() => users.Modify(list =>
         {
             list.Clear();
             list.AddRange(ForceUsersFolder().EnumerateDirectories());
