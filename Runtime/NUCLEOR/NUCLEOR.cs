@@ -43,6 +43,8 @@ namespace _ARK_
         }
 
         public static Delegates delegates;
+        public static Action delegate_current;
+        public bool is_nucleor_fixedUpdate, is_nucleor_update, is_nucleor_lateUpdate;
 
         public static NUCLEOR instance;
 
@@ -146,11 +148,19 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 ++fixedFrameCount;
-                delegates.onFixedUpdateMuonRigidbodies?.Invoke();
-                delegates.onFixedUpdate1?.Invoke();
-                delegates.onFixedUpdate2?.Invoke();
-                delegates.onFixedUpdate3?.Invoke();
-                delegates.fixedUpdateVehiclePhysics?.Invoke();
+
+                is_nucleor_fixedUpdate = true;
+
+                (delegate_current = delegates.onFixedUpdateMuonRigidbodies)?.Invoke();
+
+                (delegate_current = delegates.onFixedUpdate1)?.Invoke();
+                (delegate_current = delegates.onFixedUpdate2)?.Invoke();
+                (delegate_current = delegates.onFixedUpdate3)?.Invoke();
+
+                (delegate_current = delegates.fixedUpdateVehiclePhysics)?.Invoke();
+
+                delegate_current = null;
+                is_nucleor_fixedUpdate = false;
             }
         }
 
@@ -170,23 +180,27 @@ namespace _ARK_
 
                 UsageManager.UpdateAltPress();
 
-                delegates.onStartOfFrame_once?.Invoke();
+                is_nucleor_update = true;
+
+                (delegate_current = delegates.onStartOfFrame_once)?.Invoke();
                 delegates.onStartOfFrame_once = null;
 
-                delegates.shell_tick?.Invoke();
-                delegates.onNetworkPull?.Invoke();
-                delegates.getInputs?.Invoke();
-                delegates.onPlayerInputs?.Invoke();
-                delegates.onMuonInputs?.Invoke();
-                delegates.updateVehicleVisuals?.Invoke();
-                delegates.computeCameraCrons?.Invoke();
+                (delegate_current = delegates.shell_tick)?.Invoke();
+                (delegate_current = delegates.onNetworkPull)?.Invoke();
+                (delegate_current = delegates.getInputs)?.Invoke();
+                (delegate_current = delegates.onPlayerInputs)?.Invoke();
+                (delegate_current = delegates.onMuonInputs)?.Invoke();
+                (delegate_current = delegates.updateVehicleVisuals)?.Invoke();
+                (delegate_current = delegates.computeCameraCrons)?.Invoke();
 
-                delegates.onUpdate1?.Invoke();
-                delegates.onUpdate2?.Invoke();
-                delegates.onUpdate3?.Invoke();
+                (delegate_current = delegates.onUpdate1)?.Invoke();
+                (delegate_current = delegates.onUpdate2)?.Invoke();
+                (delegate_current = delegates.onUpdate3)?.Invoke();
 
-                delegates.onUpdatePlayers?.Invoke();
-                delegates.onCronsApplied?.Invoke();
+                (delegate_current = delegates.onUpdatePlayers)?.Invoke();
+                (delegate_current = delegates.onCronsApplied)?.Invoke();
+
+                delegate_current = null;
 
                 subScheduler.Tick();
                 scheduler.Tick();
@@ -197,15 +211,18 @@ namespace _ARK_
                     onMainThread?.Invoke();
                     onMainThread = null;
                 }
+
+                is_nucleor_update = false;
             }
         }
 
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
-                delegates.onApplicationFocus?.Invoke();
+                (delegate_current = delegates.onApplicationFocus)?.Invoke();
             else
-                delegates.onApplicationUnfocus?.Invoke();
+                (delegate_current = delegates.onApplicationUnfocus)?.Invoke();
+            delegate_current = null;
         }
 
         private void OnApplicationQuit()
@@ -214,7 +231,9 @@ namespace _ARK_
             OnApplicationFocus(false);
 #endif
 
-            delegates.onApplicationQuit?.Invoke();
+            (delegate_current = delegates.onApplicationQuit)?.Invoke();
+            delegate_current = null;
+
             applicationQuit = true;
         }
 
@@ -232,11 +251,16 @@ namespace _ARK_
         {
             lock (mainThreadLock)
             {
-                delegates.onEndOfFrame_once?.Invoke();
+                is_nucleor_lateUpdate = true;
+
+                (delegate_current = delegates.onEndOfFrame_once)?.Invoke();
                 delegates.onEndOfFrame_once = null;
 
-                delegates.onLateUpdate?.Invoke();
-                delegates.onNetworkPush?.Invoke();
+                (delegate_current = delegates.onLateUpdate)?.Invoke();
+                (delegate_current = delegates.onNetworkPush)?.Invoke();
+
+                delegate_current = null;
+                is_nucleor_lateUpdate = false;
             }
         }
 
