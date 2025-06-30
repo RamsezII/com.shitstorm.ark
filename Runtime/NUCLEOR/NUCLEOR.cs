@@ -65,6 +65,9 @@ namespace _ARK_
 
         public static bool game_path_is_working_path;
         public static string game_path, working_path, home_path, bundles_path, plugins_path, temp_path, terminal_path;
+#if UNITY_EDITOR
+        public static string assets_path;
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -87,6 +90,10 @@ namespace _ARK_
             plugins_path = Path.Combine(working_path, "Plugins");
             bundles_path = Path.Combine(working_path, "Bundles");
             temp_path = Path.Combine(home_path, "TEMP");
+
+#if UNITY_EDITOR
+            assets_path = Directory.GetParent(Application.streamingAssetsPath).FullName.DOS2UNIX_full();
+#endif
 
             if (Directory.Exists(temp_path))
                 Directory.Delete(temp_path, true);
