@@ -21,17 +21,6 @@ namespace _ARK_
         [Range(0, 1)] float progress = -1;
         public string progressBar;
 
-        static int _id;
-        [SerializeField] int id = ++_id;
-
-        //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnBeforeSceneLoad()
-        {
-            _id = 0;
-        }
-
         //----------------------------------------------------------------------------------------------------------
 
         public Schedulable([CallerMemberName] string callerName = null)

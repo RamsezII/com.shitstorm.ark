@@ -113,7 +113,7 @@ namespace _ARK_
 
                                 schedulable.OnTick();
 
-                                if (schedulable.Disposed)
+                                if (schedulable._disposed)
                                     list.RemoveElement(schedulable);
                             }
                         }
@@ -153,7 +153,7 @@ namespace _ARK_
 
                                 schedulable.OnTick();
 
-                                if (schedulable.Disposed)
+                                if (schedulable._disposed)
                                     list.RemoveElementAt(i--);
                             }
                         }
