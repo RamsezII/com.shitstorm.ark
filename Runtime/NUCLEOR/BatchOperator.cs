@@ -1,33 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace _ARK_
 {
     public sealed class BatchOperator
     {
-        readonly List<(object user, Action action)> actions = new();
-        int current;
+        public readonly List<(object user, Action action)> actions = new();
+        [SerializeField] int index;
+        [SerializeField, Range(0, 1)] float accumulator;
 
         //----------------------------------------------------------------------------------------------------------
 
-        public void AddTask(in object user, in Action action)
-        {
-            actions.Add((user, action));
-        }
-
-        internal void Tick()
+        public void Tick(in float delta)
         {
             if (actions.Count == 0)
                 return;
 
-            current = (current + 1) % actions.Count;
+            accumulator += delta;
+            int count = (int)accumulator;
 
-            (object user, Action action) = actions[current];
+            if (count == 0)
+                return;
 
-            if (user == null)
-                actions.RemoveAt(current);
-            else
-                actions[current].action();
+            accumulator -= count;
+
+            count = Mathf.Min(count, actions.Count);
+            int start = index;
+            index += count;
+
+            for (int i = 0; i < count; i++)
+            {
+                int index = (start + i) % actions.Count;
+                (object user, Action action) = actions[index];
+
+                if (user == null)
+                    actions.RemoveAt(index);
+                else
+                    actions[index].action();
+            }
         }
     }
 }
