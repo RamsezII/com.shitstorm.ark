@@ -51,6 +51,7 @@ namespace _ARK_
         public readonly ParallelScheduler subScheduler = new();
         public readonly SequentialScheduler scheduler = new();
         public readonly CronGod crongod = new();
+        public readonly BatchOperator batch_operator = new();
 
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
@@ -206,6 +207,8 @@ namespace _ARK_
 
                 (delegate_current = delegates.onUpdatePlayers)?.Invoke();
                 (delegate_current = delegates.onCronsApplied)?.Invoke();
+
+                batch_operator.Tick();
 
                 delegate_current = null;
 
