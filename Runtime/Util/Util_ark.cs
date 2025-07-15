@@ -27,4 +27,14 @@ public static class Util_ark
     [UnityEditor.MenuItem("CONTEXT/" + nameof(TextMeshProUGUI) + "/" + nameof(AddTraductable))]
     static void AddTraductable(UnityEditor.MenuCommand command) => ((TextMeshProUGUI)command.context).gameObject.AddComponent<Traductable>();
 #endif
+
+    public static IEnumerator<float> ERoutinize(params Action[] actions)
+    {
+        float inv = 1f / actions.Length;
+        for (int i = 0; i < actions.Length; i++)
+        {
+            actions[i]?.Invoke();
+            yield return i * inv;
+        }
+    }
 }
