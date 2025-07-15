@@ -34,7 +34,7 @@ public static class Util_ark
         for (int i = 0; i < actions.Length; i++)
         {
             actions[i]?.Invoke();
-            yield return i * inv;
+            yield return (1 + i) * inv;
         }
     }
 }
