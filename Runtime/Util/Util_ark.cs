@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ public static class Util_ark
     static void AddTraductable(UnityEditor.MenuCommand command) => ((TextMeshProUGUI)command.context).gameObject.AddComponent<Traductable>();
 #endif
 
+    public static IEnumerator<float> ERoutinize(this IEnumerable<Action> actions) => ERoutinize(actions.ToArray());
     public static IEnumerator<float> ERoutinize(params Action[] actions)
     {
         float inv = 1f / actions.Length;
@@ -35,6 +37,18 @@ public static class Util_ark
         {
             actions[i]?.Invoke();
             yield return (1 + i) * inv;
+        }
+    }
+
+    public static IEnumerator<float> ERoutinize(this IEnumerable<IEnumerator<float>> routines) => ERoutinize(routines.ToArray());
+    public static IEnumerator<float> ERoutinize(params IEnumerator<float>[] routines)
+    {
+        float inv = 1f / routines.Length;
+        for (int i = 0; i < routines.Length; i++)
+        {
+            using var routine = routines[i];
+            while (routine.MoveNext())
+                yield return (i + routine.Current) * inv;
         }
     }
 }
