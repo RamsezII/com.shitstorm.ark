@@ -109,20 +109,12 @@ namespace _ARK_
             return true;
         }
 
-        public static void AddListener(Action listener)
+        public static void AddListener(in Action listener)
         {
             if (user_ready)
                 listener();
             else
                 Util.AddAction(ref on_user_ready, listener);
-        }
-
-        public static void UserListener(in Action on_user_ready)
-        {
-            if (user_ready)
-                on_user_ready();
-            else
-                Util.AddAction(ref ArkMachine.on_user_ready, on_user_ready);
         }
 
         static void OnUserReady()
