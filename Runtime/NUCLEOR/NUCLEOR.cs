@@ -16,33 +16,41 @@ namespace _ARK_
                 onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 onUpdate1, onUpdate2, onUpdate3;
 
+            internal bool fixedupdate_flag;
+
             public Action
-                onFixedUpdateMuonRigidbodies,
-                fixedUpdateVehiclePhysics,
+                FixedUpdate_OnMuonRigidbodies,
+                FixedUpdate_OnVehiclePhysics,
+                FixedUpdate_BeforeAnimator,
 
-                onStartOfFrame_once,
-                shell_tick,
-                onNetworkPull,
-                getInputs,
-                onPlayerInputs,
-                onMuonInputs,
-                updateVehicleVisuals,
-                computeCameraCrons,
+                LateFixedUpdate_AfterAnimator,
 
-                onUpdatePlayers,
-                onCronsApplied,
+                Update_OnStartOfFrame_once,
 
-                onLateUpdate,
-                onEndOfFrame_once,
-                onNetworkPush,
+                Update_OnShellTick,
+                Update_OnNetworkPull,
+                Update_GettInputs,
+                Update_OnPlayerInputs,
+                Update_OnMuonInputs,
+                Update_OnVehicleVisuals,
+                Update_OnComputeCameraCrons,
 
-                onApplicationFocus,
-                onApplicationUnfocus,
-                onApplicationQuit;
+                Update_Players,
+                Update_OnCronsApplied,
+                Update_BeforeAnimator,
+
+                LateUpdate_AfterAnimator,
+                LateUpdate_Players,
+                LateUpdate,
+                LateUpdate_onEndOfFrame_once,
+                LateUpdate_OnNetworkPush,
+
+                OnApplicationFocus,
+                OnApplicationUnfocus,
+                OnApplicationQuit;
         }
 
         public static Delegates delegates;
-        public static Action delegate_current;
         public bool is_nucleor_fixedUpdate, is_nucleor_update, is_nucleor_lateUpdate;
 
         public static NUCLEOR instance;
@@ -157,16 +165,17 @@ namespace _ARK_
 
                 is_nucleor_fixedUpdate = true;
 
-                (delegate_current = delegates.onFixedUpdateMuonRigidbodies)?.Invoke();
+                delegates.FixedUpdate_OnMuonRigidbodies?.Invoke();
 
-                (delegate_current = delegates.onFixedUpdate1)?.Invoke();
-                (delegate_current = delegates.onFixedUpdate2)?.Invoke();
-                (delegate_current = delegates.onFixedUpdate3)?.Invoke();
+                delegates.onFixedUpdate1?.Invoke();
+                delegates.onFixedUpdate2?.Invoke();
+                delegates.onFixedUpdate3?.Invoke();
 
-                (delegate_current = delegates.fixedUpdateVehiclePhysics)?.Invoke();
+                delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
 
-                delegate_current = null;
                 is_nucleor_fixedUpdate = false;
+
+                delegates.fixedupdate_flag = true;
             }
         }
 
@@ -188,25 +197,27 @@ namespace _ARK_
 
                 is_nucleor_update = true;
 
-                (delegate_current = delegates.onStartOfFrame_once)?.Invoke();
-                delegates.onStartOfFrame_once = null;
+                delegates.Update_OnStartOfFrame_once?.Invoke();
+                delegates.Update_OnStartOfFrame_once = null;
 
-                (delegate_current = delegates.shell_tick)?.Invoke();
-                (delegate_current = delegates.onNetworkPull)?.Invoke();
-                (delegate_current = delegates.getInputs)?.Invoke();
-                (delegate_current = delegates.onPlayerInputs)?.Invoke();
-                (delegate_current = delegates.onMuonInputs)?.Invoke();
-                (delegate_current = delegates.updateVehicleVisuals)?.Invoke();
-                (delegate_current = delegates.computeCameraCrons)?.Invoke();
+                if (delegates.fixedupdate_flag.PullValue())
+                    delegates.FixedUpdate_BeforeAnimator?.Invoke();
 
-                (delegate_current = delegates.onUpdate1)?.Invoke();
-                (delegate_current = delegates.onUpdate2)?.Invoke();
-                (delegate_current = delegates.onUpdate3)?.Invoke();
+                delegates.Update_OnShellTick?.Invoke();
+                delegates.Update_OnNetworkPull?.Invoke();
+                delegates.Update_GettInputs?.Invoke();
+                delegates.Update_OnPlayerInputs?.Invoke();
+                delegates.Update_OnMuonInputs?.Invoke();
+                delegates.Update_OnVehicleVisuals?.Invoke();
+                delegates.Update_OnComputeCameraCrons?.Invoke();
 
-                (delegate_current = delegates.onUpdatePlayers)?.Invoke();
-                (delegate_current = delegates.onCronsApplied)?.Invoke();
+                delegates.onUpdate1?.Invoke();
+                delegates.onUpdate2?.Invoke();
+                delegates.onUpdate3?.Invoke();
 
-                delegate_current = null;
+                delegates.Update_Players?.Invoke();
+                delegates.Update_OnCronsApplied?.Invoke();
+                delegates.Update_BeforeAnimator?.Invoke();
 
                 subScheduler.Tick();
                 scheduler.Tick();
@@ -225,10 +236,9 @@ namespace _ARK_
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
-                (delegate_current = delegates.onApplicationFocus)?.Invoke();
+                delegates.OnApplicationFocus?.Invoke();
             else
-                (delegate_current = delegates.onApplicationUnfocus)?.Invoke();
-            delegate_current = null;
+                delegates.OnApplicationUnfocus?.Invoke();
         }
 
         private void OnApplicationQuit()
@@ -237,8 +247,7 @@ namespace _ARK_
             OnApplicationFocus(false);
 #endif
 
-            (delegate_current = delegates.onApplicationQuit)?.Invoke();
-            delegate_current = null;
+            delegates.OnApplicationQuit?.Invoke();
 
             applicationQuit = true;
         }
@@ -259,13 +268,15 @@ namespace _ARK_
             {
                 is_nucleor_lateUpdate = true;
 
-                (delegate_current = delegates.onEndOfFrame_once)?.Invoke();
-                delegates.onEndOfFrame_once = null;
+                delegates.LateUpdate_onEndOfFrame_once?.Invoke();
+                delegates.LateUpdate_onEndOfFrame_once = null;
 
-                (delegate_current = delegates.onLateUpdate)?.Invoke();
-                (delegate_current = delegates.onNetworkPush)?.Invoke();
+                delegates.LateUpdate_AfterAnimator?.Invoke();
+                delegates.LateUpdate_Players?.Invoke();
 
-                delegate_current = null;
+                delegates.LateUpdate?.Invoke();
+                delegates.LateUpdate_OnNetworkPush?.Invoke();
+
                 is_nucleor_lateUpdate = false;
             }
         }

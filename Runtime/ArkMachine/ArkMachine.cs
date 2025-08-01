@@ -43,8 +43,8 @@ namespace _ARK_
                 settings.last_user = value;
             });
 
-            NUCLEOR.delegates.onApplicationFocus += () => LoadSettings(false);
-            NUCLEOR.delegates.onApplicationUnfocus += () => SaveSettings(false);
+            NUCLEOR.delegates.OnApplicationFocus += () => LoadSettings(false);
+            NUCLEOR.delegates.OnApplicationUnfocus += () => SaveSettings(false);
         }
 
         //----------------------------------------------------------------------------------------------------------
