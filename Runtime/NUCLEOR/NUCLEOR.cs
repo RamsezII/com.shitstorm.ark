@@ -55,8 +55,8 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
-        public readonly ParallelScheduler subScheduler = new();
-        public readonly SequentialScheduler scheduler = new();
+        public readonly ParallelSequencer subSequencer = new();
+        public readonly SequentialSequencer sequencer = new();
         public readonly CronGod crongod = new();
 
         public Camera camera_UI;
@@ -147,8 +147,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            scheduler.list.Reset();
-            subScheduler.list.Reset();
+            sequencer.list.Reset();
+            subSequencer.list.Reset();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
@@ -219,8 +219,8 @@ namespace _ARK_
                 delegates.Update_OnCronsApplied?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
-                subScheduler.Tick();
-                scheduler.Tick();
+                subSequencer.Tick();
+                sequencer.Tick();
                 crongod.Tick();
 
                 lock (this)
@@ -254,10 +254,10 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(LogSequentialScheduler))]
-        void LogSequentialScheduler() => scheduler.LogStatus();
+        void LogSequentialScheduler() => sequencer.LogStatus();
 
         [ContextMenu(nameof(LogParallelScheduler))]
-        void LogParallelScheduler() => subScheduler.LogStatus();
+        void LogParallelScheduler() => subSequencer.LogStatus();
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -285,8 +285,8 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            subScheduler.Dispose();
-            scheduler.Dispose();
+            subSequencer.Dispose();
+            sequencer.Dispose();
             crongod.Dispose();
 
             if (this == instance)

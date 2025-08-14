@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public abstract class Scheduler : Disposable
+    public abstract class Sequencer : Disposable
     {
         public readonly ListListener<Schedulable> list = new();
 
@@ -63,7 +63,7 @@ namespace _ARK_
         }
     }
 
-    public class SequentialScheduler : Scheduler
+    public class SequentialSequencer : Sequencer
     {
         public readonly ThreadSafe_struct<bool> isTick = new();
 
@@ -130,7 +130,7 @@ namespace _ARK_
         }
     }
 
-    public class ParallelScheduler : Scheduler
+    public class ParallelSequencer : Sequencer
     {
         public override void Tick()
         {
