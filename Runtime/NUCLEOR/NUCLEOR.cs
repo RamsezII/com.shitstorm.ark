@@ -55,8 +55,9 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
-        public readonly ParallelSequencer subSequencer = new();
         public readonly SequentialSequencer sequencer = new();
+        public readonly ParallelSequencer sequencer_parallel = new();
+        public readonly Scheduler scheduler_scaled = new(), scheduler_unscaled = new();
         public readonly CronGod crongod = new();
 
         public Camera camera_UI;
@@ -148,7 +149,7 @@ namespace _ARK_
             DontDestroyOnLoad(transform.root.gameObject);
 
             sequencer.list.Reset();
-            subSequencer.list.Reset();
+            sequencer_parallel.list.Reset();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
@@ -219,7 +220,9 @@ namespace _ARK_
                 delegates.Update_OnCronsApplied?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
-                subSequencer.Tick();
+                scheduler_scaled.Tick(Time.time);
+                scheduler_unscaled.Tick(Time.unscaledTime);
+                sequencer_parallel.Tick();
                 sequencer.Tick();
                 crongod.Tick();
 
@@ -257,7 +260,7 @@ namespace _ARK_
         void LogSequentialScheduler() => sequencer.LogStatus();
 
         [ContextMenu(nameof(LogParallelScheduler))]
-        void LogParallelScheduler() => subSequencer.LogStatus();
+        void LogParallelScheduler() => sequencer_parallel.LogStatus();
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -285,7 +288,7 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            subSequencer.Dispose();
+            sequencer_parallel.Dispose();
             sequencer.Dispose();
             crongod.Dispose();
 

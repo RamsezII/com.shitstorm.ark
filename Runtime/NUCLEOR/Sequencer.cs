@@ -63,7 +63,7 @@ namespace _ARK_
         }
     }
 
-    public class SequentialSequencer : Sequencer
+    public sealed class SequentialSequencer : Sequencer
     {
         public readonly ThreadSafe_struct<bool> isTick = new();
 
@@ -130,7 +130,7 @@ namespace _ARK_
         }
     }
 
-    public class ParallelSequencer : Sequencer
+    public sealed class ParallelSequencer : Sequencer
     {
         public override void Tick()
         {
