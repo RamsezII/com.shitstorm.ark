@@ -1,4 +1,5 @@
 ﻿using _UTIL_;
+using System;
 using System.Text;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace _ARK_
         static float last_ALT;
 
         static readonly object mouse_user = new();
+        public static Action on_double_alt;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -86,7 +88,10 @@ namespace _ARK_
             {
                 float time = Time.unscaledTime;
                 if (time - last_ALT < 0.3f)
-                    usages[(int)UsageGroups.TrueMouse].ToggleElement(mouse_user);
+                    if (on_double_alt != null)
+                        on_double_alt();
+                    else
+                        usages[(int)UsageGroups.TrueMouse].ToggleElement(mouse_user);
                 last_ALT = time;
             }
         }
@@ -96,7 +101,7 @@ namespace _ARK_
             for (int i = 0; i < groups.Length; i++)
                 usages[(int)groups[i]].ToggleElement(user, toggle);
         }
-        
+
         public static void AddUser(object user, params UsageGroups[] groups)
         {
             for (int i = 0; i < groups.Length; i++)
