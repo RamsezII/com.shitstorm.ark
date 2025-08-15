@@ -19,6 +19,7 @@ namespace _ARK_
             internal bool fixedupdate_flag;
 
             public Action
+                FixedUpdate_ragdoll,
                 FixedUpdate_OnMuonRigidbodies,
                 FixedUpdate_OnVehiclePhysics,
                 FixedUpdate_BeforeAnimator,
@@ -167,6 +168,7 @@ namespace _ARK_
                 is_nucleor_fixedUpdate = true;
 
                 delegates.FixedUpdate_OnMuonRigidbodies?.Invoke();
+                delegates.FixedUpdate_ragdoll?.Invoke();
 
                 delegates.onFixedUpdate1?.Invoke();
                 delegates.onFixedUpdate2?.Invoke();
