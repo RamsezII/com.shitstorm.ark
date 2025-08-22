@@ -27,6 +27,7 @@ namespace _ARK_
                 LateFixedUpdate_AfterAnimator,
 
                 Update_OnStartOfFrame_once,
+                Update_OnStartOfFrame,
 
                 Update_OnShellTick,
                 Update_OnNetworkPull,
@@ -202,6 +203,8 @@ namespace _ARK_
 
                 delegates.Update_OnStartOfFrame_once?.Invoke();
                 delegates.Update_OnStartOfFrame_once = null;
+
+                delegates.Update_OnStartOfFrame?.Invoke();
 
                 if (delegates.fixedupdate_flag.PullValue())
                     delegates.FixedUpdate_BeforeAnimator?.Invoke();
