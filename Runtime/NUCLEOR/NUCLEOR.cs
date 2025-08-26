@@ -59,18 +59,16 @@ namespace _ARK_
 
         public readonly SequentialSequencer sequencer = new();
         public readonly ParallelSequencer sequencer_parallel = new();
-        public readonly Scheduler scheduler_scaled = new(), scheduler_unscaled = new();
-        public readonly CronGod crongod = new();
+        public readonly HeartBeat heartbeat_fixed = new(), heartbeat_scaled = new(), heartbeat_unscaled = new();
 
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
-        public static bool applicationQuit;
+        public static bool application_closed;
 
         public int fixedFrameCount;
         [Range(0, .1f)] public float averageDeltatime = 1;
 
-        Action onMainThread;
         public readonly object mainThreadLock = new();
 
         public static bool game_path_is_working_path;
@@ -128,7 +126,7 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
             delegates = default;
-            applicationQuit = false;
+            application_closed = false;
 
             Util.InstantiateOrCreateIfAbsent<NUCLEOR>();
         }
@@ -175,6 +173,8 @@ namespace _ARK_
                 delegates.onFixedUpdate2?.Invoke();
                 delegates.onFixedUpdate3?.Invoke();
 
+                heartbeat_fixed.Tick(Time.fixedDeltaTime);
+
                 delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
 
                 is_nucleor_fixedUpdate = false;
@@ -184,12 +184,6 @@ namespace _ARK_
         }
 
         //----------------------------------------------------------------------------------------------------------
-
-        public void ToMainThread(in Action action)
-        {
-            lock (this)
-                onMainThread += action;
-        }
 
         private void Update()
         {
@@ -225,17 +219,8 @@ namespace _ARK_
                 delegates.Update_OnCronsApplied?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
-                scheduler_scaled.Tick(Time.time);
-                scheduler_unscaled.Tick(Time.unscaledTime);
                 sequencer_parallel.Tick();
                 sequencer.Tick();
-                crongod.Tick();
-
-                lock (this)
-                {
-                    onMainThread?.Invoke();
-                    onMainThread = null;
-                }
 
                 is_nucleor_update = false;
             }
@@ -243,21 +228,25 @@ namespace _ARK_
 
         private void OnApplicationFocus(bool focus)
         {
-            if (focus)
-                delegates.OnApplicationFocus?.Invoke();
-            else
-                delegates.OnApplicationUnfocus?.Invoke();
+            lock (mainThreadLock)
+                if (focus)
+                    delegates.OnApplicationFocus?.Invoke();
+                else
+                    delegates.OnApplicationUnfocus?.Invoke();
         }
 
         private void OnApplicationQuit()
         {
+            lock (mainThreadLock)
+            {
 #if PLATFORM_STANDALONE_LINUX
             OnApplicationFocus(false);
 #endif
 
-            delegates.OnApplicationQuit?.Invoke();
+                delegates.OnApplicationQuit?.Invoke();
 
-            applicationQuit = true;
+                application_closed = true;
+            }
         }
 
 #if UNITY_EDITOR
@@ -282,6 +271,9 @@ namespace _ARK_
                 delegates.LateUpdate_AfterAnimator?.Invoke();
                 delegates.LateUpdate_Players?.Invoke();
 
+                heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
+                heartbeat_scaled.Tick(Time.deltaTime);
+
                 delegates.LateUpdate?.Invoke();
                 delegates.LateUpdate_OnNetworkPush?.Invoke();
 
@@ -295,7 +287,9 @@ namespace _ARK_
         {
             sequencer_parallel.Dispose();
             sequencer.Dispose();
-            crongod.Dispose();
+            heartbeat_fixed.Dispose();
+            heartbeat_unscaled.Dispose();
+            heartbeat_scaled.Dispose();
 
             if (this == instance)
             {
