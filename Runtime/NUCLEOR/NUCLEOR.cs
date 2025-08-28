@@ -291,11 +291,7 @@ namespace _ARK_
             heartbeat_unscaled.Dispose();
             heartbeat_scaled.Dispose();
 
-            if (this == instance)
-            {
-                instance = null;
-                LogManager.ClearLogs();
-            }
+            LogManager.ClearLogs();
 
             if (Directory.Exists(temp_path))
                 Directory.Delete(temp_path, true);
