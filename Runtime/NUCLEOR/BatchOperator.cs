@@ -6,7 +6,7 @@ namespace _ARK_
 {
     public sealed class BatchOperator
     {
-        public readonly List<(object user, Action action)> actions = new();
+        public readonly List<Action> actions = new();
         [SerializeField] int index;
         [SerializeField, Range(0, 1)] float accumulator;
 
@@ -32,12 +32,7 @@ namespace _ARK_
             for (int i = 0; i < count; i++)
             {
                 int index = (start + i) % actions.Count;
-                (object user, Action action) = actions[index];
-
-                if (user == null)
-                    actions.RemoveAt(index);
-                else
-                    actions[index].action();
+                actions[index]();
             }
         }
     }
