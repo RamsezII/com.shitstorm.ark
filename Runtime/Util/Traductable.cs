@@ -105,7 +105,7 @@ namespace _ARK_
             Refresh();
         }
 
-        public void SetTrad(in string text) => SetTrads(new Traductions { english = text, french = text });
+        public void SetTrad(string text) => SetTrads(new Traductions { english = text, french = text });
 
         [Obsolete]
         public void SetTrads_old(in string fr, in string en) => SetTrads(new Traductions { english = en, french = fr });
