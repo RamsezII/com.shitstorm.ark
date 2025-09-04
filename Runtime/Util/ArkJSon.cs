@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace _ARK_
 {
@@ -15,11 +16,13 @@ namespace _ARK_
 
     public abstract class MachineJSon : StaticJSon
     {
-        public override string GetFilePath() => Path.Combine(NUCLEOR.home_path.GetDir(true).FullName, GetFileName());
+        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.home_path.GetDir(true).FullName, type.FullName + json);
+        public override string GetFilePath() => GetFilePath(GetType());
     }
 
     public abstract class UserJSon : StaticJSon
     {
-        public override string GetFilePath() => Path.Combine(ArkMachine.GetUserFolder(true).FullName, GetFileName());
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.GetUserFolder(true).FullName, type.FullName + json);
+        public override string GetFilePath() => GetFilePath(GetType());
     }
 }
