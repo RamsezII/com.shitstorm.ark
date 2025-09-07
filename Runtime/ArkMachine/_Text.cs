@@ -1,5 +1,4 @@
-﻿using _UTIL_;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace _ARK_
@@ -10,7 +9,6 @@ namespace _ARK_
         public class Settings : MachineJSon
         {
             public string last_user;
-            public bool no_smooth;
 
             public Languages language = Application.systemLanguage switch
             {
@@ -36,7 +34,6 @@ namespace _ARK_
 
         public static void ApplySettings()
         {
-            Util_smooths.NO_SMOOTH = settings.no_smooth;
             Traductable.language.Update(settings.language);
         }
     }
