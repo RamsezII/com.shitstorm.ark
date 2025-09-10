@@ -72,7 +72,20 @@ namespace _ARK_
         public readonly object mainThreadLock = new();
 
         public static bool game_path_is_working_path;
-        public static string game_path, working_path, home_path, bundles_texts_path, bundles_archives_path, plugins_path, temp_path, terminal_path;
+
+        public static string
+            game_path,
+            working_path,
+            home_path,
+            bundles_texts_path,
+            bundles_archives_path_auto,
+            bundles_archives_path_universal,
+            bundles_archives_path_windows,
+            bundles_archives_path_linux,
+            plugins_path,
+            temp_path,
+            terminal_path;
+
 #if UNITY_EDITOR
         public static string assets_path;
 #endif
@@ -98,11 +111,16 @@ namespace _ARK_
             plugins_path = Path.Combine(working_path, "Plugins");
             bundles_texts_path = Path.Combine(working_path, "Bundles_texts");
 
-#if UNITY_STANDALONE_WIN
-            bundles_archives_path = Path.Combine(working_path, "Bundles_windows");
-#else
-            bundles_archives_path = Path.Combine(working_path, "Bundles_linux").DOS2UNIX_full();
-#endif
+            bundles_archives_path_universal = Path.Combine(working_path, "Bundles_universal");
+            bundles_archives_path_windows = Path.Combine(working_path, "Bundles_windows");
+            bundles_archives_path_linux = Path.Combine(working_path, "Bundles_linux").DOS2UNIX_full();
+
+            bundles_archives_path_auto = Environment.OSVersion.Platform switch
+            {
+                PlatformID.Win32NT => bundles_archives_path_windows,
+                PlatformID.Unix => bundles_archives_path_linux,
+                _ => bundles_archives_path_universal,
+            };
 
             temp_path = Path.Combine(home_path, "TEMP");
 
@@ -247,7 +265,7 @@ namespace _ARK_
             lock (mainThreadLock)
             {
 #if PLATFORM_STANDALONE_LINUX
-            OnApplicationFocus(false);
+                OnApplicationFocus(false);
 #endif
 
                 delegates.OnApplicationQuit?.Invoke();
