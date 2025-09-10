@@ -72,7 +72,7 @@ namespace _ARK_
         public readonly object mainThreadLock = new();
 
         public static bool game_path_is_working_path;
-        public static string game_path, working_path, home_path, bundles_path, plugins_path, temp_path, terminal_path;
+        public static string game_path, working_path, home_path, bundles_texts_path, bundles_archives_path, plugins_path, temp_path, terminal_path;
 #if UNITY_EDITOR
         public static string assets_path;
 #endif
@@ -96,7 +96,14 @@ namespace _ARK_
             working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
             home_path = Path.Combine(working_path, "Home");
             plugins_path = Path.Combine(working_path, "Plugins");
-            bundles_path = Path.Combine(working_path, "Bundles");
+            bundles_texts_path = Path.Combine(working_path, "Bundles_texts");
+
+#if UNITY_STANDALONE_WIN
+            bundles_archives_path = Path.Combine(working_path, "Bundles_windows");
+#else
+            bundles_archives_path = Path.Combine(working_path, "Bundles_linux").DOS2UNIX_full();
+#endif
+
             temp_path = Path.Combine(home_path, "TEMP");
 
 #if UNITY_EDITOR
