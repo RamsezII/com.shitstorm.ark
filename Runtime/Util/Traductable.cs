@@ -1,6 +1,7 @@
 using _UTIL_;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 
@@ -35,6 +36,17 @@ namespace _ARK_
             Languages.French => string.IsNullOrWhiteSpace(french) ? "[VIDE]" : french,
             _ => string.IsNullOrWhiteSpace(english) ? "[EMPTY]" : english,
         };
+    }
+
+    public static partial class Util_nucleor
+    {
+        public static Traductions ReadTraductions(this BinaryReader reader) => new() { french = reader.ReadString(), english = reader.ReadString(), };
+
+        public static void WriteTraductions(this BinaryWriter writer, in Traductions traductions)
+        {
+            writer.Write(traductions.french);
+            writer.Write(traductions.english);
+        }
     }
 
     public class Traductable : MonoBehaviour
