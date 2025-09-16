@@ -82,7 +82,6 @@ namespace _ARK_
             bundles_archives_path_universal,
             bundles_archives_path_windows,
             bundles_archives_path_linux,
-            plugins_path,
             temp_path,
             terminal_path;
 
@@ -108,7 +107,6 @@ namespace _ARK_
             game_path_is_working_path = Util.Equals_path(working_path, game_path);
             working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
             home_path = Path.Combine(working_path, "Home");
-            plugins_path = Path.Combine(working_path, "Plugins");
             bundles_texts_path = Path.Combine(working_path, "Bundles_texts");
 
             bundles_archives_path_universal = Path.Combine(working_path, "Bundles_universal");
