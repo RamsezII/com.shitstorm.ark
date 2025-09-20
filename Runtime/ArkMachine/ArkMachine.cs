@@ -57,7 +57,7 @@ namespace _ARK_
 
         public static void SetUserName(in string value)
         {
-            user_name.Update(value);
+            user_name.Value = value;
             GetUserFolder(true);
             ScanUsers();
             OnUserReady();
@@ -100,7 +100,7 @@ namespace _ARK_
             old_user.MoveTo(new_user.FullName);
 
             if (old_name.Equals(user_name.Value, StringComparison.Ordinal))
-                user_name.Update(new_name);
+                user_name.Value = new_name;
 
             GetUserFolder(true);
             ScanUsers();

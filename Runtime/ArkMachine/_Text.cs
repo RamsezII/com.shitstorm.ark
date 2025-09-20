@@ -34,7 +34,7 @@ namespace _ARK_
 
         public static void ApplySettings()
         {
-            Traductable.language.Update(settings.language);
+            Traductable.language.Value = settings.language;
         }
     }
 }
