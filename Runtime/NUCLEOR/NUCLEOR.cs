@@ -34,6 +34,7 @@ namespace _ARK_
                 Update_GettInputs,
                 Update_OnPlayerInputs,
                 Update_OnMuonInputs,
+                Update_ControlSeatInputs,
                 Update_OnVehicleVisuals,
                 Update_OnComputeCameraCrons,
 
@@ -231,6 +232,7 @@ namespace _ARK_
                 delegates.Update_GettInputs?.Invoke();
                 delegates.Update_OnPlayerInputs?.Invoke();
                 delegates.Update_OnMuonInputs?.Invoke();
+                delegates.Update_ControlSeatInputs?.Invoke();
                 delegates.Update_OnVehicleVisuals?.Invoke();
                 delegates.Update_OnComputeCameraCrons?.Invoke();
 
