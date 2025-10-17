@@ -22,6 +22,7 @@ namespace _ARK_
                 FixedUpdate_ragdoll,
                 FixedUpdate_OnMuonRigidbodies,
                 FixedUpdate_OnVehiclePhysics,
+                FixedUpdate_Microships,
                 FixedUpdate_BeforeAnimator,
 
                 LateFixedUpdate_AfterAnimator,
@@ -44,6 +45,7 @@ namespace _ARK_
 
                 LateUpdate_AfterAnimator,
                 LateUpdate_Players,
+                LateUpdate_Microships,
                 LateUpdate,
                 LateUpdate_onEndOfFrame_once,
                 LateUpdate_OnNetworkPush,
@@ -200,6 +202,7 @@ namespace _ARK_
                 heartbeat_fixed.Tick(Time.fixedDeltaTime);
 
                 delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
+                delegates.FixedUpdate_Microships?.Invoke();
 
                 is_nucleor_fixedUpdate = false;
 
@@ -295,6 +298,7 @@ namespace _ARK_
 
                 delegates.LateUpdate_AfterAnimator?.Invoke();
                 delegates.LateUpdate_Players?.Invoke();
+                delegates.LateUpdate_Microships?.Invoke();
 
                 heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
                 heartbeat_scaled.Tick(Time.deltaTime);
