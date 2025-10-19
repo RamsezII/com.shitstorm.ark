@@ -7,16 +7,17 @@ namespace _ARK_
 {
     public enum UsageGroups : byte
     {
-        IngameMouse,
+        GameMouse,
         TrueMouse,
         Keyboard,
         Typing,
         BlockPlayers,
+        BlockCamera,
         IMGUI,
         _last_
     }
 
-    public static class UsageManager
+    public static partial class UsageManager
     {
         public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
@@ -53,31 +54,9 @@ namespace _ARK_
             for (int i = 0; i < (int)UsageGroups._last_; i++)
                 usages[i] = new ListListener();
 
-            usages[(int)UsageGroups.IngameMouse].AddListener1(null, _ => UpdateCursorState());
+            usages[(int)UsageGroups.GameMouse].AddListener1(null, _ => UpdateCursorState());
             usages[(int)UsageGroups.TrueMouse].AddListener1(null, _ => UpdateCursorState());
-
-            static void UpdateCursorState()
-            {
-                ListListener
-                    users_ingameMouse = usages[(int)UsageGroups.IngameMouse],
-                    users_trueMouse = usages[(int)UsageGroups.TrueMouse];
-
-                if (users_ingameMouse.IsEmpty && users_trueMouse.IsEmpty)
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
-                else if (users_trueMouse.IsEmpty)
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = false;
-                }
-                else
-                {
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-                }
-            }
+            usages[(int)UsageGroups.BlockCamera].AddListener1(null, _ => UpdateCursorState());
         }
 
         //----------------------------------------------------------------------------------------------------------
