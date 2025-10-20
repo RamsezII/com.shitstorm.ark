@@ -89,6 +89,23 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        public string GetCurrentText() => TryGetCurrentText(out string text) ? text : null;
+        public bool TryGetCurrentText(out string text)
+        {
+            if (this != null)
+            {
+                TextMeshProUGUI tmp = GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmp != null)
+                {
+                    text = tmp.text;
+                    return true;
+                }
+            }
+
+            text = null;
+            return false;
+        }
+
         public IEnumerable<TextMeshProUGUI> AllTmps()
         {
             if (TryGetComponent(out TextMeshProUGUI tmp))
