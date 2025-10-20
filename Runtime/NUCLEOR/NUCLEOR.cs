@@ -1,7 +1,9 @@
 using _UTIL_;
 using System;
 using System.IO;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace _ARK_
 {
@@ -67,6 +69,8 @@ namespace _ARK_
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
+        public readonly OnValue_bool isTyping = new();
+
         public static bool application_closed;
 
         public int fixedFrameCount;
@@ -90,6 +94,9 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         public static string assets_path;
+
+        public bool _IsTyping => isTyping.Value;
+        [ShowProperty(nameof(_IsTyping))] public bool _show_isTyping;
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -232,6 +239,9 @@ namespace _ARK_
 
                 delegates.Update_OnShellTick?.Invoke();
                 delegates.Update_OnNetworkPull?.Invoke();
+
+                isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
+
                 delegates.Update_GettInputs?.Invoke();
                 delegates.Update_OnPlayerInputs?.Invoke();
                 delegates.Update_OnMuonInputs?.Invoke();
