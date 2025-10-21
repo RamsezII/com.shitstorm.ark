@@ -93,7 +93,7 @@ namespace _ARK_
                 usages[i].RemoveElement(user);
         }
 
-        public static bool AreEmpty(params UsageGroups[] groups)
+        public static bool AllAreEmpty(params UsageGroups[] groups)
         {
             for (int i = 0; i < groups.Length; i++)
                 if (!usages[(int)groups[i]].IsEmpty)
