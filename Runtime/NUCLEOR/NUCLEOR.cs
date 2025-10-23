@@ -4,7 +4,6 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace _ARK_
 {
@@ -69,9 +68,6 @@ namespace _ARK_
 
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
-
-        public bool block_cursor;
-        public Vector2 cursor_pos;
 
         public readonly OnValue_bool isTyping = new();
 
@@ -228,11 +224,6 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
-
-                if (block_cursor)
-                    Mouse.current?.WarpCursorPosition(cursor_pos);
-                else
-                    cursor_pos = Mouse.current.position.ReadValue();
 
                 if (CursorManager.instance != null)
                     CursorManager.instance.MoveMouse();
