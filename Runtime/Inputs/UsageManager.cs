@@ -11,8 +11,7 @@ namespace _ARK_
         TrueMouse,
         Keyboard,
         Typing,
-        BlockPlayers,
-        BlockCamera,
+        BlockPlayer,
         IMGUI,
         _last_
     }
@@ -56,7 +55,6 @@ namespace _ARK_
 
             usages[(int)UsageGroups.GameMouse].AddListener1(null, _ => UpdateCursorState());
             usages[(int)UsageGroups.TrueMouse].AddListener1(null, _ => UpdateCursorState());
-            usages[(int)UsageGroups.BlockCamera].AddListener1(null, _ => UpdateCursorState());
         }
 
         //----------------------------------------------------------------------------------------------------------

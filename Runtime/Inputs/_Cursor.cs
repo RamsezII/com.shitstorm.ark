@@ -9,7 +9,6 @@ namespace _ARK_
         {
             TrueMouse,
             GameMouse,
-            BlockCamera,
         }
 
         [Flags]
@@ -17,7 +16,6 @@ namespace _ARK_
         {
             TrueMouse = 1 << Cursors.TrueMouse,
             GameMouse = 1 << Cursors.GameMouse,
-            RotateCamera = 1 << Cursors.BlockCamera,
         }
 
         static void UpdateCursorState()
@@ -29,9 +27,6 @@ namespace _ARK_
 
             if (usages[(int)UsageGroups.GameMouse].IsNotEmpty)
                 mask |= CursorsM.GameMouse;
-
-            if (usages[(int)UsageGroups.BlockCamera].IsNotEmpty)
-                mask |= CursorsM.RotateCamera;
 
             switch (mask)
             {
