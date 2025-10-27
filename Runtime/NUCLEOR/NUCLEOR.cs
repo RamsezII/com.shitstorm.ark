@@ -24,7 +24,7 @@ namespace _ARK_
                 FixedUpdate_ragdoll,
                 FixedUpdate_OnMuonRigidbodies,
                 FixedUpdate_OnVehiclePhysics,
-                FixedUpdate_Microships,
+                FixedUpdate,
                 FixedUpdate_BeforeAnimator,
 
                 LateFixedUpdate_AfterAnimator,
@@ -39,17 +39,21 @@ namespace _ARK_
                 Update_OnMuonInputs,
                 Update_ControlSeatInputs,
                 Update_OnVehicleVisuals,
-                Update_OnComputeCameraCrons,
 
-                Update_Players,
-                Update_OnCronsApplied,
+                Update_Players1,
+                Update_UpdateAndRotateCameras,
+                Update_Crons,
+                Update_Players2,
+                Update,
                 Update_BeforeAnimator,
 
-                LateUpdate_AfterAnimator,
-                LateUpdate_Players,
-                LateUpdate_Microships,
-                LateUpdate,
                 LateUpdate_onEndOfFrame_once,
+                LateUpdate_AfterAnimator,
+                LateUpdate_Players1,
+                LateUpdate_CameraPosition,
+                LateUpdate_CameraFinalApply,
+                LateUpdate_Players2,
+                LateUpdate,
                 LateUpdate_OnNetworkPush,
 
                 OnApplicationFocus,
@@ -206,10 +210,11 @@ namespace _ARK_
                 delegates.onFixedUpdate2?.Invoke();
                 delegates.onFixedUpdate3?.Invoke();
 
+                delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
+
                 heartbeat_fixed.Tick(Time.fixedDeltaTime);
 
-                delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
-                delegates.FixedUpdate_Microships?.Invoke();
+                delegates.FixedUpdate?.Invoke();
 
                 is_nucleor_fixedUpdate = false;
 
@@ -250,14 +255,16 @@ namespace _ARK_
                 delegates.Update_OnMuonInputs?.Invoke();
                 delegates.Update_ControlSeatInputs?.Invoke();
                 delegates.Update_OnVehicleVisuals?.Invoke();
-                delegates.Update_OnComputeCameraCrons?.Invoke();
 
                 delegates.onUpdate1?.Invoke();
                 delegates.onUpdate2?.Invoke();
                 delegates.onUpdate3?.Invoke();
 
-                delegates.Update_Players?.Invoke();
-                delegates.Update_OnCronsApplied?.Invoke();
+                delegates.Update_Players1?.Invoke();
+                delegates.Update_UpdateAndRotateCameras?.Invoke();
+                delegates.Update_Crons?.Invoke();
+                delegates.Update_Players2?.Invoke();
+                delegates.Update?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
                 sequencer_parallel.Tick();
@@ -309,13 +316,14 @@ namespace _ARK_
                 delegates.LateUpdate_onEndOfFrame_once?.Invoke();
                 delegates.LateUpdate_onEndOfFrame_once = null;
 
-                delegates.LateUpdate_AfterAnimator?.Invoke();
-                delegates.LateUpdate_Players?.Invoke();
-                delegates.LateUpdate_Microships?.Invoke();
-
                 heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
                 heartbeat_scaled.Tick(Time.deltaTime);
 
+                delegates.LateUpdate_AfterAnimator?.Invoke();
+                delegates.LateUpdate_Players1?.Invoke();
+                delegates.LateUpdate_CameraPosition?.Invoke();
+                delegates.LateUpdate_CameraFinalApply?.Invoke();
+                delegates.LateUpdate_Players2?.Invoke();
                 delegates.LateUpdate?.Invoke();
                 delegates.LateUpdate_OnNetworkPush?.Invoke();
 
