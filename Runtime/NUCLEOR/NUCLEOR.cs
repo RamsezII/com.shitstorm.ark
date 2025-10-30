@@ -4,6 +4,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SocialPlatforms;
 
 namespace _ARK_
 {
@@ -80,6 +81,10 @@ namespace _ARK_
         public int fixedFrameCount;
         [Range(0, .1f)] public float averageDeltatime = 1;
 
+        public readonly OnValue<float>
+            timeScale_raw = new(1),
+            timeScale_smooth = new(1);
+
         public readonly object mainThreadLock = new();
 
         public static bool game_path_is_working_path;
@@ -101,6 +106,10 @@ namespace _ARK_
 
         public bool _IsTyping => isTyping.Value;
         [ShowProperty(nameof(_IsTyping))] public bool _show_isTyping;
+        public float _TimeScale_raw => timeScale_raw.Value;
+        [ShowProperty(nameof(_TimeScale_raw)), Range(0, 2)] public float _show_timeScale_raw;
+        public float _TimeScale_smooth => timeScale_smooth.Value;
+        [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -191,6 +200,8 @@ namespace _ARK_
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
             canvas2D = transform.Find("Canvas2D").GetComponent<Canvas>();
+
+            timeScale_raw.AddListener(value => Time.timeScale = value);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -229,6 +240,8 @@ namespace _ARK_
             lock (mainThreadLock)
             {
                 averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
+
+                timeScale_smooth.Value = Mathf.MoveTowards(timeScale_smooth._value, timeScale_raw._value, 5f * Time.unscaledDeltaTime);
 
                 if (CursorManager.instance != null)
                     CursorManager.instance.MoveMouse();
@@ -304,6 +317,9 @@ namespace _ARK_
         [ContextMenu(nameof(LogParallelScheduler))]
         void LogParallelScheduler() => sequencer_parallel.LogStatus();
 #endif
+
+        public void ToggleSlowmo() => ToggleSlowmo(timeScale_raw._value == 1);
+        public void ToggleSlowmo(in bool value) => timeScale_raw.Value = value ? .35f : 1;
 
         //----------------------------------------------------------------------------------------------------------
 
