@@ -318,9 +318,6 @@ namespace _ARK_
         void LogParallelScheduler() => sequencer_parallel.LogStatus();
 #endif
 
-        public void ToggleSlowmo() => ToggleSlowmo(timeScale_raw._value == 1);
-        public void ToggleSlowmo(in bool value) => timeScale_raw.Value = value ? .35f : 1;
-
         //----------------------------------------------------------------------------------------------------------
 
         private void LateUpdate()
