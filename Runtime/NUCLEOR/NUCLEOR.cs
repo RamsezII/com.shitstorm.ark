@@ -74,14 +74,14 @@ namespace _ARK_
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
-        public readonly OnValue_bool isTyping = new();
+        public readonly ValueHandler<bool> isTyping = new();
 
         public static bool application_closed;
 
         public int fixedFrameCount;
         [Range(0, .1f)] public float averageDeltatime = 1;
 
-        public readonly OnValue<float>
+        public readonly ValueHandler<float>
             timeScale_raw = new(1),
             timeScale_smooth = new(1);
 

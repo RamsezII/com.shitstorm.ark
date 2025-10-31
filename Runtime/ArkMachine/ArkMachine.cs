@@ -12,7 +12,7 @@ namespace _ARK_
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
 
 
-        public static readonly OnValue<string> user_name = new("default_user");
+        public static readonly ValueHandler<string> user_name = new("default_user");
 
         public static bool user_ready;
         static Action on_user_ready;

@@ -52,7 +52,7 @@ namespace _ARK_
     public class Traductable : MonoBehaviour
     {
         static readonly HashSet<Traductable> instances = new();
-        public static readonly OnValue<Languages> language = new();
+        public static readonly ValueHandler<Languages> language = new();
 
         public Traductions traductions;
 
