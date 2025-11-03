@@ -243,9 +243,6 @@ namespace _ARK_
 
                 timeScale_smooth.Value = Mathf.MoveTowards(timeScale_smooth._value, timeScale_raw._value, 5f * Time.unscaledDeltaTime);
 
-                if (CursorManager.instance != null)
-                    CursorManager.instance.MoveMouse();
-
                 UsageManager.UpdateAltPress();
 
                 is_nucleor_update = true;
