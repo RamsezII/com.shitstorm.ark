@@ -79,7 +79,10 @@ namespace _ARK_
         public static bool application_closed;
 
         public int fixedFrameCount;
-        [Range(0, .1f)] public float averageDeltatime = 1;
+        [Range(0, .1f)]
+        public float
+            averageDeltatime = 1,
+            averageUnscaledDeltatime = 1;
 
         public readonly ValueHandler<float>
             timeScale_raw = new(1),
@@ -239,7 +242,8 @@ namespace _ARK_
         {
             lock (mainThreadLock)
             {
-                averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, .5f);
+                averageUnscaledDeltatime = Mathf.Lerp(averageUnscaledDeltatime, Time.unscaledDeltaTime, 2 * Time.unscaledDeltaTime);
+                averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, 3 * Time.deltaTime);
 
                 timeScale_smooth.Value = Mathf.MoveTowards(timeScale_smooth._value, timeScale_raw._value, 5f * Time.unscaledDeltaTime);
 
