@@ -20,6 +20,7 @@ namespace _ARK_
 
         public static readonly string
             name_app = Application.productName,
+            name_exe = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? name_app + ".exe" : name_app + ".x86_64",
             name_os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? name_windows : name_linux;
 
         public readonly string
@@ -74,15 +75,14 @@ namespace _ARK_
             dpath_resources = Path.Combine(dpath_assets, "Resources").NormalizePath();
 #endif
 
-            ulong buildID = ArkBuildID.LoadBuildID();
-            dname_build_expected = "v" + buildID;
-
             DirectoryInfo pdir = Directory.GetParent(Application.dataPath);
             dname_build_actual = pdir.Name;
             dpath_app_actual = pdir.FullName.NormalizePath();
 
             if (Application.isEditor)
             {
+                dname_build_expected = dname_build_actual;
+
                 dpath_terminal = dname_build_actual + "/" + dname_home;
 
                 dpath_app_expected = dpath_app_actual;
@@ -106,9 +106,9 @@ namespace _ARK_
             }
             else
             {
-                bool mismatch = dname_build_actual.Equals(dname_build_expected);
+                dname_build_expected = Path.Combine(pdir.FullName, name_exe).LastFileWriteUtcToFolderName();
 
-                if (mismatch || pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
+                if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
                 {
                     string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_build_expected).NormalizePath();
                     error = $"mismatch in expected installation path: \"{dpath_app_actual}\" (expected something like: \"{dpath_rel_app_expected}\").";
