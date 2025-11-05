@@ -15,51 +15,68 @@ namespace _ARK_
 
         public readonly string
             fpath_buildID;
-#endif
-
-        public readonly ulong buildID;
-
-        public readonly string error;
 
         public static readonly Lazy<ArkBuildID> instance = new(() => new(null));
+
+        const string button_prefixe = "Assets/" + nameof(_ARK_) + "/";
 
         //----------------------------------------------------------------------------------------------------------
 
         ArkBuildID(object o)
         {
-            error = null;
-            buildID = 0;
-
-#if UNITY_EDITOR
             fpath_buildID = Path.Combine(ArkPaths.instance.Value.dpath_resources, fname_buildID);
-#endif
-
-            TextAsset text = Resources.Load<TextAsset>(rname_buildID);
-
-            if (text != null)
-            {
-                buildID = ulong.Parse(text.text);
-                Debug.Log($"loaded {nameof(buildID)}: {buildID}");
-            }
-#if UNITY_EDITOR
-            else if (Application.isEditor)
-            {
-                File.WriteAllText(fpath_buildID, buildID.ToString());
-                Debug.Log($"saved {nameof(buildID)}: {buildID}");
-            }
-#endif
-            else
-                error = $"could not load {nameof(buildID)}";
-
-            if (error != null)
-                Debug.LogError(error);
         }
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static string GetBuildName()
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem(button_prefixe + nameof(LoadBuildID))]
+#endif
+        public static ulong LoadBuildID() => TryLoadBuildID(out ulong buildID) ? buildID : 0;
+        public static bool TryLoadBuildID(out ulong buildID)
         {
-            return Application.productName + "_" + instance.Value.buildID;
+            TextAsset text = Resources.Load<TextAsset>(rname_buildID);
+            if (text != null)
+            {
+                buildID = ulong.Parse(text.text);
+                Debug.Log($"{typeof(ArkBuildID)} LOAD: {buildID}");
+                return true;
+            }
+
+#if UNITY_EDITOR
+            if (Application.isEditor)
+                buildID = IncrementBuildID();
+            else
+#endif
+                buildID = 0;
+
+            return false;
         }
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem(button_prefixe + nameof(ResetBuildID))]
+        public static void ResetBuildID()
+        {
+            if (File.Exists(instance.Value.fpath_buildID))
+                File.Delete(instance.Value.fpath_buildID);
+            IncrementBuildID();
+        }
+
+        [UnityEditor.MenuItem(button_prefixe + nameof(IncrementBuildID))]
+        public static ulong IncrementBuildID()
+        {
+            ulong buildID = 1 + LoadBuildID();
+            if (!Directory.Exists(ArkPaths.instance.Value.dpath_resources))
+                Directory.CreateDirectory(ArkPaths.instance.Value.dpath_resources);
+            File.WriteAllText(instance.Value.fpath_buildID, buildID.ToString());
+            Debug.Log($"{typeof(ArkBuildID)} NEW VALUE: {buildID}");
+            UnityEditor.AssetDatabase.Refresh();
+            return buildID;
+        }
+
+        [UnityEditor.MenuItem(button_prefixe + nameof(OpenBuildID))]
+        public static void OpenBuildID() => Application.OpenURL(instance.Value.fpath_buildID);
+#endif
     }
 }
