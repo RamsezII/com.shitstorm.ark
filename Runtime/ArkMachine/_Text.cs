@@ -6,7 +6,7 @@ namespace _ARK_
     partial class ArkMachine
     {
         [Serializable]
-        public class Settings : MachineJSon
+        public class Settings : HomeJSon
         {
             public string last_user;
 

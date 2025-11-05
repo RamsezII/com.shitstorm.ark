@@ -7,7 +7,7 @@ namespace _ARK_
 {
     public static partial class ArkMachine
     {
-        public static DirectoryInfo ForceUsersFolder() => Path.Combine(NUCLEOR.home_path, "Users").GetDir(true);
+        public static DirectoryInfo ForceUsersFolder() => Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users).GetDir(true);
         public static DirectoryInfo GetUserFolder(in bool force) => GetUserFolder(user_name.Value, force);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
 
@@ -21,8 +21,8 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnBeforeSceneLoad()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnResetStatics()
         {
             user_name.Reset();
             user_ready = false;
@@ -30,8 +30,6 @@ namespace _ARK_
             users.Reset();
             ScanUsers();
         }
-
-        //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()

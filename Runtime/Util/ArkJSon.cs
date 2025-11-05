@@ -14,9 +14,9 @@ namespace _ARK_
         }
     }
 
-    public abstract class MachineJSon : StaticJSon
+    public abstract class HomeJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.home_path.GetDir(true).FullName, type.FullName + json);
+        public static string GetFilePath(in Type type) => Path.Combine(ArkPaths.instance.Value.dpath_home.GetDir(true).FullName, type.FullName + json);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 

@@ -8,9 +8,6 @@ using UnityEngine.SocialPlatforms;
 
 namespace _ARK_
 {
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public sealed partial class NUCLEOR : MonoBehaviour
     {
         public struct Delegates
@@ -90,23 +87,7 @@ namespace _ARK_
 
         public readonly object mainThreadLock = new();
 
-        public static bool game_path_is_working_path;
-
-        public static string
-            game_path,
-            working_path,
-            home_path,
-            bundles_texts_path,
-            bundles_archives_path_auto,
-            bundles_archives_path_universal,
-            bundles_archives_path_windows,
-            bundles_archives_path_linux,
-            temp_path,
-            terminal_path;
-
 #if UNITY_EDITOR
-        public static string assets_path;
-
         public bool _IsTyping => isTyping.Value;
         [ShowProperty(nameof(_IsTyping))] public bool _show_isTyping;
         public float _TimeScale_raw => timeScale_raw.Value;
@@ -114,56 +95,6 @@ namespace _ARK_
         public float _TimeScale_smooth => timeScale_smooth.Value;
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
 #endif
-
-        //----------------------------------------------------------------------------------------------------------
-
-        static NUCLEOR()
-        {
-            Debug.Log($"{typeof(NUCLEOR)} static constructor");
-            InitPaths();
-        }
-
-#if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(InitPaths))]
-#endif
-        static void InitPaths()
-        {
-            game_path = Directory.GetParent(Application.dataPath).FullName;
-            working_path = Directory.GetCurrentDirectory();
-            game_path_is_working_path = Util.Equals_path(working_path, game_path);
-            working_path = game_path_is_working_path ? game_path : Directory.GetParent(game_path).FullName;
-            home_path = Path.Combine(working_path, "Home");
-            bundles_texts_path = Path.Combine(working_path, "Bundles_texts");
-
-            bundles_archives_path_universal = Path.Combine(working_path, "Bundles_universal");
-            bundles_archives_path_windows = Path.Combine(working_path, "Bundles_windows");
-            bundles_archives_path_linux = Path.Combine(working_path, "Bundles_linux").DOS2UNIX_full();
-
-            bundles_archives_path_auto = Environment.OSVersion.Platform switch
-            {
-                PlatformID.Win32NT => bundles_archives_path_windows,
-                PlatformID.Unix => bundles_archives_path_linux,
-                _ => bundles_archives_path_universal,
-            };
-
-            temp_path = Path.Combine(home_path, "TEMP");
-
-#if UNITY_EDITOR
-            assets_path = Directory.GetParent(Application.streamingAssetsPath).FullName.DOS2UNIX_full();
-#endif
-
-            if (Directory.Exists(temp_path))
-                Directory.Delete(temp_path, true);
-
-            if (game_path_is_working_path)
-                terminal_path = Path.GetFileNameWithoutExtension(game_path);
-            else
-            {
-                string root_dir = Directory.GetCurrentDirectory();
-                terminal_path = Path.GetRelativePath(root_dir, game_path);
-            }
-            Debug.Log($"{nameof(game_path_is_working_path)}: {game_path_is_working_path}, {nameof(terminal_path)}: {terminal_path}");
-        }
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -357,8 +288,8 @@ namespace _ARK_
 
             LogManager.ClearLogs();
 
-            if (Directory.Exists(temp_path))
-                Directory.Delete(temp_path, true);
+            if (Directory.Exists(ArkPaths.instance.Value.dpath_temp))
+                Directory.Delete(ArkPaths.instance.Value.dpath_temp, true);
         }
     }
 }
