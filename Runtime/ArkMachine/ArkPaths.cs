@@ -118,7 +118,7 @@ namespace _ARK_
                 }
                 else
                 {
-                    dpath_root = pdir.Parent.Parent.Parent.Parent.FullName;
+                    dpath_root = pdir.Parent.Parent.Parent.FullName;
                     dpath_app_expected = Path.Combine(dpath_root, dname_builds, name_os, dname_build).NormalizePath();
 
                     if (!Util.IsSamePath_full(dpath_app_expected, dpath_app_actual))
