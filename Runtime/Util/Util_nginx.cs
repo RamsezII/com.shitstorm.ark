@@ -10,7 +10,7 @@ namespace _ARK_
         public string type;
         public string mtime;
         public long size;
-        public DateTimeOffset MTimeAsUtc => mtime.ParseNginxMtimeToUtc();
+        public DateTimeOffset MTimeAsDate => mtime.ParseNginxMtimeToUtc();
     }
 
     [Serializable]

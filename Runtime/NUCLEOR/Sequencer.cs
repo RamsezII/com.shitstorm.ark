@@ -11,7 +11,7 @@ namespace _ARK_
 {
     public abstract class Sequencer : Disposable
     {
-        public readonly ListListener<Schedulable> list = new();
+        public readonly ListListener<Schedulable> schedulables = new();
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ namespace _ARK_
         public string GetStatus()
         {
             StringBuilder log = new();
-            log.AppendLine($"{this} -> {list._collection.Count} schedulables");
-            lock (list)
-                for (int i = 0; i < list._collection.Count; i++)
-                    if (list._collection[i] is Schedulable schedulable)
+            log.AppendLine($"{this} -> {schedulables._collection.Count} schedulables");
+            lock (schedulables)
+                for (int i = 0; i < schedulables._collection.Count; i++)
+                    if (schedulables._collection[i] is Schedulable schedulable)
                         log.AppendLine($"{i}. {schedulable.GetType().FullName}.{nameof(schedulable.description)}:\n{schedulable.description}");
                     else
-                        log.AppendLine($"{i}. {list._collection[i].GetType().FullName}");
+                        log.AppendLine($"{i}. {schedulables._collection[i].GetType().FullName}");
             return log.TroncatedForLog();
         }
 
@@ -38,11 +38,11 @@ namespace _ARK_
 
         public T AddSchedulable<T>(in T schedulable) where T : Schedulable
         {
-            lock (list)
-                if (list._collection.Contains(schedulable))
+            lock (schedulables)
+                if (schedulables._collection.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
-                    list.AddElement(schedulable);
+                    schedulables.AddElement(schedulable);
             return schedulable;
         }
 
@@ -53,12 +53,11 @@ namespace _ARK_
         protected override void OnDispose()
         {
             base.OnDispose();
-            lock (list)
+            lock (schedulables)
             {
-                for (int i = 0; i < list._collection.Count; i++)
-                    list._collection[i].Dispose();
-
-                list.Clear();
+                for (int i = 0; i < schedulables._collection.Count; i++)
+                    schedulables._collection[i].Dispose();
+                schedulables.Clear();
             }
         }
     }
@@ -77,24 +76,24 @@ namespace _ARK_
 
         public T InsertSchedulable<T>(in T schedulable) where T : Schedulable
         {
-            lock (list)
-                if (list._collection.Contains(schedulable))
+            lock (schedulables)
+                if (schedulables._collection.Contains(schedulable))
                     throw new Exception($"{this}.{nameof(AddRoutine)}({nameof(schedulable)}) -> {schedulable} is already scheduled");
                 else
-                    list.InsertElementAt(0, schedulable);
+                    schedulables.InsertElementAt(0, schedulable);
             return schedulable;
         }
 
         public override void Tick()
         {
-            lock (list)
-                if (list._collection.Count > 0)
+            lock (schedulables)
+                if (schedulables._collection.Count > 0)
                 {
-                    Schedulable schedulable = list._collection[0];
+                    Schedulable schedulable = schedulables._collection[0];
                     if (schedulable == null)
                     {
-                        list.RemoveElementAt(0);
-                        Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(list)}[0] was null");
+                        schedulables.RemoveElementAt(0);
+                        Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulables)}[0] was null");
                     }
                     else
                     {
@@ -114,12 +113,12 @@ namespace _ARK_
                                 schedulable.OnTick();
 
                                 if (schedulable._disposed)
-                                    list.RemoveElement(schedulable);
+                                    schedulables.RemoveElement(schedulable);
                             }
                         }
                         catch (Exception e)
                         {
-                            list.RemoveElement(schedulable);
+                            schedulables.RemoveElement(schedulable);
                             Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{schedulable.description}");
                             Debug.LogException(e);
                         }
@@ -134,11 +133,11 @@ namespace _ARK_
     {
         public override void Tick()
         {
-            lock (list)
-                if (list._collection.Count > 0)
-                    for (int i = 0; i < list._collection.Count; i++)
+            lock (schedulables)
+                if (schedulables._collection.Count > 0)
+                    for (int i = 0; i < schedulables._collection.Count; i++)
                     {
-                        Schedulable schedulable = list._collection[i];
+                        Schedulable schedulable = schedulables._collection[i];
 
                         try
                         {
@@ -154,12 +153,12 @@ namespace _ARK_
                                 schedulable.OnTick();
 
                                 if (schedulable._disposed)
-                                    list.RemoveElementAt(i--);
+                                    schedulables.RemoveElementAt(i--);
                             }
                         }
                         catch (Exception e)
                         {
-                            list.RemoveElementAt(i--);
+                            schedulables.RemoveElementAt(i--);
                             Debug.LogError($"{this}.{nameof(Tick)}() -> {nameof(schedulable)}:\n{schedulable.description}");
                             Debug.LogException(e);
                         }

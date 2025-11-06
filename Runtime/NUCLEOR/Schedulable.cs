@@ -1,7 +1,6 @@
 ﻿using _UTIL_;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,11 +27,11 @@ namespace _ARK_
             this.callerName = callerName;
 
             StringBuilder log = new();
-            StackTrace stackTrace = new();
+            System.Diagnostics.StackTrace stackTrace = new();
 
             for (int i = stackTrace.FrameCount - 1; i > 0; i--)
             {
-                StackFrame stackFrame = stackTrace.GetFrame(i);
+                System.Diagnostics.StackFrame stackFrame = stackTrace.GetFrame(i);
                 var method = stackFrame.GetMethod();
                 log.AppendLine($"{new string(' ', 2 * (stackTrace.FrameCount - i))}{method.DeclaringType?.FullName ?? "¤"}.{method.Name}");
             }
@@ -57,8 +56,8 @@ namespace _ARK_
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
-                UnityEngine.Debug.LogError($"{this}.{nameof(OnSchedule)}() -> {nameof(description)}:\n{description}");
+                Debug.LogException(e);
+                Debug.LogError($"{this}.{nameof(OnSchedule)}() -> {nameof(description)}:\n{description}");
                 Dispose();
             }
         }
@@ -97,8 +96,8 @@ namespace _ARK_
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
-                UnityEngine.Debug.LogError($"{this}.{nameof(OnTick)}() -> {nameof(description)}:\n{description}");
+                Debug.LogException(e);
+                Debug.LogError($"{this}.{nameof(OnTick)}() -> {nameof(description)}:\n{description}");
                 Dispose();
             }
         }
@@ -119,7 +118,7 @@ namespace _ARK_
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+                Debug.LogException(e);
             }
         }
     }

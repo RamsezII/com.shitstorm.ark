@@ -128,8 +128,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            sequencer.list.Reset();
-            sequencer_parallel.list.Reset();
+            sequencer.schedulables.Reset();
+            sequencer_parallel.schedulables.Reset();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();

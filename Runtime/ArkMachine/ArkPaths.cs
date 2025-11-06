@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace _ARK_
@@ -20,8 +19,8 @@ namespace _ARK_
 
         public static readonly string
             name_app = Application.productName,
-            name_exe = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? name_app + ".exe" : name_app + ".x86_64",
-            name_os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? name_windows : name_linux;
+            name_exe = Util.is_app_windows ? name_app + ".exe" : name_app + ".x86_64",
+            name_os = Util.is_app_windows ? name_windows : name_linux;
 
         public readonly string
             dname_build,
@@ -106,7 +105,7 @@ namespace _ARK_
             }
             else
             {
-                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParseIntoLastFileWriteUtc(dname_build[..^Util_writetimes.folder_time_format.Length], out utc_build))
+                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParsePathNameIntoDate(dname_build[..^Util_writetimes.folder_time_format.Length], out utc_build))
                     utc_build = default;
 
                 if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)

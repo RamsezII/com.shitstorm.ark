@@ -53,8 +53,11 @@ public static class Util_writetimes
     public static string LastFileWriteUtcToFolderName(this DateTimeOffset utc) => utc.ToUniversalTime().ToString(folder_time_format, CultureInfo.InvariantCulture);
     public static string UtcNowToFolderName() => LastFileWriteUtcToFolderName(DateTimeOffset.UtcNow);
 
-    public static bool TryParseIntoLastFileWriteUtc(this string input, out DateTimeOffset utc)
+    public static bool TryParsePathNameIntoDate(this string input, out DateTimeOffset utc)
     {
+        if (input.Length > folder_time_format.Length)
+            input = input[..^folder_time_format.Length];
+
         return DateTimeOffset.TryParseExact(
             input,
             folder_time_format,
