@@ -23,6 +23,8 @@ public static class Util_writetimes
         );
     }
 
+    public static DateTimeOffset ParseNginxMtimeToUtc(this string rfc1123) => TryParseNginxMtimeToUtc(rfc1123, out DateTimeOffset utc) ? utc : default;
+
     /// <summary>
     /// Format UTC -> mtime style (RFC1123 GMT)
     /// ex: "Wed, 05 Nov 2025 22:04:34 GMT"
@@ -49,6 +51,7 @@ public static class Util_writetimes
     /// Formate une date UTC en nom de dossier du type 20251105_220434.
     /// </summary>
     public static string LastFileWriteUtcToFolderName(this DateTimeOffset utc) => utc.ToUniversalTime().ToString(folder_time_format, CultureInfo.InvariantCulture);
+    public static string UtcNowToFolderName() => LastFileWriteUtcToFolderName(DateTimeOffset.UtcNow);
 
     public static bool TryParseIntoLastFileWriteUtc(this string input, out DateTimeOffset utc)
     {

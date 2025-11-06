@@ -46,7 +46,7 @@ namespace _ARK_
             dpath_app_expected,
             dpath_app_actual;
 
-        public readonly DateTimeOffset date_build;
+        public readonly DateTimeOffset utc_build;
 
 #if UNITY_EDITOR
         public readonly string
@@ -82,7 +82,7 @@ namespace _ARK_
 
             if (Application.isEditor)
             {
-                date_build = DateTimeOffset.UtcNow;
+                utc_build = DateTimeOffset.UtcNow;
 
                 dpath_app_expected = dpath_app_actual;
                 dpath_terminal = dname_build + "/" + dname_home;
@@ -106,8 +106,8 @@ namespace _ARK_
             }
             else
             {
-                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParseIntoLastFileWriteUtc(dname_build[..^Util_writetimes.folder_time_format.Length], out date_build))
-                    date_build = default;
+                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParseIntoLastFileWriteUtc(dname_build[..^Util_writetimes.folder_time_format.Length], out utc_build))
+                    utc_build = default;
 
                 if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
                 {
