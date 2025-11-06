@@ -24,8 +24,7 @@ namespace _ARK_
             name_os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? name_windows : name_linux;
 
         public readonly string
-            dname_build_expected,
-            dname_build_actual,
+            dname_build,
             dpath_root,
             dpath_home,
             dpath_terminal,
@@ -46,6 +45,8 @@ namespace _ARK_
 
             dpath_app_expected,
             dpath_app_actual;
+
+        public readonly DateTimeOffset date_build;
 
 #if UNITY_EDITOR
         public readonly string
@@ -76,16 +77,15 @@ namespace _ARK_
 #endif
 
             DirectoryInfo pdir = Directory.GetParent(Application.dataPath);
-            dname_build_actual = pdir.Name;
+            dname_build = pdir.Name;
             dpath_app_actual = pdir.FullName.NormalizePath();
 
             if (Application.isEditor)
             {
-                dname_build_expected = dname_build_actual;
-
-                dpath_terminal = dname_build_actual + "/" + dname_home;
+                date_build = DateTimeOffset.UtcNow;
 
                 dpath_app_expected = dpath_app_actual;
+                dpath_terminal = dname_build + "/" + dname_home;
 
                 dpath_home = Util.CombinePaths(dpath_app_actual, dname_home);
                 dpath_temp = Util.CombinePaths(dpath_home, dname_temp);
@@ -106,11 +106,12 @@ namespace _ARK_
             }
             else
             {
-                dname_build_expected = Path.Combine(pdir.FullName, name_exe).LastFileWriteUtcToFolderName();
+                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParseIntoLastFileWriteUtc(dname_build[..^Util_writetimes.folder_time_format.Length], out date_build))
+                    date_build = default;
 
                 if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
                 {
-                    string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_build_expected).NormalizePath();
+                    string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_build).NormalizePath();
                     error = $"mismatch in expected installation path: \"{dpath_app_actual}\" (expected something like: \"{dpath_rel_app_expected}\").";
                     dpath_root = dpath_app_actual;
                     dpath_app_expected = null;
@@ -118,7 +119,7 @@ namespace _ARK_
                 else
                 {
                     dpath_root = pdir.Parent.Parent.Parent.Parent.FullName;
-                    dpath_app_expected = Path.Combine(dpath_root, dname_builds, name_os, dname_build_actual).NormalizePath();
+                    dpath_app_expected = Path.Combine(dpath_root, dname_builds, name_os, dname_build).NormalizePath();
 
                     if (!Util.IsSamePath_full(dpath_app_expected, dpath_app_actual))
                         error = $"wrong installation path (expected \"{dpath_app_expected}\", got \"{dpath_app_actual}\")";
@@ -140,7 +141,7 @@ namespace _ARK_
                 dpath_bundles_universal = Util.CombinePaths(dpath_bundles, dname_universal);
                 dpath_bundles_os = Util.is_windows ? dpath_bundles_windows : dpath_bundles_linux;
 
-                dpath_terminal = $"{dpath_root}/{dname_home}";
+                dpath_terminal = $"{name_app}/{dname_home}";
 
                 dpath_home.GetDir(true);
                 dpath_builds_os.GetDir(true);
