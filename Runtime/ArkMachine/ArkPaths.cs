@@ -128,7 +128,7 @@ namespace _ARK_
                 dpath_home = Util.CombinePaths(dpath_root, dname_home);
                 dpath_temp = Util.CombinePaths(dpath_home, dname_temp);
 
-                dpath_builds = Path.Combine(dpath_home, dname_builds).NormalizePath();
+                dpath_builds = Path.Combine(dpath_root, dname_builds).NormalizePath();
                 dpath_builds_windows = Path.Combine(dpath_builds, name_windows).NormalizePath();
                 dpath_builds_linux = Path.Combine(dpath_builds, name_linux).NormalizePath();
                 dpath_builds_universal = Path.Combine(dpath_builds, dname_universal).NormalizePath();
