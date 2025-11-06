@@ -56,7 +56,7 @@ public static class Util_writetimes
     public static bool TryParsePathNameIntoDate(this string input, out DateTimeOffset utc)
     {
         if (input.Length > folder_time_format.Length)
-            input = input[..^folder_time_format.Length];
+            input = input[^folder_time_format.Length..];
 
         return DateTimeOffset.TryParseExact(
             input,
