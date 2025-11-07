@@ -51,17 +51,24 @@ public static class Util_writetimes
     public static string DateToFolderName(this DateTimeOffset date) => date.ToUniversalTime().ToString(folder_time_format, CultureInfo.InvariantCulture);
     public static string DateNowToFolderName() => DateToFolderName(DateTimeOffset.UtcNow);
 
-    public static bool TryParseIntoDate(this string input, out DateTimeOffset date)
+    public static bool TryParseIntoDate(this string input, out string date_segment, out DateTimeOffset date)
     {
         if (input.Length > folder_time_format.Length)
-            input = input[^folder_time_format.Length..];
+            date_segment = input[^folder_time_format.Length..];
+        else
+            date_segment = input;
 
-        return DateTimeOffset.TryParseExact(
-            input,
+        if (DateTimeOffset.TryParseExact(
+            date_segment,
             folder_time_format,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
             out date
-        );
+        ))
+            return true;
+
+        date_segment = null;
+        date = default;
+        return false;
     }
 }

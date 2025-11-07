@@ -50,11 +50,12 @@ namespace _ARK_
         {
             public readonly DirectoryInfo dir;
             public readonly DateTimeOffset date;
+            public readonly string date_str;
             public readonly bool ok, is_windows;
             public LocalBuildInfos(in DirectoryInfo dir, in bool is_windows)
             {
                 this.dir = dir;
-                ok = dir.Name.TryParseIntoDate(out date);
+                ok = dir.Name.TryParseIntoDate(out date_str, out date);
                 this.is_windows = is_windows;
             }
         }
