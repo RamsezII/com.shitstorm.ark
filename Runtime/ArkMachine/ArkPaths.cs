@@ -45,7 +45,23 @@ namespace _ARK_
             dpath_app_expected,
             dpath_app_actual;
 
-        public readonly DateTimeOffset utc_build;
+        [Serializable]
+        public readonly struct LocalBuildInfos
+        {
+            public readonly DirectoryInfo dir;
+            public readonly DateTimeOffset date;
+            public readonly bool ok, is_windows;
+            public LocalBuildInfos(in DirectoryInfo dir, in bool is_windows)
+            {
+                this.dir = dir;
+                ok = dir.Name.TryParseIntoDate(out date);
+                this.is_windows = is_windows;
+            }
+        }
+
+        public readonly int current_build_index;
+        public readonly LocalBuildInfos current_build;
+        public readonly LocalBuildInfos[] local_builds;
 
 #if UNITY_EDITOR
         public readonly string
@@ -81,8 +97,6 @@ namespace _ARK_
 
             if (Application.isEditor)
             {
-                utc_build = DateTimeOffset.UtcNow;
-
                 dpath_app_expected = dpath_app_actual;
                 dpath_terminal = dname_build + "/" + dname_home;
 
@@ -90,7 +104,7 @@ namespace _ARK_
                 dpath_temp = Util.CombinePaths(dpath_home, dname_temp);
                 dpath_root = Path.Combine(dpath_home, name_app).NormalizePath();
 
-                dpath_builds = Path.Combine(dpath_root, dname_builds).NormalizePath();
+                dpath_builds = Path.Combine(dpath_home, name_app, dname_builds).NormalizePath();
                 dpath_builds_windows = Path.Combine(dpath_builds, name_windows).NormalizePath();
                 dpath_builds_linux = Path.Combine(dpath_builds, name_linux).NormalizePath();
                 dpath_builds_universal = Path.Combine(dpath_builds, dname_universal).NormalizePath();
@@ -105,9 +119,6 @@ namespace _ARK_
             }
             else
             {
-                if (dname_build.Length < Util_writetimes.folder_time_format.Length || !Util_writetimes.TryParsePathNameIntoDate(dname_build[..^Util_writetimes.folder_time_format.Length], out utc_build))
-                    utc_build = default;
-
                 if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
                 {
                     string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_build).NormalizePath();
@@ -142,14 +153,45 @@ namespace _ARK_
 
                 dpath_terminal = $"{name_app}/{dname_home}";
 
-                dpath_home.GetDir(true);
-                dpath_builds_os.GetDir(true);
-                dpath_bundles_texts.GetDir(true);
-                dpath_bundles_os.GetDir(true);
-
                 if (error != null)
                     Debug.LogError(error);
             }
+
+            if (Application.isEditor || error == null)
+            {
+                dpath_home.GetDir(true);
+                dpath_builds_linux.GetDir(true);
+                dpath_builds_windows.GetDir(true);
+                dpath_bundles_texts.GetDir(true);
+                dpath_bundles_linux.GetDir(true);
+                dpath_bundles_windows.GetDir(true);
+            }
+
+            string[] dbuilds_lin = Directory.GetDirectories(dpath_builds_linux, "*", SearchOption.TopDirectoryOnly);
+            string[] dbuilds_win = Directory.GetDirectories(dpath_builds_windows, "*", SearchOption.TopDirectoryOnly);
+
+            int dbuilds_count = dbuilds_lin.Length + dbuilds_win.Length;
+            local_builds = new LocalBuildInfos[dbuilds_count];
+
+            for (int i = 0; i < dbuilds_lin.Length; ++i)
+                local_builds[i] = new(dbuilds_lin[i].GetDir(false), false);
+
+            for (int i = 0; i < dbuilds_win.Length; ++i)
+                local_builds[i + dbuilds_lin.Length] = new(dbuilds_win[i].GetDir(false), true);
+
+            Array.Sort(local_builds, (a, b) => b.date.CompareTo(a.date));
+
+            current_build_index = 0;
+            current_build = default;
+
+            if (!Application.isEditor)
+                for (int i = 0; i < dbuilds_count; ++i)
+                    if (local_builds[i].dir.Name == dname_build)
+                    {
+                        current_build_index = i;
+                        current_build = local_builds[i];
+                        break;
+                    }
         }
     }
 }
