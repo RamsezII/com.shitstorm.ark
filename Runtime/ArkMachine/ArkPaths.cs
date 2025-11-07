@@ -24,6 +24,7 @@ namespace _ARK_
 
         public readonly string
             dname_build,
+            dpath_parent,
             dpath_root,
             dpath_home,
             dpath_terminal,
@@ -157,6 +158,8 @@ namespace _ARK_
                 if (error != null)
                     Debug.LogError(error);
             }
+
+            dpath_parent = Directory.GetParent(dpath_root).FullName.NormalizePath();
 
             if (Application.isEditor || error == null)
             {
