@@ -46,25 +46,6 @@ namespace _ARK_
             dpath_app_expected,
             dpath_app_actual;
 
-        [Serializable]
-        public readonly struct LocalBuildInfos
-        {
-            public readonly DirectoryInfo dir;
-            public readonly DateTimeOffset date;
-            public readonly string date_str;
-            public readonly bool ok, is_windows;
-            public LocalBuildInfos(in DirectoryInfo dir, in bool is_windows)
-            {
-                this.dir = dir;
-                ok = dir.Name.TryParseIntoDate(out date_str, out date);
-                this.is_windows = is_windows;
-            }
-        }
-
-        public readonly int current_build_index;
-        public readonly LocalBuildInfos current_build;
-        public readonly LocalBuildInfos[] local_builds;
-
 #if UNITY_EDITOR
         public readonly string
             dpath_assets,
@@ -170,32 +151,6 @@ namespace _ARK_
                 dpath_bundles_linux.GetDir(true);
                 dpath_bundles_windows.GetDir(true);
             }
-
-            string[] dbuilds_lin = Directory.GetDirectories(dpath_builds_linux, "*", SearchOption.TopDirectoryOnly);
-            string[] dbuilds_win = Directory.GetDirectories(dpath_builds_windows, "*", SearchOption.TopDirectoryOnly);
-
-            int dbuilds_count = dbuilds_lin.Length + dbuilds_win.Length;
-            local_builds = new LocalBuildInfos[dbuilds_count];
-
-            for (int i = 0; i < dbuilds_lin.Length; ++i)
-                local_builds[i] = new(dbuilds_lin[i].GetDir(false), false);
-
-            for (int i = 0; i < dbuilds_win.Length; ++i)
-                local_builds[i + dbuilds_lin.Length] = new(dbuilds_win[i].GetDir(false), true);
-
-            Array.Sort(local_builds, (a, b) => b.date.CompareTo(a.date));
-
-            current_build_index = 0;
-            current_build = default;
-
-            if (!Application.isEditor)
-                for (int i = 0; i < dbuilds_count; ++i)
-                    if (local_builds[i].dir.Name == dname_build)
-                    {
-                        current_build_index = i;
-                        current_build = local_builds[i];
-                        break;
-                    }
         }
     }
 }

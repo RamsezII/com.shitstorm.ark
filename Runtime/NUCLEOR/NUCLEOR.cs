@@ -98,6 +98,15 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnResetStatics()
+        {
+            delegates = default;
+            application_closed = false;
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
@@ -105,8 +114,6 @@ namespace _ARK_
             UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
             UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
 #endif
-            delegates = default;
-            application_closed = false;
 
             Util.InstantiateOrCreateIfAbsent<NUCLEOR>();
         }
