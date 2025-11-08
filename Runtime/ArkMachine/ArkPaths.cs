@@ -63,6 +63,14 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnResetStatics()
+        {
+            instance.Value.ForceFolders();
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         ArkPaths(object o)
         {
             Debug.Log($"INIT {typeof(ArkPaths)}");
@@ -141,7 +149,11 @@ namespace _ARK_
             }
 
             dpath_parent = Directory.GetParent(dpath_root).FullName.NormalizePath();
+            ForceFolders();
+        }
 
+        void ForceFolders()
+        {
             if (Application.isEditor || error == null)
             {
                 dpath_home.GetDir(true);
