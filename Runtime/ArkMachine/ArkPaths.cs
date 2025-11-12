@@ -23,7 +23,7 @@ namespace _ARK_
             name_os = Util.is_app_windows ? name_windows : name_linux;
 
         public readonly string
-            dname_build,
+            dname_app_actual,
             dpath_parent,
             dpath_root,
             dpath_home,
@@ -83,13 +83,13 @@ namespace _ARK_
 #endif
 
             DirectoryInfo pdir = Directory.GetParent(Application.dataPath);
-            dname_build = pdir.Name;
+            dname_app_actual = pdir.Name;
             dpath_app_actual = pdir.FullName.NormalizePath();
 
             if (Application.isEditor)
             {
                 dpath_app_expected = dpath_app_actual;
-                dpath_terminal = dname_build + "/" + dname_home;
+                dpath_terminal = dname_app_actual + "/" + dname_home;
 
                 dpath_home = Util.CombinePaths(dpath_app_actual, dname_home);
                 dpath_temp = Util.CombinePaths(dpath_home, dname_temp);
@@ -112,7 +112,7 @@ namespace _ARK_
             {
                 if (pdir.Parent == null || pdir.Parent.Parent == null || pdir.Parent.Parent.Parent == null)
                 {
-                    string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_build).NormalizePath();
+                    string dpath_rel_app_expected = Path.Combine(name_app, dname_builds, name_os, dname_app_actual).NormalizePath();
                     error = $"mismatch in expected installation path: \"{dpath_app_actual}\" (expected something like: \"{dpath_rel_app_expected}\").";
                     dpath_root = dpath_app_actual;
                     dpath_app_expected = null;
@@ -120,7 +120,7 @@ namespace _ARK_
                 else
                 {
                     dpath_root = pdir.Parent.Parent.Parent.FullName;
-                    dpath_app_expected = Path.Combine(dpath_root, dname_builds, name_os, dname_build).NormalizePath();
+                    dpath_app_expected = Path.Combine(dpath_root, dname_builds, name_os, dname_app_actual).NormalizePath();
 
                     if (!Util.IsSamePath_full(dpath_app_expected, dpath_app_actual))
                         error = $"wrong installation path (expected \"{dpath_app_expected}\", got \"{dpath_app_actual}\")";

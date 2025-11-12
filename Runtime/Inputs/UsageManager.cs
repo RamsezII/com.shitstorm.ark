@@ -16,7 +16,14 @@ namespace _ARK_
         _last_
     }
 
-    public static partial class UsageManager
+    public enum MouseStatus : byte
+    {
+        None,
+        GameMouse,
+        TrueMouse,
+    }
+
+    public static class UsageManager
     {
         public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
@@ -25,10 +32,12 @@ namespace _ARK_
         static readonly object mouse_user = new();
         public static Action on_double_alt;
 
+        public static readonly ValueHandler<MouseStatus> mouse_status = new();
+
         //----------------------------------------------------------------------------------------------------------
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(_LogUsages))]
+        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(UsageManager) + "." + nameof(_LogUsages))]
         static void _LogUsages()
         {
             StringBuilder sb = new();
@@ -47,17 +56,53 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnBeforeSceneLoad()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
         {
             for (int i = 0; i < (int)UsageGroups._last_; i++)
                 usages[i] = new ListListener();
 
+            on_double_alt = null;
+            last_ALT = 0;
+
+            mouse_status.Reset();
+
             usages[(int)UsageGroups.GameMouse].AddListener1(null, _ => UpdateCursorState());
             usages[(int)UsageGroups.TrueMouse].AddListener1(null, _ => UpdateCursorState());
+
+            mouse_status.AddListener(value =>
+            {
+                switch (value)
+                {
+                    case MouseStatus.None:
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                        break;
+
+                    case MouseStatus.GameMouse:
+                        Cursor.lockState = CursorLockMode.Confined;
+                        Cursor.visible = false;
+                        break;
+
+                    case MouseStatus.TrueMouse:
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                        break;
+                }
+            });
         }
 
         //----------------------------------------------------------------------------------------------------------
+
+        static void UpdateCursorState()
+        {
+            if (usages[(int)UsageGroups.TrueMouse].IsNotEmpty)
+                mouse_status.Value = MouseStatus.TrueMouse;
+            else if (usages[(int)UsageGroups.GameMouse].IsNotEmpty)
+                mouse_status.Value = MouseStatus.GameMouse;
+            else
+                mouse_status.Value = MouseStatus.None;
+        }
 
         public static void UpdateAltPress()
         {
