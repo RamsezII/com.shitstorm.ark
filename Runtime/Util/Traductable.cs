@@ -106,6 +106,7 @@ namespace _ARK_
             return false;
         }
 
+        public TextMeshProUGUI FirstTmp() => GetComponentInChildren<TextMeshProUGUI>();
         public IEnumerable<TextMeshProUGUI> AllTmps()
         {
             if (TryGetComponent(out TextMeshProUGUI tmp))
