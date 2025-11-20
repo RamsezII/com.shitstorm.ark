@@ -73,6 +73,8 @@ namespace _ARK_
 
         public readonly ValueHandler<bool> isTyping = new();
 
+        public readonly ValueHandler<byte> party_count = new();
+
         public static bool application_closed;
 
         public int fixedFrameCount;

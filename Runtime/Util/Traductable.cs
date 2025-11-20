@@ -135,6 +135,7 @@ namespace _ARK_
             Refresh();
         }
 
+        public void SetTrad(object o) => SetTrad(o?.ToString() ?? string.Empty);
         public void SetTrad(string text) => SetTrads(new Traductions { english = text, french = text });
 
         [Obsolete]

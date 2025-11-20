@@ -26,7 +26,15 @@ public static class Util_ark
 
 #if UNITY_EDITOR
     [UnityEditor.MenuItem("CONTEXT/" + nameof(TextMeshProUGUI) + "/" + nameof(AddTraductable))]
-    static void AddTraductable(UnityEditor.MenuCommand command) => ((TextMeshProUGUI)command.context).gameObject.AddComponent<Traductable>();
+    static void AddTraductable(UnityEditor.MenuCommand command)
+    {
+        TextMeshProUGUI tmpro = (TextMeshProUGUI)command.context;
+        Traductable trad = tmpro.gameObject.AddComponent<Traductable>();
+
+        int index = tmpro.GetComponentIndex();
+        while (trad.GetComponentIndex() > index)
+            UnityEditorInternal.ComponentUtility.MoveComponentUp(trad);
+    }
 #endif
 
     public static IEnumerator<float> ERoutinize(this IEnumerable<Action> actions) => ERoutinize(actions.ToArray());
