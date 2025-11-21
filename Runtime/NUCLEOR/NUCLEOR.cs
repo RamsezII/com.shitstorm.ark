@@ -57,6 +57,11 @@ namespace _ARK_
                 OnApplicationFocus,
                 OnApplicationUnfocus,
                 OnApplicationQuit;
+
+#if UNITY_EDITOR
+            public Action
+                OnEditorQuit;
+#endif
         }
 
         public static Delegates delegates;
@@ -105,6 +110,25 @@ namespace _ARK_
         {
             delegates = default;
             application_closed = false;
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.quitting -= OnQuitEditor;
+            UnityEditor.EditorApplication.quitting += OnQuitEditor;
+
+            UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
+            UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
+        }
+
+        static void OnQuitEditor()
+        {
+            delegates.OnEditorQuit?.Invoke();
+        }
+
+        static void LogPlayModeState(UnityEditor.PlayModeStateChange state)
+        {
+            if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+                instance.OnApplicationFocus(false);
+#endif
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -112,23 +136,8 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
-            UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
-#endif
-
             Util.InstantiateOrCreateIfAbsent<NUCLEOR>();
         }
-
-        //----------------------------------------------------------------------------------------------------------
-
-#if UNITY_EDITOR
-        private static void LogPlayModeState(UnityEditor.PlayModeStateChange state)
-        {
-            if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
-                instance.OnApplicationFocus(false);
-        }
-#endif
 
         //----------------------------------------------------------------------------------------------------------
 

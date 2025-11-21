@@ -47,8 +47,13 @@ namespace _ARK_
             fpath_app_actual;
 
 #if UNITY_EDITOR
+        public const string
+            dname_ignore = "_IGNORE_";
+
         public readonly string
             dpath_assets,
+            dpath_ignore,
+            dpath_ignore_temp,
             dpath_resources;
 
         const string button_prefixe = "Assets/" + nameof(_ARK_) + "/";
@@ -71,6 +76,20 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void OnAfterSceneLoad()
+        {
+            NUCLEOR.delegates.OnEditorQuit += () =>
+            {
+                if (Directory.Exists(instance.Value.dpath_ignore_temp))
+                    Directory.Delete(instance.Value.dpath_ignore_temp, true);
+            };
+        }
+#endif
+
+        //----------------------------------------------------------------------------------------------------------
+
         ArkPaths(object o)
         {
             Debug.Log($"INIT {typeof(ArkPaths)}");
@@ -80,6 +99,8 @@ namespace _ARK_
 #if UNITY_EDITOR
             dpath_assets = Application.dataPath.NormalizePath();
             dpath_resources = Path.Combine(dpath_assets, "Resources").NormalizePath();
+            dpath_ignore = Path.Combine(Application.dataPath, dname_ignore);
+            dpath_ignore_temp = Path.Combine(dpath_ignore, "_TEMP_");
 #endif
 
             DirectoryInfo pdir = Directory.GetParent(Application.dataPath);
