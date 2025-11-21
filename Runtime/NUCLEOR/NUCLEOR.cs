@@ -1,4 +1,5 @@
 using _UTIL_;
+using Codice.CM.Common;
 using System;
 using System.IO;
 using TMPro;
@@ -8,6 +9,9 @@ using UnityEngine.SocialPlatforms;
 
 namespace _ARK_
 {
+#if UNITY_EDITOR
+    [UnityEditor.InitializeOnLoad]
+#endif
     public sealed partial class NUCLEOR : MonoBehaviour
     {
         public struct Delegates
@@ -80,6 +84,7 @@ namespace _ARK_
 
         public readonly ValueHandler<byte> party_count = new();
 
+        public static DateTimeOffset timestamp_appstart;
         public static bool application_closed;
 
         public int fixedFrameCount;
@@ -101,7 +106,36 @@ namespace _ARK_
         [ShowProperty(nameof(_TimeScale_raw)), Range(0, 2)] public float _show_timeScale_raw;
         public float _TimeScale_smooth => timeScale_smooth.Value;
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
+
+        static string GetTimestampPath() => Path.Combine(
+            ArkPaths.instance.Value.dpath_ignore_temp.GetDir(true).FullName,
+            typeof(NUCLEOR).FullName + "." + nameof(timestamp_appstart) + ".txt"
+        );
 #endif
+
+        //----------------------------------------------------------------------------------------------------------
+
+        static NUCLEOR()
+        {
+            Debug.Log($"{typeof(NUCLEOR).FullName}.CONSTRUCTOR");
+
+            timestamp_appstart = DateTimeOffset.UtcNow;
+
+#if UNITY_EDITOR
+            string fpath = GetTimestampPath();
+
+            if (File.Exists(fpath))
+            {
+                string text = File.ReadAllText(fpath);
+                if (!DateTimeOffset.TryParse(text, out timestamp_appstart))
+                    timestamp_appstart = DateTimeOffset.UtcNow;
+            }
+            else
+                File.WriteAllText(fpath, timestamp_appstart.ToString());
+#endif
+
+            Debug.Log($"{typeof(NUCLEOR).FullName}.{nameof(timestamp_appstart)}: {timestamp_appstart.LocalDateTime}");
+        }
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -241,9 +275,17 @@ namespace _ARK_
         {
             lock (mainThreadLock)
                 if (focus)
+                {
                     delegates.OnApplicationFocus?.Invoke();
+                }
                 else
+                {
+#if UNITY_EDITOR
+                    string fpath = GetTimestampPath();
+                    File.WriteAllText(fpath, timestamp_appstart.ToString());
+#endif
                     delegates.OnApplicationUnfocus?.Invoke();
+                }
         }
 
         private void OnApplicationQuit()
