@@ -24,23 +24,24 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            user_name.Reset();
             user_ready = false;
             on_user_ready = null;
+
+            user_name.Reset();
             users.Reset();
+
             ScanUsers();
+            LoadSettings(true);
+
+            user_name.AddListener(value =>
+            {
+                h_settings.last_user = value;
+            });
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
-            LoadSettings(true);
-
-            user_name.AddListener(value =>
-            {
-                settings.last_user = value;
-            });
-
             NUCLEOR.delegates.OnApplicationFocus += () => LoadSettings(false);
             NUCLEOR.delegates.OnApplicationUnfocus += () => SaveSettings(false);
         }

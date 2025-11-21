@@ -8,9 +8,9 @@ namespace _ARK_
     {
         public abstract string GetFilePath();
         public void SaveStaticJSon(in bool log) => Save(GetFilePath(), log);
-        public static bool ReadStaticJSon<T>(ref T json, in bool force, in bool log) where T : StaticJSon, new()
+        public static bool ReadStaticJSon<T>(out T json, in bool force, in bool log) where T : StaticJSon, new()
         {
-            json ??= new T();
+            json = new T();
             return Read(ref json, json.GetFilePath(), force, log);
         }
     }
@@ -30,7 +30,9 @@ namespace _ARK_
     public abstract class ResourcesJSon : JSon
     {
 #if UNITY_EDITOR
-        public string GetFilePath() => Path.Combine(ArkPaths.instance.Value.dpath_resources.GetDir(true).FullName, GetType().FullName + ".json.txt");
+        public static string GetFilePath<T>() => GetFilePath(typeof(T));
+        public static string GetFilePath(in Type type) => Path.Combine(ArkPaths.instance.Value.dpath_resources.GetDir(true).FullName, type.FullName + ".json.txt");
+        public string GetFilePath() => GetFilePath(GetType());
 #endif
 
         public static bool TryReadResourcesJSon<T>(in bool log, out T json) where T : ResourcesJSon, new()
@@ -47,16 +49,18 @@ namespace _ARK_
             {
                 json = new();
 #if UNITY_EDITOR
-                json.Save();
+                json.SaveResourcesJSon();
 #endif
                 return false;
             }
         }
 
 #if UNITY_EDITOR
-        public void Save()
+        public void SaveResourcesJSon()
         {
-            Save(GetFilePath(), true);
+            string fpath = GetFilePath();
+            Save(fpath, true);
+            UnityEditor.AssetDatabase.Refresh();
         }
 #endif
     }

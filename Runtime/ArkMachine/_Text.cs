@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _UTIL_;
+using System;
 using UnityEngine;
 
 namespace _ARK_
@@ -6,7 +7,7 @@ namespace _ARK_
     partial class ArkMachine
     {
         [Serializable]
-        public class Settings : HomeJSon
+        public class HSettings : HomeJSon
         {
             public string last_user;
 
@@ -17,24 +18,24 @@ namespace _ARK_
             };
         }
 
-        public static Settings settings = new();
+        public static HSettings h_settings;
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void LoadSettings(in bool init)
+        public static void LoadSettings(in bool log)
         {
-            StaticJSon.ReadStaticJSon(ref settings, true, init);
+            StaticJSon.ReadStaticJSon(out h_settings, true, log);
             ApplySettings();
         }
 
         public static void SaveSettings(in bool log)
         {
-            settings.SaveStaticJSon(log);
+            h_settings.SaveStaticJSon(log);
         }
 
         public static void ApplySettings()
         {
-            Traductable.language.Value = settings.language;
+            Traductable.language.Value = h_settings.language;
         }
     }
 }
