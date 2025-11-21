@@ -76,20 +76,6 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-#if UNITY_EDITOR
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void OnAfterSceneLoad()
-        {
-            NUCLEOR.delegates.OnEditorQuit += () =>
-            {
-                if (Directory.Exists(instance.Value.dpath_ignore_temp))
-                    Directory.Delete(instance.Value.dpath_ignore_temp, true);
-            };
-        }
-#endif
-
-        //----------------------------------------------------------------------------------------------------------
-
         ArkPaths(object o)
         {
             Debug.Log($"INIT {typeof(ArkPaths)}");

@@ -131,6 +131,13 @@ namespace _ARK_
             }
             else
                 File.WriteAllText(fpath, timestamp_appstart.ToString());
+
+            UnityEditor.EditorApplication.quitting += () =>
+            {
+                string dpath = ArkPaths.instance.Value.dpath_ignore_temp;
+                if (Directory.Exists(dpath))
+                    Directory.Delete(dpath, true);
+            };
 #endif
 
             Debug.Log($"{typeof(NUCLEOR).FullName}.{nameof(timestamp_appstart)}: {timestamp_appstart.LocalDateTime}");
