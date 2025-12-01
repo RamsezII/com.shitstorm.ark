@@ -80,7 +80,7 @@ namespace _ARK_
                         break;
 
                     case MouseStatus.GameMouse:
-                        Cursor.lockState = CursorLockMode.Confined;
+                        Cursor.lockState = CursorLockMode.None;
                         Cursor.visible = false;
                         break;
 
@@ -96,10 +96,10 @@ namespace _ARK_
 
         static void UpdateCursorState()
         {
-            if (usages[(int)UsageGroups.TrueMouse].IsNotEmpty)
-                mouse_status.Value = MouseStatus.TrueMouse;
-            else if (usages[(int)UsageGroups.GameMouse].IsNotEmpty)
+            if (usages[(int)UsageGroups.GameMouse].IsNotEmpty)
                 mouse_status.Value = MouseStatus.GameMouse;
+            else if (usages[(int)UsageGroups.TrueMouse].IsNotEmpty)
+                mouse_status.Value = MouseStatus.TrueMouse;
             else
                 mouse_status.Value = MouseStatus.None;
         }
