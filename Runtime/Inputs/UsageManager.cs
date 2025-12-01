@@ -80,7 +80,7 @@ namespace _ARK_
                         break;
 
                     case MouseStatus.GameMouse:
-                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.lockState = CursorLockMode.Confined;
                         Cursor.visible = false;
                         break;
 
