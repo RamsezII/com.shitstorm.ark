@@ -50,10 +50,11 @@ namespace _ARK_
 
                 LateUpdate_onEndOfFrame_once,
                 LateUpdate_AfterAnimator,
-                LateUpdate_Players1,
+                LateUpdate_Cameras_BeforeCharacterModifyPivot,
+                LateUpdate_Players_BeforeCameraPosition,
                 LateUpdate_CameraPosition,
                 LateUpdate_CameraFinalApply,
-                LateUpdate_Players2,
+                LateUpdate_Players_AfterCameraPosition,
                 LateUpdate,
                 LateUpdate_OnNetworkPush,
 
@@ -331,10 +332,11 @@ namespace _ARK_
                 heartbeat_scaled.Tick(Time.deltaTime);
 
                 delegates.LateUpdate_AfterAnimator?.Invoke();
-                delegates.LateUpdate_Players1?.Invoke();
+                delegates.LateUpdate_Cameras_BeforeCharacterModifyPivot?.Invoke();
+                delegates.LateUpdate_Players_BeforeCameraPosition?.Invoke();
                 delegates.LateUpdate_CameraPosition?.Invoke();
                 delegates.LateUpdate_CameraFinalApply?.Invoke();
-                delegates.LateUpdate_Players2?.Invoke();
+                delegates.LateUpdate_Players_AfterCameraPosition?.Invoke();
                 delegates.LateUpdate?.Invoke();
                 delegates.LateUpdate_OnNetworkPush?.Invoke();
 
