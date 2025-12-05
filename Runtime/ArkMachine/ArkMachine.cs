@@ -12,7 +12,7 @@ namespace _ARK_
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
 
 
-        public static readonly ValueHandler<string> user_name = new("default_user");
+        public static readonly ValueHandler<string> user_name = new();
 
         public static bool user_ready;
         static Action on_user_ready;
@@ -27,7 +27,7 @@ namespace _ARK_
             user_ready = false;
             on_user_ready = null;
 
-            user_name.Reset();
+            user_name.Reset("default_user");
             users.Reset();
 
             ScanUsers();
