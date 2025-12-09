@@ -79,6 +79,12 @@ namespace _ARK_
 
             Event e = Event.current;
 
+            if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape)
+            {
+                Debug.LogWarning($"TRIED ESCAPE KEY IN IMGUI_GLOBAL", this);
+                e.Use();
+            }
+
             switch (e.type)
             {
                 case EventType.KeyDown:
