@@ -8,6 +8,9 @@ namespace _ARK_
     {
         public static IMGUI_global instance;
 
+        public readonly ListListener<Action>
+            escape_users = new();
+
         public readonly ListListener<Func<Event, bool>>
             gui_users = new(),
             inputs_users = new();
@@ -35,8 +38,8 @@ namespace _ARK_
 
         private void Start()
         {
-            gui_users.AddListener1(this, isNotEmpty => Refresh());
-            inputs_users.AddListener1(this, isNotEmpty => Refresh());
+            gui_users.AddListener1(isNotEmpty => Refresh());
+            inputs_users.AddListener1(isNotEmpty => Refresh());
 
             void Refresh()
             {
@@ -69,9 +72,13 @@ namespace _ARK_
                 switch (e.keyCode)
                 {
                     case KeyCode.Escape:
-                        Debug.LogWarning($"[{GetType()}] 'ESCAPE'", this);
-                        e.Use();
-                        return;
+                        if (escape_users._collection.Count > 0)
+                        {
+                            escape_users._collection[^1]();
+                            e.Use();
+                            return;
+                        }
+                        break;
 
                     default:
                         if (e.control || e.command)

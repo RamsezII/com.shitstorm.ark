@@ -67,8 +67,8 @@ namespace _ARK_
 
             mouse_status.Reset();
 
-            usages[(int)UsageGroups.GameMouse].AddListener1(null, _ => UpdateCursorState());
-            usages[(int)UsageGroups.TrueMouse].AddListener1(null, _ => UpdateCursorState());
+            usages[(int)UsageGroups.GameMouse].AddListener1(_ => UpdateCursorState());
+            usages[(int)UsageGroups.TrueMouse].AddListener1(_ => UpdateCursorState());
 
             mouse_status.AddListener(value =>
             {
