@@ -8,19 +8,29 @@ namespace _ARK_
     {
         readonly struct Command
         {
-            public readonly Action execute;
-            public readonly Action undo;
+            internal readonly Func<object> execute;
+            internal readonly Action<object> undo;
+            internal readonly object _reference;
 
             //----------------------------------------------------------------------------------------------------------
 
-            public Command(in Action execute, in Action undo)
+            internal Command(in Command other)
+            {
+                execute = other.execute;
+                undo = other.undo;
+                _reference = other.execute();
+            }
+
+            internal Command(in Func<object> execute, in Action<object> undo)
             {
                 this.execute = execute;
                 this.undo = undo;
+                _reference = execute();
             }
         }
 
         static readonly List<Command> history = new();
+        public static readonly Dictionary<object, object> references = new();
         static int pointer;
 
         //----------------------------------------------------------------------------------------------------------
@@ -29,12 +39,13 @@ namespace _ARK_
         static void ResetStatics()
         {
             history.Clear();
+            references.Clear();
             pointer = 0;
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void Push(in Action execute, in Action undo)
+        public static void Do(in Func<object> execute, in Action<object> undo)
         {
             if (pointer < history.Count)
                 history.RemoveRange(pointer, history.Count - pointer);
@@ -47,14 +58,16 @@ namespace _ARK_
             if (pointer == 0)
                 return;
             --pointer;
-            history[pointer].undo();
+            Command command = history[pointer];
+            command.undo(command._reference);
         }
 
         public static void Redo()
         {
             if (pointer >= history.Count)
                 return;
-            history[pointer].execute();
+            Command command = history[pointer];
+            history[pointer] = new Command(command);
             ++pointer;
         }
     }
