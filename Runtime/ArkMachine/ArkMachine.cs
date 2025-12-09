@@ -19,11 +19,15 @@ namespace _ARK_
 
         public static readonly ListListener<DirectoryInfo> users = new();
 
+        public static bool flag_shutdown;
+
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
+            flag_shutdown = false;
+
             user_ready = false;
             on_user_ready = null;
 
@@ -47,6 +51,20 @@ namespace _ARK_
         }
 
         //----------------------------------------------------------------------------------------------------------
+
+        public static void ShutdownApplication(in bool force)
+        {
+            if (force)
+                flag_shutdown = true;
+
+            if (flag_shutdown)
+#if UNITY_EDITOR
+                if (Application.isEditor)
+                    UnityEditor.EditorApplication.isPlaying = false;
+                else
+#endif
+                    Application.Quit();
+        }
 
         static void ScanUsers() => users.Modify(list =>
         {
