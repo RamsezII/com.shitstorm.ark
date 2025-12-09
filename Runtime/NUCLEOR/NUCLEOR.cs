@@ -122,17 +122,6 @@ namespace _ARK_
             timestamp_appstart = DateTimeOffset.UtcNow;
 
 #if UNITY_EDITOR
-            string fpath = GetTimestampPath();
-
-            if (File.Exists(fpath))
-            {
-                string text = File.ReadAllText(fpath);
-                if (!DateTimeOffset.TryParse(text, out timestamp_appstart))
-                    timestamp_appstart = DateTimeOffset.UtcNow;
-            }
-            else
-                File.WriteAllText(fpath, timestamp_appstart.ToString());
-
             UnityEditor.EditorApplication.quitting += () =>
             {
                 string dpath = ArkPaths.instance.Value.dpath_ignore_temp;
@@ -153,6 +142,17 @@ namespace _ARK_
             application_closed = false;
 
 #if UNITY_EDITOR
+            string fpath = GetTimestampPath();
+
+            if (File.Exists(fpath))
+            {
+                string text = File.ReadAllText(fpath);
+                if (!DateTimeOffset.TryParse(text, out timestamp_appstart))
+                    timestamp_appstart = DateTimeOffset.UtcNow;
+            }
+            else
+                File.WriteAllText(fpath, timestamp_appstart.ToString());
+
             UnityEditor.EditorApplication.quitting -= OnQuitEditor;
             UnityEditor.EditorApplication.quitting += OnQuitEditor;
 

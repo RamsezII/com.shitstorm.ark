@@ -6,10 +6,20 @@ namespace _ARK_
 {
     public sealed class IMGUI_global : MonoBehaviour
     {
+        public enum ClipboardOperations : byte
+        {
+            Copy,
+            Cut,
+            Paste
+        }
+
         public static IMGUI_global instance;
 
         public readonly ListListener<Action>
             escape_users = new();
+
+        public readonly ListListener<Func<Event, ClipboardOperations, bool>>
+            clipboard_users = new();
 
         public readonly ListListener<Func<Event, bool>>
             gui_users = new(),
@@ -18,7 +28,14 @@ namespace _ARK_
 #if UNITY_EDITOR
         [SerializeField] int _frame, _gui_frame;
 #endif
+
         //--------------------------------------------------------------------------------------------------------------
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            instance = null;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
@@ -30,23 +47,11 @@ namespace _ARK_
 
         private void Awake()
         {
+            if (instance != null)
+                Debug.LogError($"the fuck");
+
             instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        private void Start()
-        {
-            gui_users.AddListener1(isNotEmpty => Refresh());
-            inputs_users.AddListener1(isNotEmpty => Refresh());
-
-            void Refresh()
-            {
-                if (this == null)
-                    return;
-                useGUILayout = gui_users.IsNotEmpty || inputs_users.IsNotEmpty;
-            }
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -102,16 +107,37 @@ namespace _ARK_
                                     return;
 
                                 case KeyCode.C:
-                                    Debug.LogWarning($"[{GetType()}] 'COPY'", this);
+                                    if (clipboard_users.IsNotEmpty)
+                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                            if (element(e, ClipboardOperations.Copy))
+                                            {
+                                                e.Use();
+                                                return;
+                                            }
+                                    Debug.LogWarning($"[{GetType()}] 'Copy'", this);
                                     e.Use();
                                     return;
 
                                 case KeyCode.X:
+                                    if (clipboard_users.IsNotEmpty)
+                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                            if (element(e, ClipboardOperations.Cut))
+                                            {
+                                                e.Use();
+                                                return;
+                                            }
                                     Debug.LogWarning($"[{GetType()}] 'CUT'", this);
                                     e.Use();
                                     return;
 
                                 case KeyCode.V:
+                                    if (clipboard_users.IsNotEmpty)
+                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                            if (element(e, ClipboardOperations.Paste))
+                                            {
+                                                e.Use();
+                                                return;
+                                            }
                                     Debug.LogWarning($"[{GetType()}] 'PASTE'", this);
                                     e.Use();
                                     return;
@@ -119,39 +145,28 @@ namespace _ARK_
                         break;
                 }
 
-            switch (e.type)
-            {
-                case EventType.KeyDown:
-                case EventType.MouseDown:
-                case EventType.ScrollWheel:
-                    for (int i = inputs_users._collection.Count - 1; i >= 0; i--)
-                    {
-                        var on_inputs = inputs_users._collection[i];
-                        if (on_inputs(e))
-                        {
-                            e.Use();
-                            return;
-                        }
-                    }
-                    break;
-            }
-
-            for (int i = gui_users._collection.Count - 1; i >= 0; i--)
-            {
-                var on_gui = gui_users._collection[i];
-                if (on_gui(e))
+            if (inputs_users.IsNotEmpty)
+                switch (e.type)
                 {
-                    e.Use();
-                    return;
+                    case EventType.KeyDown:
+                    case EventType.MouseDown:
+                    case EventType.ScrollWheel:
+                        foreach (var (index, element) in inputs_users.ReversedOrderIteration())
+                            if (element(e))
+                            {
+                                e.Use();
+                                return;
+                            }
+                        break;
                 }
-            }
-        }
 
-        //--------------------------------------------------------------------------------------------------------------
-
-        private void OnDestroy()
-        {
-            gui_users.Reset();
+            if (gui_users.IsNotEmpty)
+                foreach (var (index, element) in gui_users.ReversedOrderIteration())
+                    if (element(e))
+                    {
+                        e.Use();
+                        return;
+                    }
         }
     }
 }
