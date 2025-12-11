@@ -1,7 +1,6 @@
 using _UTIL_;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 
@@ -30,31 +29,32 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        public override readonly string ToString() => Automatic;
-        public readonly string Automatic => Traductable.language.Value switch
+        public override readonly string ToString() => GetAutomatic();
+        public readonly string GetAutomatic()
         {
-            Languages.French => string.IsNullOrWhiteSpace(french) ? "[VIDE]" : french,
-            _ => string.IsNullOrWhiteSpace(english) ? "[EMPTY]" : english,
-        };
-    }
-
-    public static partial class Util_nucleor
-    {
-        public static Traductions ReadTraductions(this BinaryReader reader) => new() { french = reader.ReadString(), english = reader.ReadString(), };
-
-        public static void WriteTraductions(this BinaryWriter writer, in Traductions traductions)
-        {
-            writer.Write(traductions.french);
-            writer.Write(traductions.english);
+            switch (Traductable.language._value)
+            {
+                case Languages.French:
+                    if (string.IsNullOrEmpty(french))
+                        goto default;
+                    else
+                        return french;
+                default:
+                    return english;
+            }
         }
     }
 
-    public class Traductable : MonoBehaviour
+    public sealed class Traductable : MonoBehaviour
     {
         static readonly HashSet<Traductable> instances = new();
         public static readonly ValueHandler<Languages> language = new();
 
+        public TextMeshProUGUI tmpro;
+        public bool auto_width;
         public Traductions traductions;
+
+        Vector2 init_size;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -71,62 +71,49 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-#if UNITY_EDITOR
-        [ContextMenu(nameof(InvertTrads))]
-        void InvertTrads() => (traductions.french, traductions.english) = (traductions.english, traductions.french);
-
-        [ContextMenu(nameof(ApplyTrads))]
-        void ApplyTrads() => SetTrads(traductions);
-#endif
-
-        //----------------------------------------------------------------------------------------------------------
-
         private void Awake()
         {
+            tmpro = GetComponentInChildren<TextMeshProUGUI>(includeInactive: true);
+            init_size = tmpro.rectTransform.sizeDelta;
             instances.Add(this);
-            Refresh();
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        public string GetCurrentText() => TryGetCurrentText(out string text) ? text : null;
-        public bool TryGetCurrentText(out string text)
+        private void Start()
         {
-            if (this != null)
-            {
-                TextMeshProUGUI tmp = GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmp != null)
-                {
-                    text = tmp.text;
-                    return true;
-                }
-            }
-
-            text = null;
-            return false;
-        }
-
-        public TextMeshProUGUI FirstTmp() => GetComponentInChildren<TextMeshProUGUI>();
-        public IEnumerable<TextMeshProUGUI> AllTmps()
-        {
-            if (TryGetComponent(out TextMeshProUGUI tmp))
-                yield return tmp;
-            else
-                foreach (TextMeshProUGUI child in GetComponentsInChildren<TextMeshProUGUI>())
-                    yield return child;
+            Refresh();
         }
 
         //----------------------------------------------------------------------------------------------------------
 
         void Refresh()
         {
-            string text = traductions.ToString();
+            if (!didAwake)
+                return;
+
+            if (tmpro == null)
+                Debug.LogError($"no {nameof(tmpro)} on {transform.GetPath(true)}", this);
+
+            string text = traductions.GetAutomatic();
 
             if (string.IsNullOrWhiteSpace(text))
                 text = traductions.english;
 
-            foreach (TextMeshProUGUI tmp in AllTmps())
-                tmp.text = text;
+            tmpro.text = text;
+
+            if (auto_width)
+            {
+                Vector2 pref = tmpro.GetPreferredValues(
+                    text: text,
+                    width: init_size.x,
+                    height: init_size.y
+                );
+
+                Vector2 size = init_size;
+
+                tmpro.rectTransform.sizeDelta = size;
+            }
         }
 
         public void SetTrads(in Traductions traductions)
@@ -135,7 +122,6 @@ namespace _ARK_
             Refresh();
         }
 
-        public void SetTrad(object o) => SetTrad(o?.ToString() ?? string.Empty);
         public void SetTrad(string text) => SetTrads(new Traductions { english = text, french = text });
 
         [Obsolete]
