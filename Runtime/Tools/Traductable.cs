@@ -104,15 +104,13 @@ namespace _ARK_
 
             if (auto_width)
             {
-                Vector2 pref = tmpro.GetPreferredValues(
+                float w = tmpro.GetPreferredValues(
                     text: text,
                     width: init_size.x,
-                    height: init_size.y
-                );
-
-                Vector2 size = init_size;
-
-                tmpro.rectTransform.sizeDelta = size;
+                    height: float.PositiveInfinity
+                ).x;
+                w = Mathf.Min(w, init_size.x);
+                tmpro.rectTransform.sizeDelta = new(w, 0);
             }
         }
 
