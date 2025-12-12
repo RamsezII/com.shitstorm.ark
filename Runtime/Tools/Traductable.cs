@@ -114,13 +114,12 @@ namespace _ARK_
             }
         }
 
+        public void SetTrad(string text) => SetTrads(new(text));
         public void SetTrads(in Traductions traductions)
         {
             this.traductions = traductions;
             Refresh();
         }
-
-        public void SetTrad(string text) => SetTrads(new Traductions { english = text, french = text });
 
         [Obsolete]
         public void SetTrads_old(in string fr, in string en) => SetTrads(new Traductions { english = en, french = fr });
