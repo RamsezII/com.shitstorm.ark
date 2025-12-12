@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 
 namespace _ARK_
 {
     using CallbackContext = InputAction.CallbackContext;
-    public static class ArkInputs
+    public static class ArkShortcuts
     {
         readonly struct ShortcutInfos
         {
@@ -93,8 +92,9 @@ namespace _ARK_
             }
 
             if (context.control.device is Keyboard)
-                if (NUCLEOR.instance.isTyping._value || !UsageManager.AllAreEmpty(UsageGroups.Typing))
-                    return;
+                if (!shortcut.control && !shortcut.alt)
+                    if (NUCLEOR.instance.isTyping._value || !UsageManager.AllAreEmpty(UsageGroups.Typing))
+                        return;
 
             bool
                 control = false,
