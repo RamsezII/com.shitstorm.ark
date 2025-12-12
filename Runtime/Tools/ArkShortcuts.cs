@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace _ARK_
 {
@@ -60,6 +61,22 @@ namespace _ARK_
                 removes[i].Dispose();
             }
         }
+
+        public static void AddShortcut(
+            in string shortcutName,
+            in string nameof_button,
+            in Action action,
+            in bool control = false,
+            in bool shift = false,
+            in bool alt = false
+        ) => AddShortcut<Keyboard>(
+            shortcutName: shortcutName,
+            nameof_button: nameof_button,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt
+        );
 
         public static void AddShortcut<T>(
             in string shortcutName,
