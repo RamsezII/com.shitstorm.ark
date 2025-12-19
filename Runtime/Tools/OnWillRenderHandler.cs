@@ -5,29 +5,25 @@ namespace _ARK_
 {
     public sealed class OnWillRenderHandler : MonoBehaviour
     {
-        public static readonly Dictionary<Camera, HashSet<OnWillRenderHandler>> all_rendered = new();
+        public static readonly Dictionary<Camera, HashSet<OnWillRenderHandler>> all_visible_handlers = new();
 
 #if HAS_RP
         static Camera current_camera;
 #endif
+
+        public new Renderer renderer;
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
-            all_rendered.Clear();
+            all_visible_handlers.Clear();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
-            NUCLEOR.delegates.Update_OnStartOfFrame += static () =>
-            {
-                foreach (var pair in all_rendered)
-                    pair.Value.Clear();
-            };
-
 #if HAS_RP
             UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering -= BeginCam;
             UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += BeginCam;
@@ -50,6 +46,37 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        private void Awake()
+        {
+            renderer = GetComponent<Renderer>();
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        static void ClearHandlers()
+        {
+            foreach (var kvp1 in all_visible_handlers)
+                kvp1.Value.Clear();
+        }
+
+        public static HashSet<OnWillRenderHandler> GetOrAddCameraVisibles(in Camera camera)
+        {
+            NUCLEOR.delegates.Update_OnStartOfFrame -= ClearHandlers;
+            NUCLEOR.delegates.Update_OnStartOfFrame += ClearHandlers;
+
+            if (all_visible_handlers.TryGetValue(camera, out var handlers))
+                return handlers;
+            all_visible_handlers.Add(camera, handlers = new());
+            return handlers;
+        }
+
+        public static void RemoveCameraDict(in Camera camera)
+        {
+            NUCLEOR.delegates.Update_OnStartOfFrame -= ClearHandlers;
+            if (all_visible_handlers.Remove(camera, out var handlers))
+                handlers.Clear();
+        }
+
         private void OnWillRenderObject()
         {
             try
@@ -63,12 +90,8 @@ namespace _ARK_
                 if (cam == null)
                     return;
 
-                var key = this;
-
-                if (all_rendered.TryGetValue(cam, out var set))
-                    set.Add(key);
-                else
-                    all_rendered.Add(cam, new() { key, });
+                if (all_visible_handlers.TryGetValue(cam, out var handlers))
+                    handlers.Add(this);
             }
             catch (System.Exception e)
             {
