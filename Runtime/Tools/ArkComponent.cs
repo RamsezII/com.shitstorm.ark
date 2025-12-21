@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace _ARK_
 {
     public abstract class ArkComponent : MonoBehaviour
     {
+        public Action onDestroy;
 
         //--------------------------------------------------------------------------------------------------------------
 
@@ -31,6 +33,7 @@ namespace _ARK_
 
         protected virtual void OnDestroy()
         {
+            onDestroy?.Invoke();
         }
     }
 }
