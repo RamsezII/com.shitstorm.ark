@@ -33,7 +33,9 @@ namespace _ARK_
                 Update_OnStartOfFrame_once,
                 Update_OnStartOfFrame,
 
+                Update_OnShellTick_before,
                 Update_OnShellTick,
+                Update_OnShellTick_after,
                 Update_OnNetworkPull,
                 Update_GettInputs,
                 Update_OnPlayerInputs,
@@ -249,7 +251,9 @@ namespace _ARK_
                 if (delegates.fixedupdate_flag.PullValue())
                     delegates.FixedUpdate_BeforeAnimator?.Invoke();
 
+                delegates.Update_OnShellTick_before?.Invoke();
                 delegates.Update_OnShellTick?.Invoke();
+                delegates.Update_OnShellTick_after?.Invoke();
                 delegates.Update_OnNetworkPull?.Invoke();
 
                 isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
