@@ -22,7 +22,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public Schedulable([CallerMemberName] string callerName = null)
+        public Schedulable([CallerMemberName] string callerName = null) : base(callerName)
         {
             this.callerName = callerName;
 

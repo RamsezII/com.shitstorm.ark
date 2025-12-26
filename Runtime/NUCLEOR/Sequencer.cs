@@ -15,6 +15,12 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        protected Sequencer(in string name) : base(name)
+        {
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         public void LogStatus() => Debug.Log(GetStatus());
         public string GetStatus()
         {
@@ -65,6 +71,12 @@ namespace _ARK_
     public sealed class SequentialSequencer : Sequencer
     {
         public readonly ThreadSafe_struct<bool> isTick = new();
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public SequentialSequencer() : base(typeof(SequentialSequencer).FullName)
+        {
+        }
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -131,6 +143,15 @@ namespace _ARK_
 
     public sealed class ParallelSequencer : Sequencer
     {
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public ParallelSequencer() : base(typeof(ParallelSequencer).FullName)
+        {
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         public override void Tick()
         {
             lock (schedulables)
