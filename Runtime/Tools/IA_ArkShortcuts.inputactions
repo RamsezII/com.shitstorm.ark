@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "IA_ArkShortcuts",
+    "maps": [
+        {
+            "name": "ArkShortcuts",
+            "id": "ce16c846-8201-4950-8cd0-a849bc4e4703",
+            "actions": [
+                {
+                    "name": "control",
+                    "type": "Button",
+                    "id": "15bf8902-510f-499a-954d-db244806a883",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "shift",
+                    "type": "Button",
+                    "id": "e11a370a-b072-40aa-91f4-6a6c7ab6ed01",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "alt",
+                    "type": "Button",
+                    "id": "283c1088-b900-43bc-a823-e186544ac0e6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ee3e042b-d079-45ba-bea0-f938bcb18c67",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "control",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "50691039-7306-476a-a787-6252bdc65ddb",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "shift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3ad5faa-cfb8-4d30-a5b8-dabd1849126b",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "alt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -157,20 +157,16 @@ namespace _ARK_
             }
 
             dpath_parent = Directory.GetParent(dpath_root).FullName.NormalizePath();
-            ForceFolders();
         }
 
         void ForceFolders()
         {
-            if (Application.isEditor || error == null)
-            {
-                dpath_home.GetDir(true);
-                dpath_builds_linux.GetDir(true);
-                dpath_builds_windows.GetDir(true);
-                dpath_bundles_texts.GetDir(true);
-                dpath_bundles_linux.GetDir(true);
-                dpath_bundles_windows.GetDir(true);
-            }
+            dpath_home.GetDir(true);
+            dpath_builds_linux.GetDir(true);
+            dpath_builds_windows.GetDir(true);
+            dpath_bundles_texts.GetDir(true);
+            dpath_bundles_linux.GetDir(true);
+            dpath_bundles_windows.GetDir(true);
         }
     }
 }

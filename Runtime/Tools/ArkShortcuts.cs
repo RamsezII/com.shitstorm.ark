@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 namespace _ARK_
 {
-    using CallbackContext = InputAction.CallbackContext;
     public static class ArkShortcuts
     {
         readonly struct ShortcutInfos
@@ -34,6 +33,8 @@ namespace _ARK_
 
         static readonly Dictionary<InputAction, ShortcutInfos> shortcuts = new();
 
+        public static readonly IA_ArkShortcuts inputActions = new();
+
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -42,6 +43,7 @@ namespace _ARK_
             foreach (var pair in shortcuts)
                 pair.Key.Dispose();
             shortcuts.Clear();
+            inputActions.Enable();
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -99,7 +101,7 @@ namespace _ARK_
             shortcuts.Add(input, new(typeof(T), action, control, shift, alt));
         }
 
-        static void OnShortcutPerformed(CallbackContext context)
+        static void OnShortcutPerformed(InputAction.CallbackContext context)
         {
             if (!shortcuts.TryGetValue(context.action, out ShortcutInfos shortcut))
             {
@@ -108,7 +110,7 @@ namespace _ARK_
             }
 
             if (context.control.device is Keyboard)
-                if (!shortcut.control && !shortcut.alt)
+                if (!shortcut.control && !shortcut.alt && !shortcut.shift)
                     if (NUCLEOR.instance.isTyping._value || !UsageManager.AllAreEmpty(UsageGroups.Typing))
                         return;
 
