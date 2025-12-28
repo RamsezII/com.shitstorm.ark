@@ -1,4 +1,4 @@
-﻿using System;
+﻿using _UTIL_;
 using System.IO;
 using UnityEngine;
 
@@ -55,31 +55,25 @@ namespace _ARK_
             dpath_ignore,
             dpath_ignore_temp,
             dpath_resources;
-
-        const string button_prefixe = "Assets/" + nameof(_ARK_) + "/";
-
-        [UnityEditor.MenuItem(button_prefixe + nameof(OpenResourcesFolder))]
-        public static void OpenResourcesFolder() => Application.OpenURL(instance.Value.dpath_resources);
 #endif
 
         public readonly string error;
 
-        public static readonly Lazy<ArkPaths> instance = new(() => new(null));
+        public static readonly LazyValue<ArkPaths> instance = new(() => new ArkPaths(null));
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            instance.Value.ForceFolders();
+            instance.Reset();
+            instance.ForcedValue();
         }
 
         //----------------------------------------------------------------------------------------------------------
 
         ArkPaths(object o)
         {
-            Debug.Log($"INIT {typeof(ArkPaths)}");
-
             error = null;
 
 #if UNITY_EDITOR
@@ -157,16 +151,6 @@ namespace _ARK_
             }
 
             dpath_parent = Directory.GetParent(dpath_root).FullName.NormalizePath();
-        }
-
-        void ForceFolders()
-        {
-            dpath_home.GetDir(true);
-            dpath_builds_linux.GetDir(true);
-            dpath_builds_windows.GetDir(true);
-            dpath_bundles_texts.GetDir(true);
-            dpath_bundles_linux.GetDir(true);
-            dpath_bundles_windows.GetDir(true);
         }
     }
 }
