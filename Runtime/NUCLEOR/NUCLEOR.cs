@@ -234,8 +234,8 @@ namespace _ARK_
         {
             lock (mainThreadLock)
             {
-                averageUnscaledDeltatime = Mathf.Lerp(averageUnscaledDeltatime, Time.unscaledDeltaTime, 2 * Time.unscaledDeltaTime);
-                averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, 3 * Time.deltaTime);
+                averageUnscaledDeltatime = Mathf.Lerp(averageUnscaledDeltatime, Time.unscaledDeltaTime, 3.5f * Time.unscaledDeltaTime);
+                averageDeltatime = Mathf.Lerp(averageDeltatime, Time.deltaTime, 3.5f * Time.deltaTime);
 
                 timeScale_smooth.Value = Mathf.MoveTowards(timeScale_smooth._value, timeScale_raw._value, 5f * Time.unscaledDeltaTime);
 
