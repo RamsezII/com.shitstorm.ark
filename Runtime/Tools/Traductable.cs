@@ -56,6 +56,8 @@ namespace _ARK_
 
         Vector2 init_size;
 
+        public Action onRefresh;
+
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -112,6 +114,8 @@ namespace _ARK_
                 w = Mathf.Min(w, init_size.x);
                 tmpro.rectTransform.sizeDelta = new(w, 0);
             }
+
+            onRefresh?.Invoke();
         }
 
         public void SetTrad(string text) => SetTrads(new(text));
