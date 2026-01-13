@@ -6,6 +6,7 @@ namespace _ARK_
     public abstract class ArkComponent : MonoBehaviour
     {
         public Action onDestroy;
+        public bool _destroyed;
 
         //--------------------------------------------------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ namespace _ARK_
 
         protected virtual void OnDestroy()
         {
+            _destroyed = true;
             onDestroy?.Invoke();
         }
     }
