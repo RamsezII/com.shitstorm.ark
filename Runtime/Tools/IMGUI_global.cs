@@ -94,14 +94,12 @@ namespace _ARK_
                                         goto case KeyCode.Y;
                                     else
                                     {
-                                        Debug.LogWarning($"[{GetType()}] 'UNDO'", this);
                                         ActionStack.Undo();
                                         e.Use();
                                         return;
                                     }
 
                                 case KeyCode.Y:
-                                    Debug.LogWarning($"[{GetType()}] 'REDO'", this);
                                     ActionStack.Redo();
                                     e.Use();
                                     return;

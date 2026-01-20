@@ -33,7 +33,13 @@ namespace _ARK_
 
         static readonly Dictionary<InputAction, ShortcutInfos> shortcuts = new();
 
-        public static readonly IA_ArkShortcuts inputActions = new();
+        public static readonly IA_ArkShortcuts IA_main = new();
+
+        public static bool Ctrl => IA_main.ArkShortcuts.control.IsPressed();
+        public static bool Alt => IA_main.ArkShortcuts.alt.IsPressed();
+        public static bool Shift => IA_main.ArkShortcuts.shift.IsPressed();
+        public static bool Ctrl_Alt_Shift_or => Ctrl || Alt || Shift;
+        public static bool Ctrl_Alt_Shift_and => Ctrl && Alt && Shift;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -43,7 +49,7 @@ namespace _ARK_
             foreach (var pair in shortcuts)
                 pair.Key.Dispose();
             shortcuts.Clear();
-            inputActions.Enable();
+            IA_main.Enable();
         }
 
         //----------------------------------------------------------------------------------------------------------
