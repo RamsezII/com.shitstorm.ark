@@ -73,6 +73,44 @@ namespace _ARK_
 
             Event e = Event.current;
 
+            if (false)
+                if (e.type == EventType.KeyDown || e.type == EventType.ValidateCommand || e.type == EventType.ExecuteCommand)
+                    Debug.Log($"[TERM GUI] type={e.type} key={e.keyCode} char={(int)e.character} commandName={e.commandName} keyboardControl={GUIUtility.keyboardControl} hotControl={GUIUtility.hotControl}");
+
+            if (e.type == EventType.ExecuteCommand)
+                switch (e.commandName)
+                {
+                    case "Copy":
+                        if (clipboard_users.IsNotEmpty)
+                            foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                if (element(e, ClipboardOperations.Copy))
+                                {
+                                    e.Use();
+                                    return;
+                                }
+                        break;
+
+                    case "Paste":
+                        if (clipboard_users.IsNotEmpty)
+                            foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                if (element(e, ClipboardOperations.Paste))
+                                {
+                                    e.Use();
+                                    return;
+                                }
+                        break;
+
+                    case "Cut":
+                        if (clipboard_users.IsNotEmpty)
+                            foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
+                                if (element(e, ClipboardOperations.Cut))
+                                {
+                                    e.Use();
+                                    return;
+                                }
+                        break;
+                }
+
             if (e.type == EventType.KeyDown)
                 switch (e.keyCode)
                 {
@@ -101,42 +139,6 @@ namespace _ARK_
 
                                 case KeyCode.Y:
                                     ActionStack.Redo();
-                                    e.Use();
-                                    return;
-
-                                case KeyCode.C:
-                                    if (clipboard_users.IsNotEmpty)
-                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
-                                            if (element(e, ClipboardOperations.Copy))
-                                            {
-                                                e.Use();
-                                                return;
-                                            }
-                                    Debug.LogWarning($"[{GetType()}] 'Copy'", this);
-                                    e.Use();
-                                    return;
-
-                                case KeyCode.X:
-                                    if (clipboard_users.IsNotEmpty)
-                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
-                                            if (element(e, ClipboardOperations.Cut))
-                                            {
-                                                e.Use();
-                                                return;
-                                            }
-                                    Debug.LogWarning($"[{GetType()}] 'CUT'", this);
-                                    e.Use();
-                                    return;
-
-                                case KeyCode.V:
-                                    if (clipboard_users.IsNotEmpty)
-                                        foreach (var (index, element) in clipboard_users.ReversedOrderIteration())
-                                            if (element(e, ClipboardOperations.Paste))
-                                            {
-                                                e.Use();
-                                                return;
-                                            }
-                                    Debug.LogWarning($"[{GetType()}] 'PASTE'", this);
                                     e.Use();
                                     return;
                             }
