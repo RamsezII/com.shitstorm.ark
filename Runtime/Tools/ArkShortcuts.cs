@@ -71,35 +71,36 @@ namespace _ARK_
 
         public static void AddShortcut(
             in string shortcutName,
-            in string nameof_button,
             in Action action,
             in bool control = false,
             in bool shift = false,
-            in bool alt = false
+            in bool alt = false,
+            params string[] bindings
         ) => AddShortcut<Keyboard>(
             shortcutName: shortcutName,
-            nameof_button: nameof_button,
             action: action,
             control: control,
             shift: shift,
-            alt: alt
+            alt: alt,
+            bindings: bindings
         );
 
         public static void AddShortcut<T>(
             in string shortcutName,
-            in string nameof_button,
             in Action action,
             in bool control = false,
             in bool shift = false,
-            in bool alt = false
-        ) where T : InputDevice
+            in bool alt = false,
+            params string[] bindings
+            ) where T : InputDevice
         {
             var input = new InputAction(
                 name: shortcutName,
                 type: InputActionType.Button
             );
 
-            input.AddBinding($"<{typeof(T).Name}>/{nameof_button}");
+            for (int i = 0; i < bindings.Length; i++)
+                input.AddBinding($"<{typeof(T).Name}>/{bindings[i]}");
 
             input.performed += OnShortcutPerformed;
 
