@@ -45,6 +45,7 @@ namespace _ARK_
                 history.RemoveRange(pointer, history.Count - pointer);
             history.Add(new Command(execute, undo));
             pointer = history.Count;
+            execute();
         }
 
         public void TakeFocus() => focused = this;
