@@ -37,7 +37,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void AddToStack(in Action execute, in Action undo)
+        public static void Do(in Action execute, in Action undo)
         {
             if (pointer < history.Count)
                 history.RemoveRange(pointer, history.Count - pointer);
