@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public static class ActionStack
+    public sealed class ActionStack : ArkComponent
     {
         readonly struct Command
         {
@@ -23,21 +23,23 @@ namespace _ARK_
             }
         }
 
-        static readonly List<Command> history = new();
-        static int pointer;
+        readonly List<Command> history = new();
+        int pointer;
+
+        public static ActionStack focused;
+        public Func<bool> hasFocus;
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
-            history.Clear();
-            pointer = 0;
+            focused = null;
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void Do(in Action execute, in Action undo)
+        public void Do(in Action execute, in Action undo)
         {
             if (pointer < history.Count)
                 history.RemoveRange(pointer, history.Count - pointer);
@@ -45,18 +47,36 @@ namespace _ARK_
             pointer = history.Count;
         }
 
-        public static void Undo()
+        public void TakeFocus() => focused = this;
+        public void UntakeFocus()
         {
-            if (pointer == 0)
+            if (this == focused)
+                focused = null;
+        }
+
+        public static void Undo() => focused?._Undo();
+        void _Undo()
+        {
+            if (_destroyed || !hasFocus() || pointer == 0)
                 return;
             history[--pointer].undo();
         }
 
-        public static void Redo()
+        public static void Redo() => focused?._Redo();
+        void _Redo()
         {
-            if (pointer >= history.Count)
+            if (_destroyed || !hasFocus() || pointer >= history.Count)
                 return;
             history[pointer++].execute();
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            history.Clear();
+            pointer = 0;
         }
     }
 }
