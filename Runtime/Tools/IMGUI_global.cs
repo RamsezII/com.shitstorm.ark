@@ -132,13 +132,13 @@ namespace _ARK_
                                         goto case KeyCode.Y;
                                     else
                                     {
-                                        ActionStack.Undo();
+                                        ActionStack.Undo_focused();
                                         e.Use();
                                         return;
                                     }
 
                                 case KeyCode.Y:
-                                    ActionStack.Redo();
+                                    ActionStack.Redo_focused();
                                     e.Use();
                                     return;
                             }

@@ -55,16 +55,26 @@ namespace _ARK_
                 focused = null;
         }
 
-        public static void Undo() => focused?._Undo();
-        void _Undo()
+        public static void Undo_focused()
+        {
+            if (focused != null)
+                focused.Undo();
+        }
+
+        public void Undo()
         {
             if (_destroyed || !hasFocus() || pointer == 0)
                 return;
             history[--pointer].undo();
         }
 
-        public static void Redo() => focused?._Redo();
-        void _Redo()
+        public static void Redo_focused()
+        {
+            if (focused != null)
+                focused.Redo();
+        }
+
+        public void Redo()
         {
             if (_destroyed || !hasFocus() || pointer >= history.Count)
                 return;
