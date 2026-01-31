@@ -9,13 +9,13 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public abstract class Sequencer : Disposable
+    public abstract class Scheduler : Disposable
     {
         public readonly ListListener<Schedulable> schedulables = new();
 
         //----------------------------------------------------------------------------------------------------------
 
-        protected Sequencer(in string name) : base(name)
+        protected Scheduler(in string name) : base(name)
         {
         }
 
@@ -68,13 +68,13 @@ namespace _ARK_
         }
     }
 
-    public sealed class SequentialSequencer : Sequencer
+    public sealed class SchedulerSequential : Scheduler
     {
         public readonly ThreadSafe_struct<bool> isTick = new();
 
         //----------------------------------------------------------------------------------------------------------
 
-        public SequentialSequencer() : base(typeof(SequentialSequencer).FullName)
+        public SchedulerSequential() : base(typeof(SchedulerSequential).FullName)
         {
         }
 
@@ -141,12 +141,12 @@ namespace _ARK_
         }
     }
 
-    public sealed class ParallelSequencer : Sequencer
+    public sealed class SchedulerParallel : Scheduler
     {
 
         //----------------------------------------------------------------------------------------------------------
 
-        public ParallelSequencer() : base(typeof(ParallelSequencer).FullName)
+        public SchedulerParallel() : base(typeof(SchedulerParallel).FullName)
         {
         }
 

@@ -75,8 +75,8 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
-        public readonly SequentialSequencer sequencer = new();
-        public readonly ParallelSequencer sequencer_parallel = new();
+        public readonly SchedulerSequential scheduler_sequential = new();
+        public readonly SchedulerParallel scheduler_parallel = new();
         public readonly HeartBeat heartbeat_fixed = new(), heartbeat_scaled = new(), heartbeat_unscaled = new();
 
         public Camera camera_UI;
@@ -189,8 +189,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            sequencer.schedulables.Reset();
-            sequencer_parallel.schedulables.Reset();
+            scheduler_sequential.schedulables.Reset();
+            scheduler_parallel.schedulables.Reset();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
@@ -275,8 +275,8 @@ namespace _ARK_
                 delegates.Update?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
-                sequencer_parallel.Tick();
-                sequencer.Tick();
+                scheduler_parallel.Tick();
+                scheduler_sequential.Tick();
 
                 is_nucleor_update = false;
             }
@@ -315,10 +315,10 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(LogSequentialScheduler))]
-        void LogSequentialScheduler() => sequencer.LogStatus();
+        void LogSequentialScheduler() => scheduler_sequential.LogStatus();
 
         [ContextMenu(nameof(LogParallelScheduler))]
-        void LogParallelScheduler() => sequencer_parallel.LogStatus();
+        void LogParallelScheduler() => scheduler_parallel.LogStatus();
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -352,8 +352,8 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            sequencer_parallel.Dispose();
-            sequencer.Dispose();
+            scheduler_parallel.Dispose();
+            scheduler_sequential.Dispose();
             heartbeat_fixed.Dispose();
             heartbeat_unscaled.Dispose();
             heartbeat_scaled.Dispose();
