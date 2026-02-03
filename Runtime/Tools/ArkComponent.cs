@@ -5,7 +5,7 @@ namespace _ARK_
 {
     public abstract class ArkComponent : MonoBehaviour
     {
-        public Action onDestroy;
+        public Action onStart, onEnable, onDisable, onDestroy;
         public int arkID;
         public bool _destroyed;
 
@@ -30,16 +30,19 @@ namespace _ARK_
 
         protected virtual void OnEnable()
         {
+            onEnable?.Invoke();
         }
 
         protected virtual void OnDisable()
         {
+            onDisable?.Invoke();
         }
 
         //--------------------------------------------------------------------------------------------------------------
 
         protected virtual void Start()
         {
+            onStart?.Invoke();
         }
 
         //--------------------------------------------------------------------------------------------------------------
