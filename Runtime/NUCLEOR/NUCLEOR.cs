@@ -75,15 +75,25 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
-        public readonly SchedulerSequential scheduler_sequential = new();
-        public readonly SchedulerParallel scheduler_parallel = new();
-        public readonly HeartBeat heartbeat_fixed = new(), heartbeat_scaled = new(), heartbeat_unscaled = new();
+        public readonly SchedulerSequential
+            scheduler_sequential = new();
+
+        public readonly SchedulerParallel
+            scheduler_parallel = new();
+
+        public readonly HeartBeat
+            heartbeat_fixed = new(),
+            heartbeat_scaled = new(),
+            heartbeat_unscaled = new();
+
+        public readonly ActionBuffer
+            actionBuffer_update = new("actionbuffer:upd"),
+            actionBuffer_fixedUpdate = new("actionbuffer:fupd");
 
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
         public readonly ValueHandler<bool> isTyping = new();
-
         public readonly ValueHandler<byte> party_count = new();
 
         public static DateTimeOffset timestamp_appstart;
@@ -218,6 +228,7 @@ namespace _ARK_
 
                 delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
 
+                actionBuffer_fixedUpdate.Execute();
                 heartbeat_fixed.Tick(Time.fixedDeltaTime);
 
                 delegates.FixedUpdate?.Invoke();
@@ -242,6 +253,10 @@ namespace _ARK_
                 UsageManager.UpdateAltPress();
 
                 is_nucleor_update = true;
+
+                actionBuffer_update.Execute();
+                heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
+                heartbeat_scaled.Tick(Time.deltaTime);
 
                 delegates.Update_OnStartOfFrame_once?.Invoke();
                 delegates.Update_OnStartOfFrame_once = null;
@@ -331,9 +346,6 @@ namespace _ARK_
 
                 delegates.LateUpdate_onEndOfFrame_once?.Invoke();
                 delegates.LateUpdate_onEndOfFrame_once = null;
-
-                heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
-                heartbeat_scaled.Tick(Time.deltaTime);
 
                 delegates.LateUpdate_AfterAnimator?.Invoke();
                 delegates.LateUpdate_Cameras_BeforeCharacterModifyPivot?.Invoke();

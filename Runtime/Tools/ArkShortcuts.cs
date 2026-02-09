@@ -54,7 +54,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void RemoveShortcut(in Action action)
+        public static void RemoveShortcut(Action action) => NUCLEOR.delegates.LateUpdate_onEndOfFrame_once += () =>
         {
             List<InputAction> removes = new();
 
@@ -67,7 +67,7 @@ namespace _ARK_
                 shortcuts.Remove(removes[i]);
                 removes[i].Dispose();
             }
-        }
+        };
 
         public static void AddShortcut(
             in string shortcutName,
