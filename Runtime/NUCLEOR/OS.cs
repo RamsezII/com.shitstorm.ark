@@ -2,21 +2,16 @@
 
 namespace _ARK_
 {
-    public abstract class OS : MonoBehaviour
+    public abstract class OS : ArkComponent
     {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            base.Awake();
             OnLoadTexts(true);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        protected virtual void Start()
-        {
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -39,12 +34,6 @@ namespace _ARK_
         {
             if (focus)
                 OnLoadTexts(false);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        protected virtual void OnDestroy()
-        {
         }
     }
 }
