@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _UTIL_;
+using System;
 using UnityEngine;
 
 namespace _ARK_
@@ -8,6 +9,7 @@ namespace _ARK_
         public Action onStart, onEnable, onDisable, onDestroy;
         public int arkID;
         public bool _destroyed;
+        public readonly ValueHandler<bool> isEnabled = new();
 
         static int _arkID;
 
@@ -31,11 +33,13 @@ namespace _ARK_
         protected virtual void OnEnable()
         {
             onEnable?.Invoke();
+            isEnabled.Value = true;
         }
 
         protected virtual void OnDisable()
         {
             onDisable?.Invoke();
+            isEnabled.Value = false;
         }
 
         //--------------------------------------------------------------------------------------------------------------
