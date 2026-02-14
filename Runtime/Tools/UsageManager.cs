@@ -30,7 +30,7 @@ namespace _ARK_
         static float last_ALT;
 
         static readonly object mouse_user = new();
-        public static Action on_double_alt;
+        public static Action on_double_alt, on_usages_change;
 
         public static readonly ValueHandler<MouseStatus> mouse_status = new();
 
@@ -59,13 +59,17 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
-            for (int i = 0; i < (int)UsageGroups._last_; i++)
-                usages[i] = new ListListener();
-
+            on_usages_change = null;
             on_double_alt = null;
             last_ALT = 0;
 
             mouse_status.Reset();
+
+            for (int i = 0; i < (int)UsageGroups._last_; i++)
+            {
+                usages[i] = new ListListener();
+                usages[i].AddListener2(list => on_usages_change?.Invoke(), doNotCallThisTime: false);
+            }
 
             usages[(int)UsageGroups.GameMouse].AddListener1(_ => UpdateCursorState());
             usages[(int)UsageGroups.TrueMouse].AddListener1(_ => UpdateCursorState());

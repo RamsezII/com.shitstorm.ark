@@ -93,6 +93,7 @@ namespace _ARK_
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
+        public readonly ValueHandler<bool> isFocused = new();
         public readonly ValueHandler<bool> isTyping = new();
         public readonly ValueHandler<byte> party_count = new();
 
@@ -299,6 +300,7 @@ namespace _ARK_
 
         private void OnApplicationFocus(bool focus)
         {
+            isFocused.Value = focus;
             lock (mainThreadLock)
                 if (focus)
                 {
@@ -316,6 +318,7 @@ namespace _ARK_
 
         private void OnApplicationQuit()
         {
+            isFocused.Value = false;
             lock (mainThreadLock)
             {
 #if PLATFORM_STANDALONE_LINUX
@@ -364,6 +367,8 @@ namespace _ARK_
 
         private void OnDestroy()
         {
+            isFocused.Value = false;
+
             scheduler_parallel.Dispose();
             scheduler_sequential.Dispose();
             heartbeat_fixed.Dispose();
