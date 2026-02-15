@@ -110,10 +110,7 @@ namespace _ARK_
             timeScale_raw = new(1),
             timeScale_smooth = new(1);
 
-        public readonly object
-            mainThreadLock = new(),
-            fixedUpdate_lock = new(),
-            update_lock = new();
+        public readonly object mainThreadLock = new();
 
 #if UNITY_EDITOR
         public bool _IsTyping => isTyping.Value;
@@ -211,16 +208,12 @@ namespace _ARK_
             canvas2D = transform.Find("Canvas2D").GetComponent<Canvas>();
 
             timeScale_raw.AddListener(value => Time.timeScale = value);
-
-            Util.Lock(fixedUpdate_lock);
-            Util.Lock(update_lock);
         }
 
         //----------------------------------------------------------------------------------------------------------
 
         private void FixedUpdate()
         {
-            Util.Unlock(fixedUpdate_lock);
             lock (mainThreadLock)
             {
                 ++fixedFrameCount;
@@ -245,14 +238,12 @@ namespace _ARK_
 
                 delegates.fixedupdate_flag = true;
             }
-            Util.Lock(fixedUpdate_lock);
         }
 
         //----------------------------------------------------------------------------------------------------------
 
         private void Update()
         {
-            Util.Unlock(update_lock);
             lock (mainThreadLock)
             {
                 averageUnscaledDeltatime = Mathf.Lerp(averageUnscaledDeltatime, Time.unscaledDeltaTime, 3.5f * Time.unscaledDeltaTime);
@@ -305,7 +296,6 @@ namespace _ARK_
 
                 is_nucleor_update = false;
             }
-            Util.Lock(update_lock);
         }
 
         private void OnApplicationFocus(bool focus)
@@ -377,18 +367,21 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            isFocused.Value = false;
+            lock (mainThreadLock)
+            {
+                isFocused.Value = false;
 
-            scheduler_parallel.Dispose();
-            scheduler_sequential.Dispose();
-            heartbeat_fixed.Dispose();
-            heartbeat_unscaled.Dispose();
-            heartbeat_scaled.Dispose();
+                scheduler_parallel.Dispose();
+                scheduler_sequential.Dispose();
+                heartbeat_fixed.Dispose();
+                heartbeat_unscaled.Dispose();
+                heartbeat_scaled.Dispose();
 
-            LogManager.ClearLogs();
+                LogManager.ClearLogs();
 
-            if (Directory.Exists(ArkPaths.instance.Value.dpath_temp))
-                Directory.Delete(ArkPaths.instance.Value.dpath_temp, true);
+                if (Directory.Exists(ArkPaths.instance.Value.dpath_temp))
+                    Directory.Delete(ArkPaths.instance.Value.dpath_temp, true);
+            }
         }
     }
 }
