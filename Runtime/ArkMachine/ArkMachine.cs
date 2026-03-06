@@ -7,6 +7,20 @@ namespace _ARK_
 {
     public static partial class ArkMachine
     {
+        [Serializable]
+        public class HSettings : HomeJSon
+        {
+            public string last_user;
+
+            public Languages language = Application.systemLanguage switch
+            {
+                SystemLanguage.French => Languages.French,
+                _ => Languages.English,
+            };
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         public static DirectoryInfo ForceUsersFolder() => Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users).GetDir(true);
         public static DirectoryInfo GetUserFolder(in bool force) => GetUserFolder(user_name.Value, force);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
@@ -19,15 +33,13 @@ namespace _ARK_
 
         public static readonly ListListener<DirectoryInfo> users = new();
 
-        public static bool flag_shutdown;
+        public static HSettings h_settings;
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            flag_shutdown = false;
-
             user_ready = false;
             on_user_ready = null;
 
@@ -52,18 +64,30 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void ShutdownApplication(in bool force)
+        public static void ShutdownApplication()
         {
-            if (force)
-                flag_shutdown = true;
-
-            if (flag_shutdown)
 #if UNITY_EDITOR
-                if (Application.isEditor)
-                    UnityEditor.EditorApplication.isPlaying = false;
-                else
+            if (Application.isEditor)
+                UnityEditor.EditorApplication.isPlaying = false;
+            else
 #endif
-                    Application.Quit();
+                Application.Quit();
+        }
+
+        public static void LoadSettings(in bool log)
+        {
+            StaticJSon.ReadStaticJSon(out h_settings, true, log);
+            ApplySettings();
+        }
+
+        public static void SaveSettings(in bool log)
+        {
+            h_settings.SaveStaticJSon(log);
+        }
+
+        public static void ApplySettings()
+        {
+            Traductable.language.Value = h_settings.language;
         }
 
         static void ScanUsers() => users.Modify(list =>
