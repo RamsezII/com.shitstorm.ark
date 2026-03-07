@@ -1,122 +1,151 @@
 ﻿using _UTIL_;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace _ARK_
 {
     public static partial class ArkMachine
     {
-        [Serializable]
-        public class HSettings : HomeJSon
-        {
-            public string last_user;
-
-            public Languages language = Application.systemLanguage switch
-            {
-                SystemLanguage.French => Languages.French,
-                _ => Languages.English,
-            };
-        }
-
-        //----------------------------------------------------------------------------------------------------------
-
-        public static DirectoryInfo ForceUsersFolder() => Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users).GetDir(true);
-        public static DirectoryInfo GetUserFolder(in bool force) => GetUserFolder(user_name.Value, force);
+        public static readonly DirectoryInfo dir_users = new(Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users));
+        public static readonly IEnumerable<DirectoryInfo> EUsers = dir_users.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
+        public static DirectoryInfo ForceUsersFolder() => dir_users.FullName.GetDir(true);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
+        public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name, force);
 
+        public static readonly ValueHandler<Languages> language = new();
+        static string last_user_name, user_name;
+        public static string CurrentUserName => user_name;
 
-        public static readonly ValueHandler<string> user_name = new();
+        static Action onReloadUserFiles;
+        static Action<bool> onReloadUserFiles_log;
 
-        public static bool user_ready;
-        static Action on_user_ready;
-
-        public static readonly ListListener<DirectoryInfo> users = new();
-
-        public static HSettings h_settings;
+        public static string GetSettingsPath() => Path.Combine(ArkPaths.instance.Value.dpath_home, JSon.GetJSonName(typeof(ArkMachine)));
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            user_ready = false;
-            on_user_ready = null;
+            last_user_name = user_name = null;
+            onReloadUserFiles = null;
+            onReloadUserFiles_log = null;
 
-            user_name.Reset("default_user");
-            users.Reset();
+            language.Reset();
 
-            ScanUsers();
-            LoadSettings(true);
+            LoadMachineSettings(true);
 
-            user_name.AddListener(value =>
-            {
-                h_settings.last_user = value;
-            });
+            if (UserExists(last_user_name))
+                SetUserName(last_user_name);
+            else
+                SetUserName("default_user");
+
+            onReloadUserFiles?.Invoke();
+            onReloadUserFiles_log?.Invoke(false);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
-            NUCLEOR.delegates.OnApplicationFocus += () => LoadSettings(false);
-            NUCLEOR.delegates.OnApplicationUnfocus += () => SaveSettings(false);
+            NUCLEOR.delegates.OnApplicationFocus += static () =>
+            {
+                LoadMachineSettings(log: false);
+
+                GetCurrentUserFolder(force: true);
+
+                onReloadUserFiles?.Invoke();
+                onReloadUserFiles_log?.Invoke(false);
+            };
+
+            NUCLEOR.delegates.OnApplicationUnfocus += static () => SaveSettings(log: false);
         }
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void ShutdownApplication()
-        {
-#if UNITY_EDITOR
-            if (Application.isEditor)
-                UnityEditor.EditorApplication.isPlaying = false;
-            else
-#endif
-                Application.Quit();
-        }
-
-        public static void LoadSettings(in bool log)
-        {
-            StaticJSon.ReadStaticJSon(out h_settings, true, log);
-            ApplySettings();
-        }
-
         public static void SaveSettings(in bool log)
         {
-            h_settings.SaveStaticJSon(log);
+            string fpath = GetSettingsPath();
+
+            JObject jobj = new()
+            {
+                [nameof(last_user_name)] = user_name,
+                [nameof(language)] = language._value.ToString(),
+            };
+
+            jobj.NJSave(fpath, log);
         }
 
-        public static void ApplySettings()
+        public static void LoadMachineSettings(in bool log)
         {
-            Traductable.language.Value = h_settings.language;
+            string fpath = GetSettingsPath();
+
+            if (fpath.NJRead(out JObject jobj, log))
+            {
+                last_user_name = jobj.Value<string>(nameof(last_user_name)) ?? user_name;
+
+                var set_language = Application.systemLanguage switch
+                {
+                    SystemLanguage.French => Languages.French,
+                    _ => Languages.English,
+                };
+
+                if (jobj.ContainsKey(nameof(language)))
+                    if (Enum.TryParse(jobj.Value<string>(nameof(ArkMachine.language)), true, out Languages language))
+                        set_language = language;
+
+                language.Value = set_language;
+            }
         }
 
-        static void ScanUsers() => users.Modify(list =>
+        public static bool UserExists(in string name)
         {
-            list.Clear();
-            list.AddRange(ForceUsersFolder().EnumerateDirectories());
-        });
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+
+            if (dir_users.Exists)
+                if (dir_users.EnumerateDirectories(name, SearchOption.TopDirectoryOnly).Any())
+                    return true;
+
+            return false;
+        }
 
         public static void SetUserName(in string value)
         {
-            user_name.Value = value;
-            GetUserFolder(true);
-            ScanUsers();
-            OnUserReady();
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                Debug.LogWarning($"can not set empty user name ({nameof(value)}: \"{value}\")");
+                return;
+            }
+
+            last_user_name = user_name = value;
+
             SaveSettings(true);
+            LoadMachineSettings(false);
+
+            onReloadUserFiles?.Invoke();
+            onReloadUserFiles_log?.Invoke(false);
         }
 
-        public static bool TryRemoveUser(in string value, out string error)
+        public static bool TryDeleteUser(in string value, out string error)
         {
+            if (string.Equals(user_name, value, StringComparison.OrdinalIgnoreCase))
+            {
+                error = "Can not delete current user";
+                return false;
+            }
+
             string path = Path.Combine(ForceUsersFolder().FullName, value);
 
             if (!Directory.Exists(path))
             {
-                error = $"User '{value}' does not exist!";
+                error = $"User '{value}' does not exist";
                 return false;
             }
 
             Directory.Delete(path, true);
-            ScanUsers();
             error = null;
 
             return true;
@@ -140,32 +169,39 @@ namespace _ARK_
 
             old_user.MoveTo(new_user.FullName);
 
-            if (old_name.Equals(user_name.Value, StringComparison.Ordinal))
-                user_name.Value = new_name;
+            if (old_name.Equals(user_name, StringComparison.Ordinal))
+                user_name = new_name;
 
-            GetUserFolder(true);
-            ScanUsers();
+            GetCurrentUserFolder(force: true);
+
+            onReloadUserFiles?.Invoke();
+            onReloadUserFiles_log?.Invoke(false);
 
             error = null;
             return true;
         }
 
-        public static void AddListener(in Action listener)
+        public static void AddOnReloadUserFiles(in Action action, in bool doNotCallThisTime = false)
         {
-            if (user_ready)
-                listener();
-            else
-                Util.AddAction(ref on_user_ready, listener);
+            onReloadUserFiles -= action;
+            if (!doNotCallThisTime)
+                action();
+            onReloadUserFiles += action;
         }
 
-        static void OnUserReady()
+        public static void RemoveOnReloadUserFiles(in Action action)
         {
-            if (!user_ready)
-            {
-                user_ready = true;
-                on_user_ready?.Invoke();
-            }
-            on_user_ready = null;
+            onReloadUserFiles -= action;
+        }
+
+        public static void ShutdownApplication()
+        {
+#if UNITY_EDITOR
+            if (Application.isEditor)
+                UnityEditor.EditorApplication.isPlaying = false;
+            else
+#endif
+                Application.Quit();
         }
     }
 }

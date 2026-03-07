@@ -1,4 +1,3 @@
-using _UTIL_;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -32,7 +31,7 @@ namespace _ARK_
         public override readonly string ToString() => GetAutomatic();
         public readonly string GetAutomatic()
         {
-            switch (Traductable.language._value)
+            switch (ArkMachine.language._value)
             {
                 case Languages.French:
                     if (string.IsNullOrEmpty(french))
@@ -48,7 +47,6 @@ namespace _ARK_
     public sealed class Traductable : MonoBehaviour
     {
         static readonly HashSet<Traductable> instances = new();
-        public static readonly ValueHandler<Languages> language = new();
 
         public TextMeshProUGUI tmpro;
         public bool auto_width;
@@ -60,11 +58,10 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void AfterSceneLoad()
         {
-            language.Reset();
-            language.AddListener(langage =>
+            ArkMachine.language.AddListener(langage =>
             {
                 foreach (Traductable self in instances)
                     self.Refresh();
