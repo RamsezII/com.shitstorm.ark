@@ -82,7 +82,7 @@ namespace _ARK_
         {
             string fpath = GetSettingsPath();
 
-            if (fpath.NJRead(out JObject jobj, log))
+            if (fpath.TryNJRead(out JObject jobj, log))
             {
                 last_user_name = jobj.Value<string>(nameof(last_user_name)) ?? user_name;
 
