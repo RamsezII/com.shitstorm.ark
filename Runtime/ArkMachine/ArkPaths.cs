@@ -19,7 +19,8 @@ namespace _ARK_
 
         public static readonly string
             name_exe = Application.productName + (Util.is_app_windows ? ".exe" : ".x86_64"),
-            name_os = Util.is_app_windows ? name_windows : name_linux;
+            name_os = Util.is_app_windows ? name_windows : name_linux,
+            dpath_ignore_resources = Path.Combine(Application.dataPath, "_IGNORE_", "Resources");
 
         public readonly string
             dname_app_actual,
