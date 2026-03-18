@@ -76,16 +76,16 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
-        public readonly SchedulerSequential
-            scheduler_sequential = new();
+        public readonly SequencerMono
+            sequencer_mono = new();
 
-        public readonly SchedulerParallel
-            scheduler_parallel = new();
+        public readonly SequencerMulti
+            sequencer_multi = new();
 
-        public readonly HeartBeat
-            heartbeat_fixed = new(),
-            heartbeat_scaled = new(),
-            heartbeat_unscaled = new();
+        public readonly Scheduler
+            scheduler_fixed = new(),
+            scheduler_scaled = new(),
+            scheduler_unscaled = new();
 
         public readonly ActionBuffer
             actionBuffer_update = new("actionbuffer:upd"),
@@ -201,8 +201,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            scheduler_sequential.schedulables.Reset();
-            scheduler_parallel.schedulables.Reset();
+            sequencer_mono.sequencables.Reset();
+            sequencer_multi.sequencables.Reset();
 
             camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
             canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
@@ -232,7 +232,7 @@ namespace _ARK_
                 delegates.FixedUpdate_OnVehiclePhysics?.Invoke();
 
                 actionBuffer_fixedUpdate.Execute();
-                heartbeat_fixed.Tick(Time.fixedDeltaTime);
+                scheduler_fixed.Tick(Time.fixedDeltaTime);
 
                 delegates.FixedUpdate?.Invoke();
 
@@ -258,8 +258,8 @@ namespace _ARK_
                 is_nucleor_update = true;
 
                 actionBuffer_update.Execute();
-                heartbeat_unscaled.Tick(Time.unscaledDeltaTime);
-                heartbeat_scaled.Tick(Time.deltaTime);
+                scheduler_unscaled.Tick(Time.unscaledDeltaTime);
+                scheduler_scaled.Tick(Time.deltaTime);
 
                 delegates.Update_OnStartOfFrame_once?.Invoke();
                 delegates.Update_OnStartOfFrame_once = null;
@@ -293,8 +293,8 @@ namespace _ARK_
                 delegates.Update?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
 
-                scheduler_parallel.Tick();
-                scheduler_sequential.Tick();
+                sequencer_multi.Tick();
+                sequencer_mono.Tick();
 
                 is_nucleor_update = false;
             }
@@ -335,10 +335,10 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(LogSequentialScheduler))]
-        void LogSequentialScheduler() => scheduler_sequential.LogStatus();
+        void LogSequentialScheduler() => sequencer_mono.LogStatus();
 
         [ContextMenu(nameof(LogParallelScheduler))]
-        void LogParallelScheduler() => scheduler_parallel.LogStatus();
+        void LogParallelScheduler() => sequencer_multi.LogStatus();
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -373,11 +373,11 @@ namespace _ARK_
             {
                 isFocused.Value = false;
 
-                scheduler_parallel.Dispose();
-                scheduler_sequential.Dispose();
-                heartbeat_fixed.Dispose();
-                heartbeat_unscaled.Dispose();
-                heartbeat_scaled.Dispose();
+                sequencer_multi.Dispose();
+                sequencer_mono.Dispose();
+                scheduler_fixed.Dispose();
+                scheduler_unscaled.Dispose();
+                scheduler_scaled.Dispose();
 
                 LogManager.ClearLogs();
 

@@ -9,7 +9,7 @@ using UnityEngine;
 namespace _ARK_
 {
     [Serializable]
-    public class Schedulable : Disposable
+    public class Sequencable : Disposable
     {
         public string callerName, description;
         public IEnumerator<float> routine;
@@ -22,7 +22,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public Schedulable([CallerMemberName] string callerName = null) : base(callerName)
+        public Sequencable([CallerMemberName] string callerName = null) : base(callerName)
         {
             this.callerName = callerName;
 
@@ -41,7 +41,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public virtual void OnSchedule()
+        public virtual void OnFirstThick()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace _ARK_
             catch (Exception e)
             {
                 Debug.LogException(e);
-                Debug.LogError($"{this}.{nameof(OnSchedule)}() -> {nameof(description)}:\n{description}");
+                Debug.LogError($"{this}.{nameof(OnFirstThick)}() -> {nameof(description)}:\n{description}");
                 Dispose();
             }
         }
