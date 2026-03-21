@@ -20,6 +20,7 @@ namespace _ARK_
         public static readonly string
             name_exe = Application.productName + (Util.is_app_windows ? ".exe" : ".x86_64"),
             name_os = Util.is_app_windows ? name_windows : name_linux,
+            dpath_resources = Path.Combine(Application.dataPath, "Resources"),
             dpath_ignore_resources = Path.Combine(Application.dataPath, "_IGNORE_", "Resources");
 
         public readonly string
@@ -52,10 +53,8 @@ namespace _ARK_
             dname_ignore = "_IGNORE_";
 
         public readonly string
-            dpath_assets,
             dpath_ignore,
-            dpath_ignore_temp,
-            dpath_resources;
+            dpath_ignore_temp;
 #endif
 
         public readonly string error;
@@ -78,8 +77,6 @@ namespace _ARK_
             error = null;
 
 #if UNITY_EDITOR
-            dpath_assets = Application.dataPath.NormalizePath();
-            dpath_resources = Path.Combine(dpath_assets, "Resources").NormalizePath();
             dpath_ignore = Path.Combine(Application.dataPath, dname_ignore);
             dpath_ignore_temp = Path.Combine(dpath_ignore, "_TEMP_");
 #endif
