@@ -10,7 +10,7 @@ namespace _ARK_
 {
     public static partial class ArkMachine
     {
-        public static readonly DirectoryInfo dir_users = new(Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users));
+        public static readonly DirectoryInfo dir_users = Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users).GetDir(true);
         public static readonly IEnumerable<DirectoryInfo> EUsers = dir_users.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
         public static DirectoryInfo ForceUsersFolder() => dir_users.FullName.GetDir(true);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
