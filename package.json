@@ -4,7 +4,7 @@
     "displayName": "ram16._ARK_",
     "description": "Fragile and immense, seed and tree — seed as central Heart.",
     "dependencies": {
-        "com.shitstorm.util": "https://github.com/RamsezII/com.shitstorm.util.git"
+        "com.shitstorm.util": "7.7.7"
     },
     "author": {
         "name": "RamsezII",
