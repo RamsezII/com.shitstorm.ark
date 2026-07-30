@@ -10,9 +10,10 @@ namespace _ARK_
             dname_ignore = "_IGNORE_",
             dname_resources = "Resources",
 #endif
+            dname_tools = "tools",
+            dname_temp = "temp",
             dname_home = "home",
             dname_users = "users",
-            dname_temp = "temp",
             dname_bundles = "bundles",
             dname_texts = "texts",
             dname_builds = "builds",
@@ -27,10 +28,11 @@ namespace _ARK_
         public static DirectoryInfo ExecDir => Application.dataPath.GetDir(false).Parent;
         public static FileInfo ExecFile => new(Path.Combine(ExecDir.FullName, Application.productName + (Util.IsAppWindows ? ".exe" : ".x86_64")));
         public static DirectoryInfo DRoot => IsPortableBuild() ? ExecDir : ExecDir.Parent.Parent.Parent;
+        public static DirectoryInfo DFTools => DRoot.Combine(dname_tools).ForceDir();
+        public static DirectoryInfo DTemp => DRoot.Combine(dname_temp);
+        public static DirectoryInfo DFTemp => DTemp.ForceDir();
         public static DirectoryInfo DFHome => new DirectoryInfo(Path.Combine(DRoot.FullName, dname_home)).ForceDir();
         public static DirectoryInfo DFUsers => new DirectoryInfo(Path.Combine(DFHome.FullName, dname_users)).ForceDir();
-        public static DirectoryInfo DTemp => DFHome.Combine(dname_temp);
-        public static DirectoryInfo DFTemp => DTemp.ForceDir();
         public static DirectoryInfo DFBundles => new DirectoryInfo(Path.Combine(DFHome.FullName, dname_bundles)).ForceDir();
         public static DirectoryInfo DFBundlesTexts => new DirectoryInfo(Path.Combine(DFBundles.FullName, dname_texts)).ForceDir();
         public static DirectoryInfo DFBundlesWindows => new DirectoryInfo(Path.Combine(DFBundles.FullName, dname_windows)).ForceDir();
