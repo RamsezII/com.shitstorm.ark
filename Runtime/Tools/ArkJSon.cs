@@ -17,7 +17,7 @@ namespace _ARK_
 
     public abstract class HomeJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(ArkPaths.instance.Value.dpath_home.GetDir(true).FullName, type.FullName + json);
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFHome.FullName, type.FullName + json);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 
@@ -31,7 +31,7 @@ namespace _ARK_
     {
 #if UNITY_EDITOR
         public static string GetFilePath<T>() => GetFilePath(typeof(T));
-        public static string GetFilePath(in Type type) => Path.Combine(ArkPaths.dpath_resources.GetDir(true).FullName, type.FullName + ".json.txt");
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFResources.ForceDir().FullName, type.FullName + ".json.txt");
         public string GetFilePath() => GetFilePath(GetType());
 #endif
 

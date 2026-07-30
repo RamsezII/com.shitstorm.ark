@@ -122,7 +122,7 @@ namespace _ARK_
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
 
         static string GetTimestampPath() => Path.Combine(
-            ArkPaths.instance.Value.dpath_ignore_temp.GetDir(true).FullName,
+            ArkMachine.DFIgnoreTemp.FullName,
             typeof(NUCLEOR).FullName + "." + nameof(timestamp_appstart) + ".txt"
         );
 #endif
@@ -138,9 +138,9 @@ namespace _ARK_
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.quitting += () =>
             {
-                string dpath = ArkPaths.instance.Value.dpath_ignore_temp;
-                if (Directory.Exists(dpath))
-                    Directory.Delete(dpath, true);
+                var dtemp = ArkMachine.DIgnoreTemp;
+                if (dtemp.Exists)
+                    dtemp.Delete(true);
             };
 #endif
 
@@ -381,8 +381,9 @@ namespace _ARK_
 
                 LogManager.ClearLogs();
 
-                if (Directory.Exists(ArkPaths.instance.Value.dpath_temp))
-                    Directory.Delete(ArkPaths.instance.Value.dpath_temp, true);
+                var dtemp = ArkMachine.DTemp;
+                if (dtemp.Exists)
+                    dtemp.Delete(true);
             }
         }
     }

@@ -10,10 +10,9 @@ namespace _ARK_
 {
     public static partial class ArkMachine
     {
-        public static readonly DirectoryInfo dir_users = Path.Combine(ArkPaths.instance.Value.dpath_home, ArkPaths.dname_users).GetDir(true);
-        public static readonly IEnumerable<DirectoryInfo> EUsers = dir_users.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-        public static DirectoryInfo ForceUsersFolder() => dir_users.FullName.GetDir(true);
-        public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(ForceUsersFolder().FullName, user_name).GetDir(force);
+        public static DirectoryInfo GetUsersDir => DFUsers.ForceDir();
+        public static IEnumerable<DirectoryInfo> EUsers => GetUsersDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
+        public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
         public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name, force);
 
         public static readonly ValueHandler<Languages> language = new();
@@ -23,7 +22,7 @@ namespace _ARK_
         static Action onReloadUserFiles;
         static Action<bool> onReloadUserFiles_log;
 
-        public static string GetSettingsPath() => Path.Combine(ArkPaths.instance.Value.dpath_home, JSon.GetJSonName(typeof(ArkMachine)));
+        public static string GetSettingsPath() => Path.Combine(DFHome.FullName, JSon.GetJSonName(typeof(ArkMachine)));
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -105,8 +104,8 @@ namespace _ARK_
             if (string.IsNullOrWhiteSpace(name))
                 return false;
 
-            if (dir_users.Exists)
-                if (dir_users.EnumerateDirectories(name, SearchOption.TopDirectoryOnly).Any())
+            if (GetUsersDir.Exists)
+                if (GetUsersDir.EnumerateDirectories(name, SearchOption.TopDirectoryOnly).Any())
                     return true;
 
             return false;
@@ -137,7 +136,7 @@ namespace _ARK_
                 return false;
             }
 
-            string path = Path.Combine(ForceUsersFolder().FullName, value);
+            string path = Path.Combine(GetUsersDir.FullName, value);
 
             if (!Directory.Exists(path))
             {
