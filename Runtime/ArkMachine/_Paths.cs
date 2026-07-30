@@ -29,7 +29,7 @@ namespace _ARK_
         public static FileInfo ExecFile => new(Path.Combine(ExecDir.FullName, Application.productName + (Util.IsAppWindows ? ".exe" : ".x86_64")));
         public static DirectoryInfo DRoot => IsPortableBuild() ? ExecDir : ExecDir.Parent.Parent.Parent;
         public static DirectoryInfo DFTools => ExecDir.Combine(dname_tools).ForceDir();
-        public static DirectoryInfo DTemp => DRoot.Combine(dname_temp);
+        public static DirectoryInfo DTemp => DFHome.Combine(dname_temp);
         public static DirectoryInfo DFTemp => DTemp.ForceDir();
         public static DirectoryInfo DFHome => new DirectoryInfo(Path.Combine(DRoot.FullName, dname_home)).ForceDir();
         public static DirectoryInfo DFUsers => new DirectoryInfo(Path.Combine(DFHome.FullName, dname_users)).ForceDir();
