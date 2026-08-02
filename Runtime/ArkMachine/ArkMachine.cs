@@ -15,7 +15,7 @@ namespace _ARK_
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
         public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name, force);
 
-        public static readonly ValueHandler<Languages> language = new();
+        public static readonly ValueNotifier<Languages> language = new();
         static string last_user_name, user_name;
         public static string CurrentUserName => user_name;
 

@@ -94,9 +94,9 @@ namespace _ARK_
         public Camera camera_UI;
         public Canvas canvas3D, canvas2D;
 
-        public readonly ValueHandler<bool> isFocused = new();
-        public readonly ValueHandler<bool> isTyping = new();
-        public readonly ValueHandler<byte> party_count = new();
+        public readonly ValueNotifier<bool> isFocused = new();
+        public readonly ValueNotifier<bool> isTyping = new();
+        public readonly ValueNotifier<byte> party_count = new();
 
         public static DateTimeOffset timestamp_appstart;
         public static bool application_closed;
@@ -107,7 +107,7 @@ namespace _ARK_
             averageDeltatime = 1,
             averageUnscaledDeltatime = 1;
 
-        public readonly ValueHandler<float>
+        public readonly ValueNotifier<float>
             timeScale_raw = new(1),
             timeScale_smooth = new(1);
 

@@ -32,7 +32,7 @@ namespace _ARK_
         static readonly object mouse_user = new();
         public static Action on_double_alt, on_usages_change;
 
-        public static readonly ValueHandler<MouseStatus> mouse_status = new();
+        public static readonly ValueNotifier<MouseStatus> mouse_status = new();
 
         //----------------------------------------------------------------------------------------------------------
 

@@ -9,7 +9,7 @@ namespace _ARK_
         public Action onStart, onEnable, onDisable, onDestroy;
         public int arkID;
         public bool _destroyed;
-        public readonly ValueHandler<bool> isEnabled = new();
+        public readonly ValueNotifier<bool> isEnabled = new();
 
         static int _arkID;
 
