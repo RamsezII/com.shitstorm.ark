@@ -91,9 +91,6 @@ namespace _ARK_
             actionBuffer_update = new("actionbuffer:upd"),
             actionBuffer_fixedUpdate = new("actionbuffer:fupd");
 
-        public Camera camera_UI;
-        public Canvas canvas3D, canvas2D;
-
         public readonly ValueNotifier<bool> isFocused = new();
         public readonly ValueNotifier<bool> isTyping = new();
         public readonly ValueNotifier<byte> party_count = new();
@@ -203,10 +200,6 @@ namespace _ARK_
 
             sequencer_mono.sequencables.Reset();
             sequencer_multi.sequencables.Reset();
-
-            camera_UI = transform.Find("Camera_UI").GetComponent<Camera>();
-            canvas3D = camera_UI.transform.Find("Canvas3D").GetComponent<Canvas>();
-            canvas2D = transform.Find("Canvas2D").GetComponent<Canvas>();
 
             timeScale_raw.AddListener(value => Time.timeScale = value);
         }
