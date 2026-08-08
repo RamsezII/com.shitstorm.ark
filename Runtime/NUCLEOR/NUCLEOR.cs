@@ -76,6 +76,9 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
+        public Camera cameraUI3D;
+        public Canvas canvas2D, canvas3D;
+
         public readonly SequencerMono
             sequencer_mono = new();
 
@@ -197,6 +200,10 @@ namespace _ARK_
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+
+            cameraUI3D = transform.Find("CameraUI3D").GetComponent<Camera>();
+            canvas3D = cameraUI3D.GetComponentInChildren<Canvas>();
+            canvas2D = transform.Find("Canvas2D").GetComponent<Canvas>();
 
             sequencer_mono.sequencables.Reset();
             sequencer_multi.sequencables.Reset();
