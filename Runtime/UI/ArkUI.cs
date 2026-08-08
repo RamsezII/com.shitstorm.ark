@@ -15,7 +15,6 @@ namespace _ARK_
 
             public readonly RectTransform
                 canvas_rt,
-                player_ui,
                 current_mode,
                 mode_manager,
                 OS_overlay;
@@ -28,7 +27,6 @@ namespace _ARK_
                 canvas_rt = (RectTransform)canvas.transform;
                 raycaster = canvas.GetComponent<GraphicRaycaster>();
                 canvasGroup = canvas.GetComponent<CanvasGroup>();
-                player_ui = (RectTransform)canvas.transform.Find(nameof(player_ui));
                 current_mode = (RectTransform)canvas.transform.Find(nameof(current_mode));
                 mode_manager = (RectTransform)canvas.transform.Find(nameof(mode_manager));
                 OS_overlay = (RectTransform)canvas.transform.Find(nameof(OS_overlay));
@@ -39,10 +37,12 @@ namespace _ARK_
         public Camera cameraUI3D;
         public ArkCanvas ui2D, ui3D;
 
-        [SerializeField]
-        RectTransform
+        public RectTransform
+            rt_player_ui,
+            rt_player_prompt,
             rt_telemetry;
 
+        public interface IPlayerPrompt { }
         public interface IGuiGlobal { }
         public interface IGuiTelemetry { }
 
@@ -58,7 +58,12 @@ namespace _ARK_
             ui2D = new(transform.Find("Canvas2D").GetComponent<Canvas>());
             ui3D = new(cameraUI3D.transform.Find("Canvas3D").GetComponent<Canvas>());
 
+            rt_player_ui = (RectTransform)ui3D.canvas_rt.Find("player_ui");
+            rt_player_prompt = (RectTransform)ui3D.canvas_rt.Find("player_prompt");
             rt_telemetry = (RectTransform)ui2D.canvas_rt.Find("telemetry");
+
+            foreach (var type in Util.EGetAllDerivedTypes<IPlayerPrompt>())
+                Util.InstantiateOrCreateIfAbsent(type, parent: rt_player_prompt);
 
             foreach (var type in Util.EGetAllDerivedTypes<IGuiGlobal>())
                 Util.InstantiateOrCreateIfAbsent(type, parent: ui2D.OS_overlay);

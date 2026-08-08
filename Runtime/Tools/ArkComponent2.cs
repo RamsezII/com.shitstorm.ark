@@ -1,14 +1,11 @@
 ﻿using _UTIL_;
-using System;
 using UnityEngine;
 
 namespace _ARK_
 {
-    public abstract class ArkComponent : MonoBehaviour
+    public abstract class ArkComponent2 : ArkComponent1
     {
-        public Action onStart, onEnable, onDisable, onDestroy;
         public int arkID;
-        public bool _destroyed;
         public readonly ValueNotifier<bool> isEnabled = new();
 
         static int _arkID;
@@ -23,38 +20,24 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
             arkID = ++_arkID;
+            base.Awake();
         }
 
         //--------------------------------------------------------------------------------------------------------------
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
-            onEnable?.Invoke();
+            base.OnEnable();
             isEnabled.Value = true;
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-            onDisable?.Invoke();
+            base.OnDisable();
             isEnabled.Value = false;
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        protected virtual void Start()
-        {
-            onStart?.Invoke();
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        protected virtual void OnDestroy()
-        {
-            _destroyed = true;
-            onDestroy?.Invoke();
         }
     }
 }

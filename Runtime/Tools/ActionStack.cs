@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed class ActionStack : ArkComponent
+    public sealed class ActionStack : ArkComponent1
     {
         readonly struct Command
         {
