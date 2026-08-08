@@ -22,7 +22,7 @@ namespace _ARK_
             dname_universal = "universal";
 
         public static readonly string
-            dpath_terminal = Application.productName + "/" + dname_home;
+            dpath_terminal = Directory.GetCurrentDirectory();
 
         public static string NameOS => Util.IsAppWindows ? dname_windows : dname_linux;
         public static DirectoryInfo ExecDir => Application.dataPath.GetDir(false).Parent;
