@@ -73,6 +73,8 @@ namespace _ARK_
 
         public static NUCLEOR instance;
 
+        public DateTimeOffset timestamp_app;
+
         public readonly SequencerMono
             sequencer_mono = new();
 
@@ -92,7 +94,6 @@ namespace _ARK_
         public readonly ValueNotifier<bool> isTyping = new();
         public readonly ValueNotifier<byte> party_count = new();
 
-        public static DateTimeOffset timestamp_editorStart;
         public static bool application_closed;
 
         public int fixedFrameCount;
@@ -114,6 +115,8 @@ namespace _ARK_
         [ShowProperty(nameof(_TimeScale_raw)), Range(0, 2)] public float _show_timeScale_raw;
         public float _TimeScale_smooth => timeScale_smooth.Value;
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
+
+        public static DateTimeOffset timestamp_editorStart;
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -122,9 +125,9 @@ namespace _ARK_
         {
             Debug.Log($"{typeof(NUCLEOR).FullName}.CONSTRUCTOR");
 
+#if UNITY_EDITOR
             timestamp_editorStart = DateTimeOffset.UtcNow;
 
-#if UNITY_EDITOR
             SaveEText();
 
             UnityEditor.EditorApplication.quitting += () =>
@@ -184,6 +187,8 @@ namespace _ARK_
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+
+            timestamp_app = DateTimeOffset.UtcNow;
 
             sequencer_mono.sequencables.Reset();
             sequencer_multi.sequencables.Reset();
