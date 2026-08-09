@@ -47,6 +47,8 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         public static DirectoryInfo DFIgnore => new DirectoryInfo(Path.Combine(Application.dataPath, dname_ignore)).ForceDir();
+        public static DirectoryInfo DEditorTemp => new(Path.Combine(DFHome.FullName, "EditorTemp"));
+        public static DirectoryInfo DFEditorTemp => DEditorTemp.ForceDir();
         public static DirectoryInfo DIgnoreTemp => DFIgnore.Combine("_TEMP_");
         public static DirectoryInfo DFIgnoreTemp => DIgnoreTemp.ForceDir();
         public static DirectoryInfo DFResources => new DirectoryInfo(Path.Combine(Application.dataPath, dname_resources)).ForceDir();

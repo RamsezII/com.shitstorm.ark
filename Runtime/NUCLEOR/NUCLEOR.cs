@@ -8,9 +8,6 @@ using UnityEngine.SocialPlatforms;
 
 namespace _ARK_
 {
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public sealed partial class NUCLEOR : MonoBehaviour
     {
         public struct Delegates
@@ -95,7 +92,7 @@ namespace _ARK_
         public readonly ValueNotifier<bool> isTyping = new();
         public readonly ValueNotifier<byte> party_count = new();
 
-        public static DateTimeOffset timestamp_appstart;
+        public static DateTimeOffset timestamp_editorStart;
         public static bool application_closed;
 
         public int fixedFrameCount;
@@ -117,11 +114,6 @@ namespace _ARK_
         [ShowProperty(nameof(_TimeScale_raw)), Range(0, 2)] public float _show_timeScale_raw;
         public float _TimeScale_smooth => timeScale_smooth.Value;
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
-
-        static string GetTimestampPath() => Path.Combine(
-            ArkMachine.DFIgnoreTemp.FullName,
-            typeof(NUCLEOR).FullName + "." + nameof(timestamp_appstart) + ".txt"
-        );
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -130,18 +122,20 @@ namespace _ARK_
         {
             Debug.Log($"{typeof(NUCLEOR).FullName}.CONSTRUCTOR");
 
-            timestamp_appstart = DateTimeOffset.UtcNow;
+            timestamp_editorStart = DateTimeOffset.UtcNow;
 
 #if UNITY_EDITOR
+            SaveEText();
+
             UnityEditor.EditorApplication.quitting += () =>
             {
-                var dtemp = ArkMachine.DIgnoreTemp;
+                var dtemp = ArkMachine.DEditorTemp;
                 if (dtemp.Exists)
                     dtemp.Delete(true);
             };
 #endif
 
-            Debug.Log($"{typeof(NUCLEOR).FullName}.{nameof(timestamp_appstart)}: {timestamp_appstart.LocalDateTime}");
+            Debug.Log($"{typeof(NUCLEOR).FullName} {nameof(timestamp_editorStart)}: {timestamp_editorStart.LocalDateTime}");
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -153,35 +147,28 @@ namespace _ARK_
             application_closed = false;
 
 #if UNITY_EDITOR
-            string fpath = GetTimestampPath();
-
-            if (File.Exists(fpath))
-            {
-                string text = File.ReadAllText(fpath);
-                if (!DateTimeOffset.TryParse(text, out timestamp_appstart))
-                    timestamp_appstart = DateTimeOffset.UtcNow;
-            }
-            else
-                File.WriteAllText(fpath, timestamp_appstart.ToString());
-
             UnityEditor.EditorApplication.quitting -= OnQuitEditor;
             UnityEditor.EditorApplication.quitting += OnQuitEditor;
 
-            UnityEditor.EditorApplication.playModeStateChanged -= LogPlayModeState;
-            UnityEditor.EditorApplication.playModeStateChanged += LogPlayModeState;
+            UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChange;
+            UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChange;
+
+            LoadEText();
+#endif
         }
 
+#if UNITY_EDITOR
         static void OnQuitEditor()
         {
             delegates.OnEditorQuit?.Invoke();
         }
 
-        static void LogPlayModeState(UnityEditor.PlayModeStateChange state)
+        static void OnPlayModeStateChange(UnityEditor.PlayModeStateChange state)
         {
             if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
                 instance.OnApplicationFocus(false);
-#endif
         }
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -302,13 +289,7 @@ namespace _ARK_
                 if (focus)
                     delegates.OnApplicationFocus?.Invoke();
                 else
-                {
-#if UNITY_EDITOR
-                    string fpath = GetTimestampPath();
-                    File.WriteAllText(fpath, timestamp_appstart.ToString());
-#endif
                     delegates.OnApplicationUnfocus?.Invoke();
-                }
         }
 
         private void OnApplicationQuit()
