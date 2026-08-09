@@ -75,5 +75,12 @@ namespace _ARK_
 
             return true;
         }
+
+        //----------------------------------------------------------------------------------------------------------
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(OpenHomeFolder))]
+        static void OpenHomeFolder() => Application.OpenURL(DFHome.FullName);
+#endif
     }
 }

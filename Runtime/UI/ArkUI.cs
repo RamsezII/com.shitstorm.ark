@@ -35,9 +35,11 @@ namespace _ARK_
 
         public static ArkUI instance;
         public Camera cameraUI3D;
+        public Canvas ui3D_pixels;
         public ArkCanvas ui2D, ui3D;
 
         public RectTransform
+            rt_3D_pixels,
             rt_player_ui,
             rt_player_prompt,
             rt_telemetry;
@@ -55,12 +57,17 @@ namespace _ARK_
 
             cameraUI3D = transform.Find("CameraUI3D").GetComponent<Camera>();
 
+            ui3D_pixels = cameraUI3D.transform.Find("Canvas3D_pixels").GetComponent<Canvas>();
+            rt_3D_pixels = (RectTransform)ui3D_pixels.transform;
+            rt_player_ui = (RectTransform)rt_3D_pixels.Find("player_ui");
+
             ui2D = new(transform.Find("Canvas2D").GetComponent<Canvas>());
             ui3D = new(cameraUI3D.transform.Find("Canvas3D").GetComponent<Canvas>());
 
-            rt_player_ui = (RectTransform)ui3D.canvas_rt.Find("player_ui");
             rt_player_prompt = (RectTransform)ui3D.canvas_rt.Find("player_prompt");
             rt_telemetry = (RectTransform)ui2D.canvas_rt.Find("telemetry");
+
+            LoadHText(true);
 
             foreach (var type in Util.EGetAllDerivedTypes<IPlayerPrompt>())
                 Util.InstantiateOrCreateIfAbsent(type, parent: rt_player_prompt);
@@ -81,6 +88,9 @@ namespace _ARK_
                 ui2D.canvasGroup.interactable = ui3D.canvasGroup.interactable = !isNotEmpty;
                 ui2D.canvasGroup.blocksRaycasts = ui3D.canvasGroup.blocksRaycasts = !isNotEmpty;
             });
+
+            NUCLEOR.delegates.OnApplicationFocus += () => LoadHText(log: false);
+            NUCLEOR.delegates.OnApplicationUnfocus += () => SaveHText(log: false);
         }
 
         //--------------------------------------------------------------------------------------------------------------
