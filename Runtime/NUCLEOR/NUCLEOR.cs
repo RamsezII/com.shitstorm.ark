@@ -127,7 +127,7 @@ namespace _ARK_
 #if UNITY_EDITOR
             timestamp_editorStart = DateTimeOffset.UtcNow;
 
-            SaveEText();
+            LoadEText();
 
             UnityEditor.EditorApplication.quitting += () =>
             {
