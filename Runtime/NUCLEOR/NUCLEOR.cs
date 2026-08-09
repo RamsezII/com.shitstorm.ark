@@ -116,16 +116,14 @@ namespace _ARK_
         [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
 
         public static DateTimeOffset timestamp_editorStart;
-#endif
 
         //----------------------------------------------------------------------------------------------------------
 
         static NUCLEOR()
         {
-            Debug.Log($"{typeof(NUCLEOR).FullName}.CONSTRUCTOR");
-
-#if UNITY_EDITOR
             timestamp_editorStart = DateTimeOffset.UtcNow;
+
+            Debug.Log($"{typeof(NUCLEOR).FullName}.CONSTRUCTOR {nameof(timestamp_editorStart)}: {timestamp_editorStart.LocalDateTime}");
 
             LoadEText();
 
@@ -135,10 +133,8 @@ namespace _ARK_
                 if (dtemp.Exists)
                     dtemp.Delete(true);
             };
-#endif
-
-            Debug.Log($"{typeof(NUCLEOR).FullName} {nameof(timestamp_editorStart)}: {timestamp_editorStart.LocalDateTime}");
         }
+#endif
 
         //----------------------------------------------------------------------------------------------------------
 
