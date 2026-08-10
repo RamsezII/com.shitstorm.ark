@@ -14,6 +14,7 @@ namespace _ARK_
             JObject jobj = new()
             {
                 ["player_ui_scaleFactor"] = ui3D_pixels.scaleFactor,
+                ["game_ui_scaleFactor"] = ui2D.canvas.scaleFactor,
             };
             jobj.NJSave(hpath, log: log);
         }
@@ -26,6 +27,9 @@ namespace _ARK_
             {
                 if (jobj.TryGetValue("player_ui_scaleFactor", out var jtoken))
                     ui3D_pixels.scaleFactor = (float)jtoken;
+
+                if (jobj.TryGetValue("game_ui_scaleFactor", out jtoken))
+                    ui2D.canvas.scaleFactor = (float)jtoken;
             }
         }
     }
