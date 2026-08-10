@@ -34,8 +34,9 @@ namespace _ARK_
         }
 
         public static ArkUI instance;
+
         public Camera cameraUI3D;
-        public Canvas ui3D_pixels;
+        [SerializeField] Canvas ui3D_pixels;
         public ArkCanvas ui2D, ui3D;
 
         public RectTransform
