@@ -115,15 +115,12 @@ namespace _ARK_
             onRefresh?.Invoke();
         }
 
-        public void SetTrad(string text) => SetTrads(new(text));
-        public void SetTrads(in Traductions traductions)
+        public void SetText(string text) => SetTraductions(new Traductions(text));
+        public void SetTraductions(in Traductions traductions)
         {
             this.traductions = traductions;
             Refresh();
         }
-
-        [Obsolete]
-        public void SetTrads_old(in string fr, in string en) => SetTrads(new Traductions { english = en, french = fr });
 
         //----------------------------------------------------------------------------------------------------------
 
