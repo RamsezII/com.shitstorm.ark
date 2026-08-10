@@ -1,5 +1,4 @@
 ﻿using _UTIL_;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,20 +15,20 @@ namespace _ARK_
         public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name, force);
 
         public static readonly ValueNotifier<Languages> language = new();
-        static string last_user_name, user_name;
+        static string user_name;
         public static string CurrentUserName => user_name;
 
         static Action onReloadUserFiles;
         static Action<bool> onReloadUserFiles_log;
-
-        public static string GetSettingsPath() => Path.Combine(DFHome.FullName, JSon.GetJSonName(typeof(ArkMachine)));
 
         //----------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            last_user_name = user_name = null;
+            settings = null;
+
+            user_name = null;
             onReloadUserFiles = null;
             onReloadUserFiles_log = null;
 
@@ -37,8 +36,8 @@ namespace _ARK_
 
             LoadMachineSettings(true);
 
-            if (UserExists(last_user_name))
-                SetUserName(last_user_name);
+            if (UserExists(settings.last_user_name))
+                SetUserName(settings.last_user_name);
             else
                 SetUserName("default_user");
 
@@ -64,41 +63,6 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void SaveSettings(in bool log)
-        {
-            string fpath = GetSettingsPath();
-
-            JObject jobj = new()
-            {
-                [nameof(last_user_name)] = user_name,
-                [nameof(language)] = language._value.ToString(),
-            };
-
-            jobj.NJSave(fpath, log);
-        }
-
-        public static void LoadMachineSettings(in bool log)
-        {
-            string fpath = GetSettingsPath();
-
-            if (fpath.TryNJRead(out JObject jobj, log))
-            {
-                last_user_name = jobj.Value<string>(nameof(last_user_name)) ?? user_name;
-
-                var set_language = Application.systemLanguage switch
-                {
-                    SystemLanguage.French => Languages.French,
-                    _ => Languages.English,
-                };
-
-                if (jobj.ContainsKey(nameof(language)))
-                    if (Enum.TryParse(jobj.Value<string>(nameof(ArkMachine.language)), true, out Languages language))
-                        set_language = language;
-
-                language.Value = set_language;
-            }
-        }
-
         public static bool UserExists(in string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -119,7 +83,7 @@ namespace _ARK_
                 return;
             }
 
-            last_user_name = user_name = value;
+            settings.last_user_name = user_name = value;
 
             SaveSettings(true);
             LoadMachineSettings(false);

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
+    [Serializable]
     public abstract class StaticJSon : JSon
     {
         public abstract string GetFilePath();
@@ -15,23 +16,26 @@ namespace _ARK_
         }
     }
 
+    [Serializable]
     public abstract class HomeJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFHome.FullName, type.FullName + json);
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFHome.FullName, type.FullName + json_txt);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 
+    [Serializable]
     public abstract class UserJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.GetCurrentUserFolder(force: true).FullName, type.FullName + json);
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.GetCurrentUserFolder(force: true).FullName, type.FullName + json_txt);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 
+    [Serializable]
     public abstract class ResourcesJSon : JSon
     {
 #if UNITY_EDITOR
         public static string GetFilePath<T>() => GetFilePath(typeof(T));
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFResources.ForceDir().FullName, type.FullName + ".json.txt");
+        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFResources.ForceDir().FullName, type.FullName + json_txt);
         public string GetFilePath() => GetFilePath(GetType());
 #endif
 

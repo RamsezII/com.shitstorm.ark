@@ -12,6 +12,7 @@ namespace _ARK_
             DontDestroyOnLoad(gameObject);
             base.Awake();
             OnLoadTexts(true);
+            NUCLEOR.delegates.OnApplicationFocus += () => OnLoadTexts(log: false);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -28,12 +29,6 @@ namespace _ARK_
         void LoadTexts() => OnLoadTexts(true);
         protected virtual void OnLoadTexts(in bool log)
         {
-        }
-
-        protected virtual void OnApplicationFocus(bool focus)
-        {
-            if (focus)
-                OnLoadTexts(false);
         }
     }
 }

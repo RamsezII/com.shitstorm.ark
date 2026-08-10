@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 namespace _ARK_
@@ -32,6 +33,8 @@ namespace _ARK_
         public static DirectoryInfo DTemp => DFHome.Combine(dname_temp);
         public static DirectoryInfo DFTemp => DTemp.ForceDir();
         public static DirectoryInfo DFHome => new DirectoryInfo(Path.Combine(DRoot.FullName, dname_home)).ForceDir();
+        public static string GetHomeJSonPath<T>() => GetHomeJSonPath(typeof(T));
+        public static string GetHomeJSonPath(in Type type) => Path.Combine(DFHome.FullName, type.GetJSonFileName());
         public static DirectoryInfo DFUsers => new DirectoryInfo(Path.Combine(DFHome.FullName, dname_users)).ForceDir();
         public static DirectoryInfo DFBundles => new DirectoryInfo(Path.Combine(DFHome.FullName, dname_bundles)).ForceDir();
         public static DirectoryInfo DFBundlesTexts => new DirectoryInfo(Path.Combine(DFBundles.FullName, dname_texts)).ForceDir();
