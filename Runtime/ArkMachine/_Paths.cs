@@ -55,6 +55,8 @@ namespace _ARK_
         public static DirectoryInfo DIgnoreTemp => DFIgnore.Combine("_TEMP_");
         public static DirectoryInfo DFIgnoreTemp => DIgnoreTemp.ForceDir();
         public static DirectoryInfo DFResources => new DirectoryInfo(Path.Combine(Application.dataPath, dname_resources)).ForceDir();
+        public static string GetResourcesJSonPath<T>() => GetResourcesJSonPath(typeof(T));
+        public static string GetResourcesJSonPath(in Type type) => Path.Combine(DFResources.FullName, type.GetJSonFileName());
         public static DirectoryInfo DFIgnoreResources => new DirectoryInfo(Path.Combine(Application.dataPath, dname_ignore, dname_resources)).ForceDir();
 #endif
 
