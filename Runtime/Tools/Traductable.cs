@@ -115,6 +115,8 @@ namespace _ARK_
             onRefresh?.Invoke();
         }
 
+        public void SetOnOff(bool on) => SetTraductions(on ? new("On") : new("Off"));
+        public void SetYesNo(bool yes) => SetTraductions(yes ? new() { french = "Oui", english = "Yes", } : new() { french = "Non", english = "No", });
         public void SetText(string text) => SetTraductions(new Traductions(text));
         public void SetTraductions(in Traductions traductions)
         {
