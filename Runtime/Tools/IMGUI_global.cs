@@ -13,9 +13,14 @@ namespace _ARK_
             Paste
         }
 
+        public interface IEscapeUser
+        {
+            void OnPressedEscape();
+        }
+
         public static IMGUI_global instance;
 
-        public readonly ListListener<Action>
+        public readonly ListListener<IEscapeUser>
             escape_users = new();
 
         public readonly ListListener<Func<Event, ClipboardOperations, bool>>
@@ -117,7 +122,7 @@ namespace _ARK_
                     case KeyCode.Escape:
                         if (escape_users._collection.Count > 0)
                         {
-                            escape_users._collection[^1]();
+                            escape_users._collection[^1].OnPressedEscape();
                             e.Use();
                             return;
                         }
