@@ -19,8 +19,9 @@ namespace _ARK_
     [Serializable]
     public abstract class HomeJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFHome.FullName, type.FullName + json_txt);
-        public override string GetFilePath() => GetFilePath(GetType());
+        [Obsolete]
+        public static string GetFilePath(in Type type) => ArkMachine.GetHomeJSonPath(type);
+        public override string GetFilePath() => ArkMachine.GetHomeJSonPath(GetType());
     }
 
     [Serializable]
