@@ -148,15 +148,6 @@ namespace _ARK_
 
         public override void Tick()
         {
-            lock (queues)
-                foreach (var queue in queues)
-                    if (queue.TryPeek(out var routine))
-                        if (!routine.MoveNext())
-                        {
-                            routine.Dispose();
-                            queue.Dequeue();
-                        }
-
             lock (sequencables)
                 if (sequencables._collection.Count > 0)
                     for (int i = 0; i < sequencables._collection.Count; i++)
@@ -187,6 +178,15 @@ namespace _ARK_
                             Debug.LogException(e);
                         }
                     }
+
+            lock (queues)
+                foreach (var queue in queues)
+                    if (queue.TryPeek(out var routine))
+                        if (!routine.MoveNext())
+                        {
+                            routine.Dispose();
+                            queue.Dequeue();
+                        }
         }
 
         //----------------------------------------------------------------------------------------------------------
