@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace _ARK_
@@ -13,12 +12,11 @@ namespace _ARK_
     {
         public string callerName, description;
         public IEnumerator<float> routine;
-        public Func<bool> moveNext;
-        public Action action, _task;
-        public Task task;
+        public Action action;
         public readonly ThreadSafe_struct<bool> scheduled = new();
         [Range(0, 1)] float progress = -1;
         public string progressBar;
+        public float Progress => routine?.Current ?? (scheduled.Value ? 1 : 0);
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -50,9 +48,6 @@ namespace _ARK_
                     action();
                     Dispose();
                 }
-
-                if (_task != null)
-                    task = Task.Run(_task);
             }
             catch (Exception e)
             {
@@ -66,12 +61,6 @@ namespace _ARK_
         {
             try
             {
-                if (moveNext != null && !moveNext())
-                {
-                    moveNext = null;
-                    Dispose();
-                }
-
                 if (routine != null)
                     if (!routine.MoveNext())
                     {
@@ -87,12 +76,6 @@ namespace _ARK_
                         int count = (int)(Mathf.Clamp01(progress) * max);
                         progressBar = new string('▓', count) + new string('░', max - count);
                     }
-
-                if (task != null && task.IsCompleted)
-                {
-                    task = null;
-                    Dispose();
-                }
             }
             catch (Exception e)
             {
@@ -102,24 +85,31 @@ namespace _ARK_
             }
         }
 
+        public void GetStatus(in StringBuilder sb, in bool newline = true)
+        {
+            sb.Append($"{GetType()}'{name}'");
+
+            if (_disposed)
+                sb.Append("[disposed]");
+            else if (scheduled._value)
+            {
+                sb.Append("[running]");
+                if (routine != null)
+                    sb.Append($"[{routine.Current.PercentLog()}]");
+            }
+            else
+                sb.Append("[pending]");
+
+            if (newline)
+                sb.AppendLine();
+        }
+
         //----------------------------------------------------------------------------------------------------------
 
         protected override void OnDispose()
         {
             base.OnDispose();
-
             routine?.Dispose();
-            moveNext = null;
-            _task = null;
-
-            try
-            {
-                task?.Dispose();
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
         }
     }
 }

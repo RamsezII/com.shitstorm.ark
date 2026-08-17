@@ -1,6 +1,5 @@
 ﻿using _ARK_;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -16,13 +15,6 @@ public static class Util_ark
         3 => '\\',
         _ => '?',
     };
-
-    public static IEnumerator<float> ESchedulize(this IEnumerator enumerator, Action<object> onDone = null)
-    {
-        while (enumerator.MoveNext())
-            yield return 0;
-        onDone?.Invoke(enumerator.Current);
-    }
 
 #if UNITY_EDITOR
     [UnityEditor.MenuItem("CONTEXT/" + nameof(TextMeshProUGUI) + "/" + nameof(AddTraductable))]

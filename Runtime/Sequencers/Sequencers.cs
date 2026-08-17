@@ -1,6 +1,5 @@
 ﻿using _UTIL_;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -20,6 +19,16 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        public virtual void GetStatus(in StringBuilder sb)
+        {
+            if (sequencables._collection.Count > 0)
+            {
+                sb.AppendLine($"{GetType()}'{name}'({sequencables._collection.Count} operations)");
+                foreach (var op in NUCLEOR.instance.sequencer_multi.sequencables._collection)
+                    op.GetStatus(sb);
+            }
+        }
+
         public void LogStatus() => Debug.Log(GetStatus());
         public string GetStatus()
         {
@@ -36,7 +45,6 @@ namespace _ARK_
 
         public Sequencable AddAction(in Action action, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { action = action });
         public Sequencable AddRoutine(in IEnumerator<float> routine, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { routine = routine });
-        public Sequencable AddRoutine(in IEnumerator routine, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { routine = routine.ESchedulize() });
 
         public T AddSequencable<T>(in T sequencable) where T : Sequencable
         {
@@ -136,7 +144,7 @@ namespace _ARK_
 
     public sealed class SequencerMulti : Sequencer
     {
-        public readonly HashSet<Queue<IEnumerator<float>>> queues = new();
+        readonly HashSet<SubSequencer> sequencers = new();
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -145,6 +153,21 @@ namespace _ARK_
         }
 
         //----------------------------------------------------------------------------------------------------------
+
+        public SubSequencer AddSequencer(in string name)
+        {
+            SubSequencer sequencer = new(this, name);
+            lock (sequencers)
+                sequencers.Add(sequencer);
+            return sequencer;
+        }
+
+        public override void GetStatus(in StringBuilder sb)
+        {
+            base.GetStatus(sb);
+            foreach (var sequencer in sequencers)
+                sequencer.GetStatus(sb);
+        }
 
         public override void Tick()
         {
@@ -179,14 +202,17 @@ namespace _ARK_
                         }
                     }
 
-            lock (queues)
-                foreach (var queue in queues)
-                    if (queue.TryPeek(out var routine))
-                        if (!routine.MoveNext())
-                        {
-                            routine.Dispose();
-                            queue.Dequeue();
-                        }
+            lock (sequencers)
+                foreach (var sequencer in sequencers)
+                    lock (sequencer)
+                        if (!sequencer._disposed)
+                            sequencer.Tick();
+                        else
+                            NUCLEOR.delegates.LateUpdate_onEndOfFrame_once += () =>
+                            {
+                                lock (sequencers)
+                                    sequencers.Remove(sequencer);
+                            };
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -195,13 +221,9 @@ namespace _ARK_
         {
             base.OnDispose();
 
-            lock (queues)
-            {
-                foreach (var queue in queues)
-                    while (queue.TryDequeue(out var routine))
-                        routine.Dispose();
-                queues.Clear();
-            }
+            lock (sequencers)
+                foreach (var sequencer in sequencers)
+                    sequencer.Dispose();
         }
     }
 }
