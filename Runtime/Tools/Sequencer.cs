@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace _ARK_
@@ -38,7 +37,7 @@ namespace _ARK_
         public Sequencable AddAction(in Action action, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { action = action });
         public Sequencable AddRoutine(in IEnumerator<float> routine, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { routine = routine });
         public Sequencable AddRoutine(in IEnumerator routine, [CallerMemberName] string callerName = null) => AddSequencable(new Sequencable(callerName) { routine = routine.ESchedulize() });
-        
+
         public T AddSequencable<T>(in T sequencable) where T : Sequencable
         {
             lock (sequencables)
@@ -79,7 +78,7 @@ namespace _ARK_
 
         public Sequencable InsertAction(in Action action, [CallerMemberName] string callerName = null) => InsertSchedulable(new Sequencable(callerName) { action = action });
         public Sequencable InsertRoutine(in IEnumerator<float> routine, [CallerMemberName] string callerName = null) => InsertSchedulable(new Sequencable(callerName) { routine = routine });
-        
+
         public T InsertSchedulable<T>(in T schedulable) where T : Sequencable
         {
             lock (sequencables)
@@ -137,6 +136,7 @@ namespace _ARK_
 
     public sealed class SequencerMulti : Sequencer
     {
+        public readonly HashSet<Queue<IEnumerator<float>>> queues = new();
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -148,6 +148,15 @@ namespace _ARK_
 
         public override void Tick()
         {
+            lock (queues)
+                foreach (var queue in queues)
+                    if (queue.TryPeek(out var routine))
+                        if (!routine.MoveNext())
+                        {
+                            routine.Dispose();
+                            queue.Dequeue();
+                        }
+
             lock (sequencables)
                 if (sequencables._collection.Count > 0)
                     for (int i = 0; i < sequencables._collection.Count; i++)
@@ -178,6 +187,21 @@ namespace _ARK_
                             Debug.LogException(e);
                         }
                     }
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+
+            lock (queues)
+            {
+                foreach (var queue in queues)
+                    while (queue.TryDequeue(out var routine))
+                        routine.Dispose();
+                queues.Clear();
+            }
         }
     }
 }
