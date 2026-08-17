@@ -46,6 +46,7 @@ namespace _ARK_
                 Update_Players2,
                 Update,
                 Update_BeforeAnimator,
+                Update_BeforeLateUpdate,
 
                 LateUpdate_onEndOfFrame_once,
                 LateUpdate_AfterAnimator,
@@ -274,6 +275,7 @@ namespace _ARK_
                 delegates.Update_Players2?.Invoke();
                 delegates.Update?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
+                delegates.Update_BeforeLateUpdate?.Invoke();
 
                 sequencer_multi.Tick();
                 sequencer_mono.Tick();

@@ -1,36 +1,33 @@
-﻿using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System;
 
 namespace _ARK_
 {
-    partial class ArkUI
+    partial class ArkUI : IHomeTexts
     {
-        static readonly string hpath = Path.Combine(ArkMachine.DFHome.FullName, typeof(ArkUI).GetJSonFileName());
+        [Serializable]
+        public class HSettings : HomeJSon
+        {
+            public float
+                ui3D_pixels_scale = 1,
+                ui2D_scale = 1;
+        }
+
+        public HSettings hsettings;
 
         //----------------------------------------------------------------------------------------------------------
 
-        void SaveHText(in bool log)
+        void IHomeTexts.OnSaveHTexts(in bool log)
         {
-            JObject jobj = new()
-            {
-                ["player_ui_scaleFactor"] = ui3D_pixels.scaleFactor,
-                ["game_ui_scaleFactor"] = ui2D.canvas.scaleFactor,
-            };
-            jobj.NJSave(hpath, log: log);
+            hsettings.ui3D_pixels_scale = ui3D_pixels.scaleFactor;
+            hsettings.ui2D_scale = ui2D.canvas.scaleFactor;
+            hsettings.SaveStaticJSon(log);
         }
 
-        void LoadHText(in bool log)
+        void IHomeTexts.OnLoadHTexts(in bool log)
         {
-            if (!hpath.TryNJRead(out JObject jobj))
-                SaveHText(log);
-            else
-            {
-                if (jobj.TryGetValue("player_ui_scaleFactor", out var jtoken))
-                    ui3D_pixels.scaleFactor = (float)jtoken;
-
-                if (jobj.TryGetValue("game_ui_scaleFactor", out jtoken))
-                    ui2D.canvas.scaleFactor = (float)jtoken;
-            }
+            StaticJSon.ReadStaticJSon(out hsettings, true, log);
+            ui3D_pixels.scaleFactor = hsettings.ui3D_pixels_scale;
+            ui2D.canvas.scaleFactor = hsettings.ui2D_scale;
         }
     }
 }

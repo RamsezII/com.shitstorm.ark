@@ -68,8 +68,6 @@ namespace _ARK_
             rt_player_prompt = (RectTransform)ui3D.canvas_rt.Find("player_prompt");
             rt_telemetry = (RectTransform)ui2D.canvas_rt.Find("telemetry");
 
-            LoadHText(true);
-
             foreach (var type in Util.EGetAllDerivedTypes<IPlayerPrompt>())
                 Util.InstantiateOrCreateIfAbsent(type, parent: rt_player_prompt);
 
@@ -90,8 +88,7 @@ namespace _ARK_
                 ui2D.canvasGroup.blocksRaycasts = ui3D.canvasGroup.blocksRaycasts = !isNotEmpty;
             });
 
-            NUCLEOR.delegates.OnApplicationFocus += () => LoadHText(log: false);
-            NUCLEOR.delegates.OnApplicationUnfocus += () => SaveHText(log: false);
+            IHomeTexts.AddUser(this);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -119,6 +116,13 @@ namespace _ARK_
                 Mathf.LerpUnclamped(r.yMin, r.yMax, lpos.y),
                 lpos.z
             );
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        private void OnDestroy()
+        {
+            IHomeTexts.RemoveUser(this);
         }
     }
 }
