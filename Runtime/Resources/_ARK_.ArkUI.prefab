@@ -462,6 +462,9 @@ MonoBehaviour:
   rt_player_ui: {fileID: 0}
   rt_player_prompt: {fileID: 0}
   rt_telemetry: {fileID: 0}
+  hsettings:
+    ui3D_pixels_scale: 1
+    ui2D_scale: 1
 --- !u!1001 &19241718490011734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -599,6 +602,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas3D
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856621765207808422, guid: 67b076ed603ef6f46988aece966c13d6,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -752,11 +760,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ScaleFactor
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5856621765207808422, guid: 67b076ed603ef6f46988aece966c13d6,
-        type: 3}
-      propertyPath: m_UiScaleMode
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

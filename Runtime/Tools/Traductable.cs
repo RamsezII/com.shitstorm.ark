@@ -48,12 +48,11 @@ namespace _ARK_
     {
         static readonly HashSet<Traductable> instances = new();
 
-        public TextMeshProUGUI tmpro;
-        public bool auto_width;
+        [Min(0)] public float autowidth_min;
+        public RectTransform autowidth_target;
+
         public Traductions traductions;
-
-        Vector2 init_size;
-
+        [HideInInspector] public TextMeshProUGUI tmpro;
         public Action onRefresh;
 
         //----------------------------------------------------------------------------------------------------------
@@ -70,10 +69,17 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        [ContextMenu(nameof(AutoWidthMin))]
+        void AutoWidthMin()
+        {
+            autowidth_min = GetComponent<TMP_Text>().rectTransform.sizeDelta.x;
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
         private void Awake()
         {
             tmpro = GetComponentInChildren<TextMeshProUGUI>(includeInactive: true);
-            init_size = tmpro.rectTransform.sizeDelta;
             instances.Add(this);
         }
 
@@ -88,28 +94,26 @@ namespace _ARK_
 
         void Refresh()
         {
-            if (!didAwake)
+            if (!didStart)
                 return;
 
             if (tmpro == null)
                 Debug.LogError($"no {nameof(tmpro)} on {transform.GetPath(true)}", this);
 
             string text = traductions.GetAutomatic();
-
             if (string.IsNullOrWhiteSpace(text))
                 text = traductions.english;
 
             tmpro.text = text;
 
-            if (auto_width)
+            if (autowidth_target != null)
             {
-                float w = tmpro.GetPreferredValues(
+                float width = tmpro.GetPreferredValues(
                     text: text,
-                    width: init_size.x,
-                    height: float.PositiveInfinity
+                    width: float.MaxValue,
+                    height: autowidth_target.rect.height
                 ).x;
-                w = Mathf.Min(w, init_size.x);
-                tmpro.rectTransform.sizeDelta = new(w, 0);
+                autowidth_target.sizeDelta = new(Mathf.Max(width, autowidth_min), autowidth_target.sizeDelta.y);
             }
 
             onRefresh?.Invoke();

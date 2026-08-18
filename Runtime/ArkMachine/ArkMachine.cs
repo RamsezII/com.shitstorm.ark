@@ -34,7 +34,7 @@ namespace _ARK_
 
             language.Reset();
 
-            LoadMachineSettings(true);
+            LoadHSettings(true);
 
             if (UserExists(settings.last_user_name))
                 SetUserName(settings.last_user_name);
@@ -50,7 +50,7 @@ namespace _ARK_
         {
             NUCLEOR.delegates.OnApplicationFocus += static () =>
             {
-                LoadMachineSettings(log: false);
+                LoadHSettings(log: false);
 
                 GetCurrentUserFolder(force: true);
 
@@ -58,7 +58,7 @@ namespace _ARK_
                 onReloadUserFiles_log?.Invoke(false);
             };
 
-            NUCLEOR.delegates.OnApplicationUnfocus += static () => SaveSettings(log: false);
+            NUCLEOR.delegates.OnApplicationUnfocus += static () => SaveHSettings(log: false);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -85,8 +85,8 @@ namespace _ARK_
 
             settings.last_user_name = user_name = value;
 
-            SaveSettings(true);
-            LoadMachineSettings(false);
+            SaveHSettings(true);
+            LoadHSettings(false);
 
             onReloadUserFiles?.Invoke();
             onReloadUserFiles_log?.Invoke(false);

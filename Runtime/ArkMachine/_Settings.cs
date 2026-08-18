@@ -22,7 +22,7 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static void SaveSettings(in bool log)
+        public static void SaveHSettings(in bool log)
         {
             string spath = HSettings.GetSettingsPath();
 
@@ -31,7 +31,7 @@ namespace _ARK_
             settings.Save(spath, log);
         }
 
-        public static void LoadMachineSettings(in bool log)
+        public static void LoadHSettings(in bool log)
         {
             string fpath = HSettings.GetSettingsPath();
 
