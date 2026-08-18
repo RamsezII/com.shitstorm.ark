@@ -48,7 +48,6 @@ namespace _ARK_
                 Update_BeforeAnimator,
                 Update_BeforeLateUpdate,
 
-                LateUpdate_onEndOfFrame_once,
                 LateUpdate_AfterAnimator,
                 LateUpdate_Cameras_BeforeCharacterModifyPivot,
                 LateUpdate_Players_BeforeCameraPosition,
@@ -56,6 +55,7 @@ namespace _ARK_
                 LateUpdate_CameraFinalApply,
                 LateUpdate_Players_AfterCameraPosition,
                 LateUpdate,
+                LateUpdate_onEndOfFrame_once,
                 LateUpdate_OnNetworkPush,
 
                 OnApplicationFocus,
@@ -325,9 +325,6 @@ namespace _ARK_
             {
                 is_nucleor_lateUpdate = true;
 
-                delegates.LateUpdate_onEndOfFrame_once?.Invoke();
-                delegates.LateUpdate_onEndOfFrame_once = null;
-
                 delegates.LateUpdate_AfterAnimator?.Invoke();
                 delegates.LateUpdate_Cameras_BeforeCharacterModifyPivot?.Invoke();
                 delegates.LateUpdate_Players_BeforeCameraPosition?.Invoke();
@@ -335,6 +332,10 @@ namespace _ARK_
                 delegates.LateUpdate_CameraFinalApply?.Invoke();
                 delegates.LateUpdate_Players_AfterCameraPosition?.Invoke();
                 delegates.LateUpdate?.Invoke();
+
+                delegates.LateUpdate_onEndOfFrame_once?.Invoke();
+                delegates.LateUpdate_onEndOfFrame_once = null;
+
                 delegates.LateUpdate_OnNetworkPush?.Invoke();
 
                 is_nucleor_lateUpdate = false;
