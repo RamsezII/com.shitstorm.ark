@@ -9,50 +9,35 @@ namespace _ARK_
         public class HSettings : HomeJSon
         {
             public float
-                ui3D_pixels_scale = 1,
+                ui3D_scale = 1,
                 ui2D_scale = 1;
         }
 
         public HSettings hsettings;
 
-        static int ScreenHeightFactor => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 720f + .5f));
-        int hfactorWhenLoaded = ScreenHeightFactor;
+        static int ScreenHeightFactor3D => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 600f));
+        static int ScreenHeightFactor2D => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 500f));
+
+        int
+            lastFactor3D = ScreenHeightFactor3D,
+            lastFactor2D = ScreenHeightFactor2D;
 
         //----------------------------------------------------------------------------------------------------------
 
-#if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(LogScreenResolution))]
-        static void LogScreenResolution()
-        {
-            Debug.Log(Screen.currentResolution);
-        }
-
-        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(LogScreenHeight))]
-        static void LogScreenHeight()
-        {
-            Debug.Log(Screen.height);
-        }
-
-        [UnityEditor.MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(LogScreenHeightFactor))]
-        static void LogScreenHeightFactor()
-        {
-            Debug.Log(ScreenHeightFactor);
-        }
-#endif
-
         void IHomeTexts.OnSaveHTexts(in bool log)
         {
-            hsettings.ui3D_pixels_scale = ui3D_pixels.scaleFactor / hfactorWhenLoaded;
-            hsettings.ui2D_scale = ui2D.canvas.scaleFactor / hfactorWhenLoaded;
+            hsettings.ui3D_scale = ui3D_pixels.scaleFactor / lastFactor3D;
+            hsettings.ui2D_scale = ui2D.canvas.scaleFactor / lastFactor2D;
             hsettings.SaveStaticJSon(log);
         }
 
         void IHomeTexts.OnLoadHTexts(in bool log)
         {
-            hfactorWhenLoaded = ScreenHeightFactor;
+            lastFactor3D = ScreenHeightFactor3D;
+            lastFactor2D = ScreenHeightFactor2D;
             StaticJSon.ReadStaticJSon(out hsettings, true, log);
-            ui3D_pixels.scaleFactor = hsettings.ui3D_pixels_scale * hfactorWhenLoaded;
-            ui2D.canvas.scaleFactor = hsettings.ui2D_scale * hfactorWhenLoaded;
+            ui3D_pixels.scaleFactor = hsettings.ui3D_scale * lastFactor3D;
+            ui2D.canvas.scaleFactor = hsettings.ui2D_scale * lastFactor2D;
         }
     }
 }

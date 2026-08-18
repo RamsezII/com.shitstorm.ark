@@ -756,11 +756,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas2D
       objectReference: {fileID: 0}
-    - target: {fileID: 5856621765207808422, guid: 67b076ed603ef6f46988aece966c13d6,
-        type: 3}
-      propertyPath: m_ScaleFactor
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
