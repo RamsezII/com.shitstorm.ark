@@ -16,7 +16,7 @@ namespace _ARK_
         public HSettings hsettings;
 
         static int ScreenHeightFactor3D => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 600f));
-        static int ScreenHeightFactor2D => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 500f));
+        static int ScreenHeightFactor2D => Mathf.Max(1, Mathf.RoundToInt((Screen.width + Screen.height) / 1200f));
 
         int
             lastFactor3D = ScreenHeightFactor3D,
