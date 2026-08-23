@@ -10,6 +10,7 @@ namespace _ARK_
         public readonly struct ArkCanvas
         {
             public readonly Canvas canvas;
+            public readonly CanvasScaler scaler;
             public readonly GraphicRaycaster raycaster;
             public readonly CanvasGroup canvasGroup;
 
@@ -24,6 +25,7 @@ namespace _ARK_
             internal ArkCanvas(in Canvas canvas)
             {
                 this.canvas = canvas;
+                scaler = canvas.GetComponent<CanvasScaler>();
                 canvas_rt = (RectTransform)canvas.transform;
                 raycaster = canvas.GetComponent<GraphicRaycaster>();
                 canvasGroup = canvas.GetComponent<CanvasGroup>();
@@ -37,6 +39,7 @@ namespace _ARK_
 
         public Camera cameraUI3D;
         [SerializeField] Canvas ui3D_pixels;
+        [SerializeField] CanvasScaler ui3D_pixels_scaler;
         public ArkCanvas ui2D, ui3D;
 
         public RectTransform
@@ -60,6 +63,7 @@ namespace _ARK_
 
             ui3D_pixels = cameraUI3D.transform.Find("Canvas3D_pixels").GetComponent<Canvas>();
             rt_3D_pixels = (RectTransform)ui3D_pixels.transform;
+            ui3D_pixels_scaler = ui3D_pixels.GetComponent<CanvasScaler>();
             rt_player_ui = (RectTransform)rt_3D_pixels.Find("player_ui");
 
             ui2D = new(transform.Find("Canvas2D").GetComponent<Canvas>());

@@ -16,7 +16,7 @@ namespace _ARK_
         public HSettings hsettings;
 
         static int ScreenHeightFactor3D => Mathf.Max(1, Mathf.RoundToInt(Screen.height / 600f));
-        static int ScreenHeightFactor2D => Mathf.Max(1, Mathf.RoundToInt((Screen.width + Screen.height) / 1200f));
+        static int ScreenHeightFactor2D => Mathf.Max(1, Mathf.RoundToInt((Screen.width * .3f + .7f * Screen.height) / 550f));
 
         int
             lastFactor3D = ScreenHeightFactor3D,
@@ -26,8 +26,8 @@ namespace _ARK_
 
         void IHomeTexts.OnSaveHTexts(in bool log)
         {
-            hsettings.ui3D_scale = ui3D_pixels.scaleFactor / lastFactor3D;
-            hsettings.ui2D_scale = ui2D.canvas.scaleFactor / lastFactor2D;
+            hsettings.ui3D_scale = ui3D_pixels_scaler.scaleFactor / lastFactor3D;
+            hsettings.ui2D_scale = ui2D.scaler.scaleFactor / lastFactor2D;
             hsettings.SaveStaticJSon(log);
         }
 
@@ -36,8 +36,8 @@ namespace _ARK_
             lastFactor3D = ScreenHeightFactor3D;
             lastFactor2D = ScreenHeightFactor2D;
             StaticJSon.ReadStaticJSon(out hsettings, true, log);
-            ui3D_pixels.scaleFactor = hsettings.ui3D_scale * lastFactor3D;
-            ui2D.canvas.scaleFactor = hsettings.ui2D_scale * lastFactor2D;
+            ui3D_pixels_scaler.scaleFactor = hsettings.ui3D_scale * lastFactor3D;
+            ui2D.scaler.scaleFactor = hsettings.ui2D_scale * lastFactor2D;
         }
     }
 }
