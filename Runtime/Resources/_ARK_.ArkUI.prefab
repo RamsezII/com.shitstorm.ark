@@ -458,12 +458,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: shitstorm._ARK_::_ARK_.ArkUI
   cameraUI3D: {fileID: 0}
   ui3D_pixels: {fileID: 0}
+  ui3D_pixels_scaler: {fileID: 0}
   rt_3D_pixels: {fileID: 0}
   rt_player_ui: {fileID: 0}
   rt_player_prompt: {fileID: 0}
   rt_telemetry: {fileID: 0}
   hsettings:
-    ui3D_pixels_scale: 1
+    ui3D_scale: 1
     ui2D_scale: 1
 --- !u!1001 &19241718490011734
 PrefabInstance:
