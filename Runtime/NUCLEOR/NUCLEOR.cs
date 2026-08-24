@@ -109,13 +109,6 @@ namespace _ARK_
         public readonly object mainThreadLock = new();
 
 #if UNITY_EDITOR
-        public bool _IsTyping => isTyping.Value;
-        [ShowProperty(nameof(_IsTyping))] public bool _show_isTyping;
-        public float _TimeScale_raw => timeScale_raw.Value;
-        [ShowProperty(nameof(_TimeScale_raw)), Range(0, 2)] public float _show_timeScale_raw;
-        public float _TimeScale_smooth => timeScale_smooth.Value;
-        [ShowProperty(nameof(_TimeScale_smooth)), Range(0, 2)] public float _show_timeScale_smooth;
-
         public static DateTimeOffset timestamp_editorStart;
 
         //----------------------------------------------------------------------------------------------------------
