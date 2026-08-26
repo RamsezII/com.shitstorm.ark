@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace _ARK_
 {
@@ -26,8 +27,8 @@ namespace _ARK_
         void IHomeTexts.OnLoadHTexts(in bool log)
         {
             StaticJSon.ReadStaticJSon(out hsettings, true, log);
-            ui3D_pixels_scaler.scaleFactor = hsettings.ui3D_scale;
-            ui2D.scaler.scaleFactor = hsettings.ui2D_scale;
+            ui3D_pixels_scaler.scaleFactor = Mathf.Max(1, hsettings.ui3D_scale);
+            ui2D.scaler.scaleFactor = Mathf.Max(1, hsettings.ui2D_scale);
         }
     }
 }
