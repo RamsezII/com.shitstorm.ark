@@ -110,6 +110,7 @@ namespace _ARK_
 
         public static void UpdateAltPress()
         {
+#if ENABLE_LEGACY_INPUT_MANAGER
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 float time = Time.unscaledTime;
@@ -120,6 +121,7 @@ namespace _ARK_
                         usages[(int)UsageGroups.TrueMouse].ToggleElement(mouse_user);
                 last_ALT = time;
             }
+#endif
         }
 
         public static void ToggleUser(object user, bool toggle, params UsageGroups[] groups)
