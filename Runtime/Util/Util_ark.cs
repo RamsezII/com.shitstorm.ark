@@ -22,6 +22,7 @@ public static class Util_ark
     {
         TextMeshProUGUI tmpro = (TextMeshProUGUI)command.context;
         Traductable trad = tmpro.gameObject.AddComponent<Traductable>();
+        trad.SetText(tmpro.text);
 
         int index = tmpro.GetComponentIndex();
         while (trad.GetComponentIndex() > index)
