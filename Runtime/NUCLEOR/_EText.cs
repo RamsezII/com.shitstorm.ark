@@ -9,11 +9,19 @@ namespace _ARK_
 {
     partial class NUCLEOR
     {
+        const string button_prefixe = "Assets/" + nameof(_ARK_) + "/" + nameof(NUCLEOR) + ".";
         static readonly string editor_texts_fpath = Path.Combine(ArkMachine.DFEditorTemp.FullName, typeof(NUCLEOR).GetJSonFileName());
 
         //----------------------------------------------------------------------------------------------------------
 
-        [MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(NUCLEOR) + "." + nameof(SaveEText))]
+        [MenuItem(button_prefixe + nameof(OpenEText))]
+        static void OpenEText()
+        {
+            SaveEText();
+            Application.OpenURL(editor_texts_fpath);
+        }
+
+        [MenuItem(button_prefixe + nameof(SaveEText))]
         static void SaveEText()
         {
             JObject jobj = new()
@@ -23,7 +31,7 @@ namespace _ARK_
             jobj.NJSave(editor_texts_fpath);
         }
 
-        [MenuItem("Assets/" + nameof(_ARK_) + "/" + nameof(NUCLEOR) + "." + nameof(LoadEText))]
+        [MenuItem(button_prefixe + nameof(LoadEText))]
         static void LoadEText()
         {
             if (!File.Exists(editor_texts_fpath))
