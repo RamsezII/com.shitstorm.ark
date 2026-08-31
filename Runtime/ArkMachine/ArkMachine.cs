@@ -12,11 +12,10 @@ namespace _ARK_
         public static DirectoryInfo GetUsersDir => DFUsers.ForceDir();
         public static IEnumerable<DirectoryInfo> EUsers => GetUsersDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
-        public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name, force);
+        public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name._value, force);
 
         public static readonly ValueNotifier<Languages> language = new();
-        static string user_name;
-        public static string CurrentUserName => user_name;
+        public static readonly ValueNotifier<string> user_name = new();
 
         static Action onReloadUserFiles;
         static Action<bool> onReloadUserFiles_log;
@@ -28,7 +27,7 @@ namespace _ARK_
         {
             settings = null;
 
-            user_name = null;
+            user_name.Reset();
             onReloadUserFiles = null;
             onReloadUserFiles_log = null;
 
@@ -83,7 +82,7 @@ namespace _ARK_
                 return;
             }
 
-            settings.last_user_name = user_name = value;
+            user_name.Value = settings.last_user_name = value;
 
             SaveHSettings(true);
             LoadHSettings(false);
@@ -94,7 +93,7 @@ namespace _ARK_
 
         public static bool TryDeleteUser(in string value, out string error)
         {
-            if (string.Equals(user_name, value, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(user_name._value, value, StringComparison.OrdinalIgnoreCase))
             {
                 error = "Can not delete current user";
                 return false;
@@ -132,8 +131,8 @@ namespace _ARK_
 
             old_user.MoveTo(new_user.FullName);
 
-            if (old_name.Equals(user_name, StringComparison.Ordinal))
-                user_name = new_name;
+            if (old_name.Equals(user_name._value, StringComparison.Ordinal))
+                user_name.Value = new_name;
 
             GetCurrentUserFolder(force: true);
 

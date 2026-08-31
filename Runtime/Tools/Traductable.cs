@@ -51,6 +51,9 @@ namespace _ARK_
         [Min(0)] public float autowidth_min;
         public RectTransform autowidth_target;
 
+        public Vector2 autosize_min;
+        public RectTransform autosize_target;
+
         public Traductions traductions;
         [HideInInspector] public TextMeshProUGUI tmpro;
         public Action onRefresh;
@@ -106,7 +109,16 @@ namespace _ARK_
 
             tmpro.text = text;
 
-            if (autowidth_target != null)
+            if (autosize_target != null)
+            {
+                var pref = tmpro.GetPreferredValues(
+                    text: text,
+                    width: float.MaxValue,
+                    height: float.MaxValue
+                );
+                autosize_target.sizeDelta = new(Mathf.Max(pref.x, autosize_min.x), Mathf.Max(pref.y, autosize_min.y));
+            }
+            else if (autowidth_target != null)
             {
                 float width = tmpro.GetPreferredValues(
                     text: text,
