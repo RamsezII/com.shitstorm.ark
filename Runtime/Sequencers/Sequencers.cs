@@ -24,7 +24,7 @@ namespace _ARK_
             if (sequencables._collection.Count > 0)
             {
                 sb.AppendLine($"{GetType()}'{name}'({sequencables._collection.Count} operations)");
-                foreach (var op in NUCLEOR.instance.sequencer_multi.sequencables._collection)
+                foreach (var op in NUCLEOR.instance.routinizer.sequencables._collection)
                     op.GetStatus(sb);
             }
         }

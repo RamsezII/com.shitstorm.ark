@@ -76,10 +76,10 @@ namespace _ARK_
         public DateTimeOffset timestamp_app;
 
         public readonly SequencerMono
-            sequencer_mono = new();
+            monolith = new();
 
         public readonly SequencerMulti
-            sequencer_multi = new();
+            routinizer = new();
 
         public readonly Scheduler
             scheduler_fixed = new(),
@@ -179,8 +179,8 @@ namespace _ARK_
 
             timestamp_app = DateTimeOffset.UtcNow;
 
-            sequencer_mono.sequencables.Reset();
-            sequencer_multi.sequencables.Reset();
+            monolith.sequencables.Reset();
+            routinizer.sequencables.Reset();
 
             timeScale_raw.AddListener(value => Time.timeScale = value);
 
@@ -270,8 +270,8 @@ namespace _ARK_
                 delegates.Update_BeforeAnimator?.Invoke();
                 delegates.Update_BeforeLateUpdate?.Invoke();
 
-                sequencer_multi.Tick();
-                sequencer_mono.Tick();
+                routinizer.Tick();
+                monolith.Tick();
 
                 is_nucleor_update = false;
             }
@@ -304,10 +304,10 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(LogSequentialScheduler))]
-        void LogSequentialScheduler() => sequencer_mono.LogStatus();
+        void LogSequentialScheduler() => monolith.LogStatus();
 
         [ContextMenu(nameof(LogParallelScheduler))]
-        void LogParallelScheduler() => sequencer_multi.LogStatus();
+        void LogParallelScheduler() => routinizer.LogStatus();
 #endif
 
         //----------------------------------------------------------------------------------------------------------
@@ -343,8 +343,8 @@ namespace _ARK_
             {
                 isFocused.Value = false;
 
-                sequencer_multi.Dispose();
-                sequencer_mono.Dispose();
+                routinizer.Dispose();
+                monolith.Dispose();
                 scheduler_fixed.Dispose();
                 scheduler_unscaled.Dispose();
                 scheduler_scaled.Dispose();
