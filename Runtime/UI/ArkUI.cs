@@ -57,19 +57,60 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
-        public bool ScreenPointToWorldPoint(in Vector2 screenPoint, out Vector3 worldPoint) => RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            rect: rt_canvas,
+        Camera GetEventCamera(Camera eventCamera) => eventCamera != null ? eventCamera : canvas.worldCamera;
+
+        public bool ScreenPointToWorldPoint(
+            in RectTransform plane,
+            in Vector2 screenPoint,
+            Camera eventCamera,
+            out Vector3 worldPoint
+        ) => RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            rect: plane,
             screenPoint: screenPoint,
-            cam: cameraUI,
+            cam: GetEventCamera(eventCamera),
             out worldPoint
         );
 
-        public bool ScreenPointToLocalPoint(in Vector2 screenPoint, out Vector2 localPoint) => RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rect: rt_canvas,
+        public bool ScreenPointToLocalPoint(
+            in RectTransform space,
+            in Vector2 screenPoint,
+            Camera eventCamera,
+            out Vector2 localPoint
+        ) => RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rect: space,
             screenPoint: screenPoint,
-            cam: cameraUI,
+            cam: GetEventCamera(eventCamera),
             localPoint: out localPoint
         );
+
+        public bool ScreenDeltaToLocal(
+            in RectTransform space,
+            in Vector2 screenPoint,
+            in Vector2 screenDelta,
+            Camera eventCamera,
+            out Vector2 localDelta
+        )
+        {
+            if (ScreenPointToLocalPoint(space, screenPoint, eventCamera, out Vector2 current)
+                && ScreenPointToLocalPoint(space, screenPoint - screenDelta, eventCamera, out Vector2 previous))
+            {
+                localDelta = current - previous;
+                return true;
+            }
+
+            localDelta = Vector2.zero;
+            return false;
+        }
+
+        public bool SetScreenPosition(in RectTransform target, in Vector2 screenPoint, Camera eventCamera = null)
+        {
+            if (target.parent is not RectTransform plane
+                || !ScreenPointToWorldPoint(plane, screenPoint, eventCamera, out Vector3 worldPoint))
+                return false;
+
+            target.position = worldPoint;
+            return true;
+        }
 
         public Vector3 InverseTransformPoint(in Camera camera, in Vector3 point)
         {
