@@ -15,7 +15,6 @@ namespace _ARK_
 
         public RectTransform
             rt_canvas,
-            rt_current_mode,
             rt_mode_manager,
             rt_OS_overlay,
             rt_player_ui,
