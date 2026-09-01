@@ -133,6 +133,7 @@ namespace _ARK_
 
         public void SetOnOff(bool on) => SetTraductions(on ? new("On") : new("Off"));
         public void SetYesNo(bool yes) => SetTraductions(yes ? new() { french = "Oui", english = "Yes", } : new() { french = "Non", english = "No", });
+        public void SetConfirmCancel(bool confirm) => SetTraductions(confirm ? new() { french = "Confirmer", english = "Confirm", } : new() { french = "Annuler", english = "Cancel", });
         public void SetText(string text) => SetTraductions(new Traductions(text));
         public void SetTraductions(in Traductions traductions)
         {
