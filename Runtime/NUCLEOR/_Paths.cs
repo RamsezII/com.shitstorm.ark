@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    partial class ArkMachine
+    partial class NUCLEOR
     {
         public const string
 #if UNITY_EDITOR

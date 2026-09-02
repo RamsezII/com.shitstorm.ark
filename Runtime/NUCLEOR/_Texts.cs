@@ -4,20 +4,26 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    partial class ArkUI : IHomeTexts
+    partial class NUCLEOR : IHomeTexts
     {
-        [NJEdit, SerializeField] float UI_scale = 1;
+        [NJText] string last_user_name;
+        [NJEdit]
+        static Languages language = Application.systemLanguage switch
+        {
+            SystemLanguage.French => Languages.French,
+            _ => Languages.English,
+        };
 
         //----------------------------------------------------------------------------------------------------------
 
         void IHomeTexts.OnSaveHTexts(in JObject jobj, in bool log)
         {
-            UI_scale = Mathf.Max(1, canvasScaler.scaleFactor);
+            language = static_language._value;
         }
 
         void IHomeTexts.OnLoadHTexts(in JObject jobj, in bool log)
         {
-            canvasScaler.scaleFactor = Mathf.Max(1, UI_scale);
+            static_language.Value = language;
         }
     }
 }

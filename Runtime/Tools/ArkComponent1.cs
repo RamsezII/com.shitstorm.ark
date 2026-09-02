@@ -31,6 +31,8 @@ namespace _ARK_
         protected virtual void Start()
         {
             onStart?.Invoke();
+            if (this is IHomeTexts iuser)
+                IHomeTexts.AddUser(iuser);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -39,6 +41,8 @@ namespace _ARK_
         {
             _destroyed = true;
             onDestroy?.Invoke();
+            if (this is IHomeTexts iuser)
+                IHomeTexts.RemoveUser(iuser);
         }
     }
 }

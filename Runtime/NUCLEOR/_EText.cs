@@ -10,7 +10,7 @@ namespace _ARK_
     partial class NUCLEOR
     {
         const string button_prefixe = "Assets/" + nameof(_ARK_) + "/" + nameof(NUCLEOR) + ".";
-        static readonly string editor_texts_fpath = Path.Combine(ArkMachine.DFEditorTemp.FullName, typeof(NUCLEOR).GetJSonFileName());
+        static readonly string editor_texts_fpath = Path.Combine(DFEditorTemp.FullName, typeof(NUCLEOR).GetJSonFileName());
 
         //----------------------------------------------------------------------------------------------------------
 

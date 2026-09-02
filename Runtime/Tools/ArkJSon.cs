@@ -20,14 +20,14 @@ namespace _ARK_
     public abstract class HomeJSon : StaticJSon
     {
         [Obsolete]
-        public static string GetFilePath(in Type type) => ArkMachine.GetHomeJSonPath(type);
-        public override string GetFilePath() => ArkMachine.GetHomeJSonPath(GetType());
+        public static string GetFilePath(in Type type) => NUCLEOR.GetHomeJSonPath(type);
+        public override string GetFilePath() => NUCLEOR.GetHomeJSonPath(GetType());
     }
 
     [Serializable]
     public abstract class UserJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.GetCurrentUserFolder(force: true).FullName, type.FullName + json_txt);
+        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.GetCurrentUserFolder(force: true).FullName, type.FullName + json_txt);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 
@@ -36,7 +36,7 @@ namespace _ARK_
     {
 #if UNITY_EDITOR
         public static string GetFilePath<T>() => GetFilePath(typeof(T));
-        public static string GetFilePath(in Type type) => Path.Combine(ArkMachine.DFResources.ForceDir().FullName, type.FullName + json_txt);
+        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.DFResources.ForceDir().FullName, type.FullName + json_txt);
         public string GetFilePath() => GetFilePath(GetType());
 #endif
 

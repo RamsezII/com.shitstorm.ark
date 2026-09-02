@@ -92,7 +92,7 @@ namespace _ARK_
 
         public readonly ValueNotifier<bool> isFocused = new();
         public readonly ValueNotifier<bool> isTyping = new();
-        public readonly ValueNotifier<byte> party_count = new();
+        public readonly HashSetListener<object> players = new();
 
         public static bool application_closed;
 
@@ -123,7 +123,7 @@ namespace _ARK_
 
             UnityEditor.EditorApplication.quitting += () =>
             {
-                var dtemp = ArkMachine.DEditorTemp;
+                var dtemp = DEditorTemp;
                 if (dtemp.Exists)
                     dtemp.Delete(true);
             };
@@ -137,6 +137,15 @@ namespace _ARK_
         {
             delegates = default;
             application_closed = false;
+
+            user_name.Reset();
+            onReloadUserFiles = null;
+            onReloadUserFiles_log = null;
+
+            static_language.Reset();
+
+            onReloadUserFiles?.Invoke();
+            onReloadUserFiles_log?.Invoke(false);
 
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.quitting -= OnQuitEditor;
@@ -177,12 +186,21 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
+            players.AddElement(this);
+
             timestamp_app = DateTimeOffset.UtcNow;
 
             monolith.sequencables.Reset();
             routinizer.sequencables.Reset();
 
             timeScale_raw.AddListener(value => Time.timeScale = value);
+
+            if (UserExists(last_user_name))
+                SetUserName(last_user_name);
+            else
+                SetUserName("default_user");
+
+            IHomeTexts.AddUser(this);
 
             Util.InstantiateOrCreateIfAbsent<ArkUI>();
         }
@@ -282,7 +300,14 @@ namespace _ARK_
             isFocused.Value = focus;
             lock (mainThreadLock)
                 if (focus)
+                {
+                    GetCurrentUserFolder(force: true);
+
+                    onReloadUserFiles?.Invoke();
+                    onReloadUserFiles_log?.Invoke(false);
+
                     delegates.OnApplicationFocus?.Invoke();
+                }
                 else
                     delegates.OnApplicationUnfocus?.Invoke();
         }
@@ -339,6 +364,8 @@ namespace _ARK_
 
         private void OnDestroy()
         {
+            IHomeTexts.RemoveUser(this);
+
             lock (mainThreadLock)
             {
                 isFocused.Value = false;
@@ -351,7 +378,7 @@ namespace _ARK_
 
                 LogManager.ClearLogs();
 
-                var dtemp = ArkMachine.DTemp;
+                var dtemp = DTemp;
                 if (dtemp.Exists)
                     dtemp.Delete(true);
             }

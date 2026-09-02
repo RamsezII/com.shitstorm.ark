@@ -7,58 +7,22 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public static partial class ArkMachine
+    public partial class NUCLEOR
     {
         public static DirectoryInfo GetUsersDir => DFUsers.ForceDir();
         public static IEnumerable<DirectoryInfo> EUsers => GetUsersDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
         public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
         public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name._value, force);
 
-        public static readonly ValueNotifier<Languages> language = new();
         public static readonly ValueNotifier<string> user_name = new();
+        public static readonly ValueNotifier<Languages> static_language = new(Application.systemLanguage switch
+        {
+            SystemLanguage.French => Languages.French,
+            _ => Languages.English,
+        });
 
         static Action onReloadUserFiles;
         static Action<bool> onReloadUserFiles_log;
-
-        //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void OnResetStatics()
-        {
-            settings = null;
-
-            user_name.Reset();
-            onReloadUserFiles = null;
-            onReloadUserFiles_log = null;
-
-            language.Reset();
-
-            LoadHSettings(true);
-
-            if (UserExists(settings.last_user_name))
-                SetUserName(settings.last_user_name);
-            else
-                SetUserName("default_user");
-
-            onReloadUserFiles?.Invoke();
-            onReloadUserFiles_log?.Invoke(false);
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void OnAfterSceneLoad()
-        {
-            NUCLEOR.delegates.OnApplicationFocus += static () =>
-            {
-                LoadHSettings(log: false);
-
-                GetCurrentUserFolder(force: true);
-
-                onReloadUserFiles?.Invoke();
-                onReloadUserFiles_log?.Invoke(false);
-            };
-
-            NUCLEOR.delegates.OnApplicationUnfocus += static () => SaveHSettings(log: false);
-        }
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -82,10 +46,11 @@ namespace _ARK_
                 return;
             }
 
-            user_name.Value = settings.last_user_name = value;
+            user_name.Value = instance.last_user_name = value;
 
-            SaveHSettings(true);
-            LoadHSettings(false);
+            instance.SaveHomeText(log: true);
+            instance.LoadHomeText(log: false);
+            delegates.OnApplicationFocus?.Invoke();
 
             onReloadUserFiles?.Invoke();
             onReloadUserFiles_log?.Invoke(false);

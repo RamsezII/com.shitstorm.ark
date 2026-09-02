@@ -31,7 +31,7 @@ namespace _ARK_
         public override readonly string ToString() => GetAutomatic();
         public readonly string GetAutomatic()
         {
-            switch (ArkMachine.language._value)
+            switch (NUCLEOR.static_language._value)
             {
                 case Languages.French:
                     if (string.IsNullOrEmpty(french))
@@ -63,7 +63,7 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void AfterSceneLoad()
         {
-            ArkMachine.language.AddListener(langage =>
+            NUCLEOR.static_language.AddListener(langage =>
             {
                 foreach (Traductable self in instances)
                     self.Refresh();
