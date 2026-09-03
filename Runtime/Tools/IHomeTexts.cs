@@ -5,28 +5,41 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public static class Util_HomeTexts
+    public static class Util_ArkTexts
     {
-        public static void SaveHomeText(this IHomeTexts target, in bool log)
+        public static void SaveArkText(this IArkTexts target, in bool log)
         {
+            string spath = target switch
+            {
+                IHomeTexts => NUCLEOR.GetHomeJSonPath(target.GetType()),
+                IUserTexts => NUCLEOR.instance.GetCurrentUserTextPath(target.GetType()),
+                _ => throw new System.NotImplementedException(),
+            };
+
             JObject jobj = new();
             jobj.WriteFields<NJTextAttribute>(target);
-            target.OnSaveHTexts(jobj, log: log);
-            jobj.NJSave(NUCLEOR.GetHomeJSonPath(target.GetType()), log: log);
+            target.OnSaveArkText(jobj, log: log);
+            jobj.NJSave(spath, log: log);
         }
 
-        public static void LoadHomeText(this IHomeTexts target, in bool log)
+        public static void LoadArkText(this IArkTexts target, in bool log)
         {
-            string lpath = NUCLEOR.GetHomeJSonPath(target.GetType());
+            string lpath = target switch
+            {
+                IHomeTexts => NUCLEOR.GetHomeJSonPath(target.GetType()),
+                IUserTexts => NUCLEOR.instance.GetCurrentUserTextPath(target.GetType()),
+                _ => throw new System.NotImplementedException(),
+            };
+
             lpath.TryNJRead(out JObject jobj, force: true, log_success: log);
             jobj.ReadFields<NJTextAttribute>(target);
-            target.OnLoadHTexts(jobj, log: log);
+            target.OnLoadArkText(jobj, log: log);
         }
     }
 
-    public interface IHomeTexts
+    public interface IArkTexts
     {
-        public static readonly HashSet<IHomeTexts> _users = new();
+        public static readonly HashSet<IArkTexts> _users = new();
 
         //--------------------------------------------------------------------------------------------------------------
 
@@ -41,26 +54,26 @@ namespace _ARK_
         {
             NUCLEOR.delegates.OnApplicationFocus += () =>
             {
-                foreach (var instance in _users)
-                    instance.LoadHomeText(log: false);
+                foreach (var user in _users)
+                    user.LoadArkText(log: false);
             };
 
             NUCLEOR.delegates.OnApplicationUnfocus += () =>
             {
-                foreach (var instance in _users)
-                    instance.SaveHomeText(log: false);
+                foreach (var user in _users)
+                    user.SaveArkText(log: false);
             };
         }
 
         //--------------------------------------------------------------------------------------------------------------
 
-        public static void AddUser(IHomeTexts user)
+        public static void AddUser(IArkTexts user)
         {
-            user.LoadHomeText(log: false);
+            user.LoadArkText(log: false);
             _users.Add(user);
         }
 
-        public static void RemoveUser(IHomeTexts user)
+        public static void RemoveUser(IArkTexts user)
         {
             _users.Remove(user);
         }
@@ -68,19 +81,27 @@ namespace _ARK_
         //--------------------------------------------------------------------------------------------------------------
 
 #if UNITY_EDITOR
-        [ContextMenu(nameof(SaveHomeText))]
-        void SaveHomeText() => this.SaveHomeText(log: true);
+        [ContextMenu(nameof(SaveArkText))]
+        void SaveArkText() => this.SaveArkText(log: true);
 
-        [ContextMenu(nameof(LoadHomeText))]
-        void LoadHomeText() => this.LoadHomeText(log: true);
+        [ContextMenu(nameof(LoadArkText))]
+        void LoadArkText() => this.LoadArkText(log: true);
 #endif
 
-        void OnSaveHTexts(in JObject jobj, in bool log)
+        void OnSaveArkText(in JObject jobj, in bool log)
         {
         }
 
-        void OnLoadHTexts(in JObject jobj, in bool log)
+        void OnLoadArkText(in JObject jobj, in bool log)
         {
         }
+    }
+
+    public interface IUserTexts : IArkTexts
+    {
+    }
+
+    public interface IHomeTexts : IArkTexts
+    {
     }
 }

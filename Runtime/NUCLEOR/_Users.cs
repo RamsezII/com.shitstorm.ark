@@ -13,16 +13,15 @@ namespace _ARK_
         public static IEnumerable<DirectoryInfo> EUsers => GetUsersDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
         public DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
         public DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name._value, force);
+        public string GetCurrentUserTextPath(in Type type) => Path.Combine(GetCurrentUserFolder(force: true).FullName, type.GetJSonFileName());
 
         public readonly ValueNotifier<string> user_name = new();
-
-        Action onReloadUserFiles;
 
         //----------------------------------------------------------------------------------------------------------
 
         void AwakeUser()
         {
-            this.LoadHomeText(log: true);
+            this.LoadArkText(log: true);
 
             if (UserExists(last_user_name))
                 SetUserName(last_user_name);
@@ -56,11 +55,9 @@ namespace _ARK_
 
             user_name.Value = value;
 
-            this.SaveHomeText(log: true);
-            this.LoadHomeText(log: false);
-            delegates.OnApplicationFocus?.Invoke();
+            this.SaveArkText(log: true);
 
-            onReloadUserFiles?.Invoke();
+            delegates.OnApplicationFocus?.Invoke();
         }
 
         public bool TryDeleteUser(in string value, out string error)
@@ -108,23 +105,10 @@ namespace _ARK_
 
             GetCurrentUserFolder(force: true);
 
-            onReloadUserFiles?.Invoke();
+            delegates.OnApplicationFocus?.Invoke();
 
             error = null;
             return true;
-        }
-
-        public void AddOnReloadUserFiles(in Action action, in bool doNotCallThisTime = false)
-        {
-            onReloadUserFiles -= action;
-            if (!doNotCallThisTime)
-                action();
-            onReloadUserFiles += action;
-        }
-
-        public void RemoveOnReloadUserFiles(in Action action)
-        {
-            onReloadUserFiles -= action;
         }
 
         public static void ShutdownApplication()

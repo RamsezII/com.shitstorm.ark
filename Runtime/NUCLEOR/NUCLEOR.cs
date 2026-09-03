@@ -108,9 +108,6 @@ namespace _ARK_
                 if (focus)
                 {
                     GetCurrentUserFolder(force: true);
-
-                    onReloadUserFiles?.Invoke();
-
                     delegates.OnApplicationFocus?.Invoke();
                 }
                 else

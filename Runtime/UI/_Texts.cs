@@ -10,12 +10,12 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        void IHomeTexts.OnSaveHTexts(in JObject jobj, in bool log)
+        void IArkTexts.OnSaveArkText(in JObject jobj, in bool log)
         {
             UI_scale = Mathf.Max(1, canvasScaler.scaleFactor);
         }
 
-        void IHomeTexts.OnLoadHTexts(in JObject jobj, in bool log)
+        void IArkTexts.OnLoadArkText(in JObject jobj, in bool log)
         {
             canvasScaler.scaleFactor = Mathf.Max(1, UI_scale);
         }
