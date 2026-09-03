@@ -17,8 +17,8 @@ namespace _ARK_
             };
 
             JObject jobj = new();
+            target.OnBeforeSaveArkText(jobj, log: log);
             jobj.WriteFields<NJTextAttribute>(target);
-            target.OnSaveArkText(jobj, log: log);
             jobj.NJSave(spath, log: log);
         }
 
@@ -33,7 +33,7 @@ namespace _ARK_
 
             lpath.TryNJRead(out JObject jobj, force: true, log_success: log);
             jobj.ReadFields<NJTextAttribute>(target);
-            target.OnLoadArkText(jobj, log: log);
+            target.OnAfterLoadArkText(jobj, log: log);
         }
     }
 
@@ -88,11 +88,11 @@ namespace _ARK_
         void LoadArkText() => this.LoadArkText(log: true);
 #endif
 
-        void OnSaveArkText(in JObject jobj, in bool log)
+        void OnBeforeSaveArkText(in JObject jobj, in bool log)
         {
         }
 
-        void OnLoadArkText(in JObject jobj, in bool log)
+        void OnAfterLoadArkText(in JObject jobj, in bool log)
         {
         }
     }

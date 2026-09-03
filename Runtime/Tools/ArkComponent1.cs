@@ -12,8 +12,8 @@ namespace _ARK_
 
         protected virtual void Awake()
         {
-            if (this is IHomeTexts iuser)
-                IHomeTexts.AddUser(iuser);
+            if (this is IArkTexts iuser)
+                IArkTexts.AddUser(iuser);
         }
 
         //--------------------------------------------------------------------------------------------------------------

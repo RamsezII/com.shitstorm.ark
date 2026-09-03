@@ -16,12 +16,12 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        void IArkTexts.OnSaveArkText(in JObject jobj, in bool log)
+        void IArkTexts.OnBeforeSaveArkText(in JObject jobj, in bool log)
         {
             language = Traductable.language._value;
         }
 
-        void IArkTexts.OnLoadArkText(in JObject jobj, in bool log)
+        void IArkTexts.OnAfterLoadArkText(in JObject jobj, in bool log)
         {
             Traductable.language.Value = language;
         }
