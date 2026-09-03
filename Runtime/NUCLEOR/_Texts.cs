@@ -18,12 +18,12 @@ namespace _ARK_
 
         void IHomeTexts.OnSaveHTexts(in JObject jobj, in bool log)
         {
-            language = static_language._value;
+            language = Traductable.language._value;
         }
 
         void IHomeTexts.OnLoadHTexts(in JObject jobj, in bool log)
         {
-            static_language.Value = language;
+            Traductable.language.Value = language;
         }
     }
 }

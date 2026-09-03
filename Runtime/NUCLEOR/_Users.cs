@@ -11,22 +11,28 @@ namespace _ARK_
     {
         public static DirectoryInfo GetUsersDir => DFUsers.ForceDir();
         public static IEnumerable<DirectoryInfo> EUsers => GetUsersDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-        public static DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
-        public static DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name._value, force);
+        public DirectoryInfo GetUserFolder(in string user_name, in bool force) => Path.Combine(GetUsersDir.FullName, user_name).GetDir(force);
+        public DirectoryInfo GetCurrentUserFolder(in bool force) => GetUserFolder(user_name._value, force);
 
-        public static readonly ValueNotifier<string> user_name = new();
-        public static readonly ValueNotifier<Languages> static_language = new(Application.systemLanguage switch
-        {
-            SystemLanguage.French => Languages.French,
-            _ => Languages.English,
-        });
+        public readonly ValueNotifier<string> user_name = new();
 
-        static Action onReloadUserFiles;
-        static Action<bool> onReloadUserFiles_log;
+        Action onReloadUserFiles;
 
         //----------------------------------------------------------------------------------------------------------
 
-        public static bool UserExists(in string name)
+        void AwakeUser()
+        {
+            if (UserExists(last_user_name))
+                SetUserName(last_user_name);
+            else
+                SetUserName("default_user");
+
+            user_name.AddListener(value => last_user_name = value);
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public bool UserExists(in string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return false;
@@ -38,7 +44,7 @@ namespace _ARK_
             return false;
         }
 
-        public static void SetUserName(in string value)
+        public void SetUserName(in string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -46,17 +52,16 @@ namespace _ARK_
                 return;
             }
 
-            user_name.Value = instance.last_user_name = value;
+            user_name.Value = value;
 
-            instance.SaveHomeText(log: true);
-            instance.LoadHomeText(log: false);
+            this.SaveHomeText(log: true);
+            this.LoadHomeText(log: false);
             delegates.OnApplicationFocus?.Invoke();
 
             onReloadUserFiles?.Invoke();
-            onReloadUserFiles_log?.Invoke(false);
         }
 
-        public static bool TryDeleteUser(in string value, out string error)
+        public bool TryDeleteUser(in string value, out string error)
         {
             if (string.Equals(user_name._value, value, StringComparison.OrdinalIgnoreCase))
             {
@@ -78,7 +83,7 @@ namespace _ARK_
             return true;
         }
 
-        public static bool TryRenameUser(in string old_name, in string new_name, out string error)
+        public bool TryRenameUser(in string old_name, in string new_name, out string error)
         {
             DirectoryInfo old_user = GetUserFolder(old_name, false);
             if (!old_user.Exists)
@@ -102,13 +107,12 @@ namespace _ARK_
             GetCurrentUserFolder(force: true);
 
             onReloadUserFiles?.Invoke();
-            onReloadUserFiles_log?.Invoke(false);
 
             error = null;
             return true;
         }
 
-        public static void AddOnReloadUserFiles(in Action action, in bool doNotCallThisTime = false)
+        public void AddOnReloadUserFiles(in Action action, in bool doNotCallThisTime = false)
         {
             onReloadUserFiles -= action;
             if (!doNotCallThisTime)
@@ -116,7 +120,7 @@ namespace _ARK_
             onReloadUserFiles += action;
         }
 
-        public static void RemoveOnReloadUserFiles(in Action action)
+        public void RemoveOnReloadUserFiles(in Action action)
         {
             onReloadUserFiles -= action;
         }

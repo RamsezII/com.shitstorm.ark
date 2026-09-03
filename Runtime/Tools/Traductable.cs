@@ -1,3 +1,4 @@
+using _UTIL_;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -31,7 +32,7 @@ namespace _ARK_
         public override readonly string ToString() => GetAutomatic();
         public readonly string GetAutomatic()
         {
-            switch (NUCLEOR.static_language._value)
+            switch (Traductable.language._value)
             {
                 case Languages.French:
                     if (string.IsNullOrEmpty(french))
@@ -48,6 +49,12 @@ namespace _ARK_
     {
         static readonly HashSet<Traductable> instances = new();
 
+        public static readonly ValueNotifier<Languages> language = new(Application.systemLanguage switch
+        {
+            SystemLanguage.French => Languages.French,
+            _ => Languages.English,
+        });
+
         [Min(0)] public float autowidth_min;
         public RectTransform autowidth_target;
 
@@ -60,10 +67,16 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnResetStatics()
+        {
+            language.Reset();
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void AfterSceneLoad()
         {
-            NUCLEOR.static_language.AddListener(langage =>
+            language.AddListener(langage =>
             {
                 foreach (Traductable self in instances)
                     self.Refresh();

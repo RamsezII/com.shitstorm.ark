@@ -27,7 +27,7 @@ namespace _ARK_
     [Serializable]
     public abstract class UserJSon : StaticJSon
     {
-        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.GetCurrentUserFolder(force: true).FullName, type.FullName + json_txt);
+        public static string GetFilePath(in Type type) => Path.Combine(NUCLEOR.instance.GetCurrentUserFolder(force: true).FullName, type.FullName + json_txt);
         public override string GetFilePath() => GetFilePath(GetType());
     }
 
