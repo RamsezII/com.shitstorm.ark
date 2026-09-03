@@ -22,6 +22,8 @@ namespace _ARK_
 
         void AwakeUser()
         {
+            this.LoadHomeText(log: true);
+
             if (UserExists(last_user_name))
                 SetUserName(last_user_name);
             else

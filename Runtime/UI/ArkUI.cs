@@ -48,6 +48,12 @@ namespace _ARK_
         {
             UsageManager.usages[(int)UsageGroups.IMGUI].AddListener1(isNotEmpty =>
             {
+                if (canvasGroup == null)
+                {
+                    Debug.LogWarning($"{nameof(ArkUI)}.{nameof(canvasGroup)} is null");
+                    return;
+                }
+
                 canvasGroup.interactable = !isNotEmpty;
                 canvasGroup.blocksRaycasts = !isNotEmpty;
             });

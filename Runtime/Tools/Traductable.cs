@@ -49,11 +49,7 @@ namespace _ARK_
     {
         static readonly HashSet<Traductable> instances = new();
 
-        public static readonly ValueNotifier<Languages> language = new(Application.systemLanguage switch
-        {
-            SystemLanguage.French => Languages.French,
-            _ => Languages.English,
-        });
+        public static readonly ValueNotifier<Languages> language = new();
 
         [Min(0)] public float autowidth_min;
         public RectTransform autowidth_target;
@@ -71,6 +67,11 @@ namespace _ARK_
         static void OnResetStatics()
         {
             language.Reset();
+            language.Value = Application.systemLanguage switch
+            {
+                SystemLanguage.French => Languages.French,
+                _ => Languages.English,
+            };
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
