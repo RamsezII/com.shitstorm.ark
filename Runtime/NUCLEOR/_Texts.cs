@@ -6,8 +6,8 @@ namespace _ARK_
 {
     partial class NUCLEOR : IHomeTexts
     {
-        [NJText] string last_user_name;
-        [NJEdit]
+        [NJField(editable: false)] string last_user_name;
+        [NJField]
         static Languages language = Application.systemLanguage switch
         {
             SystemLanguage.French => Languages.French,

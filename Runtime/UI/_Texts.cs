@@ -6,7 +6,7 @@ namespace _ARK_
 {
     partial class ArkUI : IHomeTexts
     {
-        [NJEdit, SerializeField] float UI_scale = 1;
+        [NJField, SerializeField] float UI_scale = 1;
 
         //----------------------------------------------------------------------------------------------------------
 

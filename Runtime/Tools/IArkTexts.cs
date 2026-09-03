@@ -18,7 +18,7 @@ namespace _ARK_
 
             JObject jobj = new();
             target.OnBeforeSaveArkText(jobj, log: log);
-            jobj.WriteFields<NJTextAttribute>(target);
+            jobj.WriteFields<NJFieldAttribute>(target);
             jobj.NJSave(spath, log: log);
         }
 
@@ -32,7 +32,7 @@ namespace _ARK_
             };
 
             lpath.TryNJRead(out JObject jobj, force: true, log_success: log);
-            jobj.ReadFields<NJTextAttribute>(target);
+            jobj.ReadFields<NJFieldAttribute>(target);
             target.OnAfterLoadArkText(jobj, log: log);
         }
     }
