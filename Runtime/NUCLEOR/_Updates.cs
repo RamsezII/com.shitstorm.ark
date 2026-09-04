@@ -29,15 +29,15 @@ namespace _ARK_
                 Update_OnStartOfFrame_once,
                 Update_OnStartOfFrame,
 
-                Update_OnShellTick_before,
-                Update_OnShellTick,
-                Update_OnShellTick_after,
-                Update_OnNetworkPull,
-                Update_GettInputs,
-                Update_OnPlayerInputs,
-                Update_OnMuonInputs,
-                Update_ControlSeatInputs,
-                Update_OnVehicleVisuals,
+                Update_ShellTick_before,
+                Update_ShellTick,
+                Update_ShellTick_after,
+                Update_NetworkPull,
+                Update_GetInputs,
+                Update_PlayerInputs,
+                Update_PawnInputs,
+                Update_MuonInputs,
+                Update_MuonVisuals,
 
                 Update_Players1,
                 Update_UpdateAndRotateCameras,
@@ -155,18 +155,18 @@ namespace _ARK_
                 if (delegates.fixedupdate_flag.PullValue())
                     delegates.FixedUpdate_BeforeAnimator?.Invoke();
 
-                delegates.Update_OnShellTick_before?.Invoke();
-                delegates.Update_OnShellTick?.Invoke();
-                delegates.Update_OnShellTick_after?.Invoke();
-                delegates.Update_OnNetworkPull?.Invoke();
+                delegates.Update_ShellTick_before?.Invoke();
+                delegates.Update_ShellTick?.Invoke();
+                delegates.Update_ShellTick_after?.Invoke();
+                delegates.Update_NetworkPull?.Invoke();
 
                 isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
 
-                delegates.Update_GettInputs?.Invoke();
-                delegates.Update_OnPlayerInputs?.Invoke();
-                delegates.Update_OnMuonInputs?.Invoke();
-                delegates.Update_ControlSeatInputs?.Invoke();
-                delegates.Update_OnVehicleVisuals?.Invoke();
+                delegates.Update_GetInputs?.Invoke();
+                delegates.Update_PlayerInputs?.Invoke();
+                delegates.Update_PawnInputs?.Invoke();
+                delegates.Update_MuonInputs?.Invoke();
+                delegates.Update_MuonVisuals?.Invoke();
 
                 delegates.onUpdate1?.Invoke();
                 delegates.onUpdate2?.Invoke();
