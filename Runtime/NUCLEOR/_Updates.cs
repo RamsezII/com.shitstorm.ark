@@ -48,7 +48,6 @@ namespace _ARK_
                 Update_BeforeLateUpdate,
 
                 LateUpdate_AfterAnimator,
-                LateUpdate_Cameras_BeforeCharacterModifyPivot,
                 LateUpdate_Players_BeforeCameraPosition,
                 LateUpdate_CameraPosition,
                 LateUpdate_CameraFinalApply,
@@ -196,7 +195,6 @@ namespace _ARK_
                 is_nucleor_lateUpdate = true;
 
                 delegates.LateUpdate_AfterAnimator?.Invoke();
-                delegates.LateUpdate_Cameras_BeforeCharacterModifyPivot?.Invoke();
                 delegates.LateUpdate_Players_BeforeCameraPosition?.Invoke();
                 delegates.LateUpdate_CameraPosition?.Invoke();
                 delegates.LateUpdate_CameraFinalApply?.Invoke();
