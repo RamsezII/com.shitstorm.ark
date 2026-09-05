@@ -1,11 +1,10 @@
 ﻿using _UTIL_;
-using System;
 using System.Text;
 using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed partial class ArkGUI : ArkComponent1, IHomeTexts
+    public sealed partial class ArkGUI : ArkComponent1
     {
         public static ArkGUI instance;
 

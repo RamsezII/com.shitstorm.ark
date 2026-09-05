@@ -58,7 +58,7 @@ namespace _ARK_
                 canvasGroup.blocksRaycasts = !isNotEmpty;
             });
 
-            IHomeTexts.AddUser(this);
+            IArkTexts.AddUser(this);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ namespace _ARK_
 
         private void OnDestroy()
         {
-            IHomeTexts.RemoveUser(this);
+            IArkTexts.RemoveUser(this);
         }
     }
 }
