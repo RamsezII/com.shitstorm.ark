@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using _UTIL_;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace _ARK_
 {
@@ -69,30 +71,117 @@ namespace _ARK_
             }
         };
 
-        public static void AddShortcut(
+        public static void AddShortcut_keyboard(
             in string shortcutName,
             in Action action,
             in bool control = false,
             in bool shift = false,
             in bool alt = false,
-            params string[] bindings
-        ) => AddShortcut<Keyboard>(
+            params Key[] bindings
+        ) => AddShortcut_internal<Keyboard, Key>(
             shortcutName: shortcutName,
             action: action,
             control: control,
             shift: shift,
             alt: alt,
-            bindings: bindings
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_keyboard(binding)
         );
 
-        public static void AddShortcut<T>(
+        public static void AddShortcut_keyboard_special(
             in string shortcutName,
             in Action action,
             in bool control = false,
             in bool shift = false,
             in bool alt = false,
-            params string[] bindings
-            ) where T : InputDevice
+            params KeyboardSpecial[] bindings
+        ) => AddShortcut_internal<Keyboard, KeyboardSpecial>(
+            shortcutName: shortcutName,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt,
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_keyboard_special(binding)
+        );
+
+        public static void AddShortcut_mouse(
+            in string shortcutName,
+            in Action action,
+            in bool control = false,
+            in bool shift = false,
+            in bool alt = false,
+            params MouseButton[] bindings
+        ) => AddShortcut_internal<Mouse, MouseButton>(
+            shortcutName: shortcutName,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt,
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_mouse(binding)
+        );
+
+        public static void AddShortcut_mouse_special(
+            in string shortcutName,
+            in Action action,
+            in bool control = false,
+            in bool shift = false,
+            in bool alt = false,
+            params MouseSpecial[] bindings
+        ) => AddShortcut_internal<Mouse, MouseSpecial>(
+            shortcutName: shortcutName,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt,
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_mouse_special(binding)
+        );
+
+        public static void AddShortcut_gamepad(
+            in string shortcutName,
+            in Action action,
+            in bool control = false,
+            in bool shift = false,
+            in bool alt = false,
+            params GamepadButton[] bindings
+        ) => AddShortcut_internal<Gamepad, GamepadButton>(
+            shortcutName: shortcutName,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt,
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_gamepad(binding)
+        );
+
+        public static void AddShortcut_gamepad_special(
+            in string shortcutName,
+            in Action action,
+            in bool control = false,
+            in bool shift = false,
+            in bool alt = false,
+            params GamepadSpecial[] bindings
+        ) => AddShortcut_internal<Gamepad, GamepadSpecial>(
+            shortcutName: shortcutName,
+            action: action,
+            control: control,
+            shift: shift,
+            alt: alt,
+            bindings: bindings,
+            addBinding: static (input, binding) => input.AddBinding_gamepad_special(binding)
+        );
+
+        static void AddShortcut_internal<TDevice, TBinding>(
+            in string shortcutName,
+            in Action action,
+            in bool control,
+            in bool shift,
+            in bool alt,
+            TBinding[] bindings,
+            Action<InputAction, TBinding> addBinding
+        ) where TDevice : InputDevice
         {
             var input = new InputAction(
                 name: shortcutName,
@@ -100,12 +189,12 @@ namespace _ARK_
             );
 
             for (int i = 0; i < bindings.Length; i++)
-                input.AddBinding($"<{typeof(T).Name}>/{bindings[i]}");
+                addBinding(input, bindings[i]);
 
             input.performed += OnShortcutPerformed;
 
             input.Enable();
-            shortcuts.Add(input, new(typeof(T), action, control, shift, alt));
+            shortcuts.Add(input, new(typeof(TDevice), action, control, shift, alt));
         }
 
         static void OnShortcutPerformed(InputAction.CallbackContext context)
