@@ -51,6 +51,7 @@ namespace _ARK_
                 LateUpdate_Players_BeforeCameraPosition,
                 LateUpdate_CameraPosition,
                 LateUpdate_CameraFinalApply,
+                LateUpdate_Cinemachines,
                 LateUpdate_Players_AfterCameraPosition,
                 LateUpdate,
                 LateUpdate_onEndOfFrame_once,
@@ -198,6 +199,7 @@ namespace _ARK_
                 delegates.LateUpdate_Players_BeforeCameraPosition?.Invoke();
                 delegates.LateUpdate_CameraPosition?.Invoke();
                 delegates.LateUpdate_CameraFinalApply?.Invoke();
+                delegates.LateUpdate_Cinemachines?.Invoke();
                 delegates.LateUpdate_Players_AfterCameraPosition?.Invoke();
                 delegates.LateUpdate?.Invoke();
 
