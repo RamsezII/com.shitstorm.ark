@@ -55,7 +55,7 @@ namespace _ARK_
 
             user_name.Value = value;
 
-            this.SaveArkTexts(log: true);
+            this.SaveArkTexts();
 
             delegates.OnApplicationFocus?.Invoke();
         }

@@ -9,7 +9,7 @@ namespace _ARK_
 {
     public static class Util_ArkTexts
     {
-        public static void SaveArkTexts(this IArkTexts target, in bool log)
+        public static void SaveArkTexts(this IArkTexts target, in bool log = true, in bool reloadAllTexts = false)
         {
             var jobj = new JObject();
             Dictionary<Type, JObject> jobjs = new()
@@ -30,9 +30,11 @@ namespace _ARK_
                 };
                 pair.Value.NJSave(spath, log);
             }
+
+            NUCLEOR.delegates.OnApplicationFocus?.Invoke();
         }
 
-        public static void LoadArkTexts(this IArkTexts target, in bool log)
+        public static void LoadArkTexts(this IArkTexts target, in bool log = true)
         {
             Dictionary<Type, JObject> jobjs = new();
 
@@ -101,10 +103,10 @@ namespace _ARK_
 
 #if UNITY_EDITOR
         [ContextMenu(nameof(SaveArkText))]
-        void SaveArkText() => this.SaveArkTexts(log: true);
+        void SaveArkText() => this.SaveArkTexts();
 
         [ContextMenu(nameof(LoadArkText))]
-        void LoadArkText() => this.LoadArkTexts(log: true);
+        void LoadArkText() => this.LoadArkTexts();
 #endif
 
         void OnBeforeSaveArkTexts(in Dictionary<Type, JObject> jobjs, in JObject jobj, in bool log)
