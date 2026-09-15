@@ -41,8 +41,8 @@ namespace _ARK_
         {
             _destroyed = true;
             onDestroy?.Invoke();
-            if (this is IHomeTexts iuser)
-                IHomeTexts.RemoveUser(iuser);
+            if (this is IArkTexts iuser)
+                IArkTexts.RemoveUser(iuser);
         }
     }
 }

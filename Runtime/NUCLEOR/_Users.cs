@@ -21,7 +21,7 @@ namespace _ARK_
 
         void AwakeUser()
         {
-            this.LoadArkText(log: true);
+            this.LoadArkTexts(log: true);
 
             if (UserExists(last_user_name))
                 SetUserName(last_user_name);
@@ -55,7 +55,7 @@ namespace _ARK_
 
             user_name.Value = value;
 
-            this.SaveArkText(log: true);
+            this.SaveArkTexts(log: true);
 
             delegates.OnApplicationFocus?.Invoke();
         }
