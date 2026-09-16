@@ -1,15 +1,11 @@
-﻿using _UTIL_;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _ARK_
 {
-    partial class NUCLEOR : IHomeTexts
+    partial class NUCLEOR
     {
-        [NJField(editable: false)] string last_user_name;
-        [NJField]
+        [HField(editable: false)] string last_user_name;
+        [UField]
         static Languages language = Application.systemLanguage switch
         {
             SystemLanguage.French => Languages.French,
@@ -18,8 +14,10 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        void IArkTexts.OnAfterLoadArkTexts(in Dictionary<Type, JObject> jobjs, in JObject jobj, in bool log)
+        protected override void OnAfterLoadFields(bool log)
         {
+            base.OnAfterLoadFields(log);
+
             Traductable.language.Value = language;
         }
     }

@@ -1,19 +1,17 @@
-﻿using _UTIL_;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _ARK_
 {
-    partial class ArkUI : IHomeTexts
+    partial class ArkUI
     {
-        [NJField, SerializeField] float UI_scale = 1;
+        [UField, SerializeField] float UI_scale = 1;
 
         //----------------------------------------------------------------------------------------------------------
 
-        void IArkTexts.OnAfterLoadArkTexts(in Dictionary<Type, JObject> jobjs, in JObject jobj, in bool log)
+        protected override void OnAfterLoadFields(bool log)
         {
+            base.OnAfterLoadFields(log);
+
             canvasScaler.scaleFactor = Mathf.Max(1, UI_scale);
         }
     }

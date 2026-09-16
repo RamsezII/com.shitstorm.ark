@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace _ARK_
 {
-    public sealed partial class ArkUI : MonoBehaviour
+    public sealed partial class ArkUI : ArkComponent2
     {
         public static ArkUI instance;
 
@@ -27,10 +27,12 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        private void Awake()
+        protected override void Awake()
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            base.Awake();
 
             foreach (var type in Util.EGetAllDerivedTypes<IPlayerPrompt>())
                 Util.InstantiateOrCreateIfAbsent(type, parent: rt_player_prompt);
@@ -44,8 +46,10 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             UsageManager.usages[(int)UsageGroups.IMGUI].AddListener1(isNotEmpty =>
             {
                 if (canvasGroup == null)
@@ -57,8 +61,6 @@ namespace _ARK_
                 canvasGroup.interactable = !isNotEmpty;
                 canvasGroup.blocksRaycasts = !isNotEmpty;
             });
-
-            IArkTexts.AddUser(this);
         }
 
         //--------------------------------------------------------------------------------------------------------------
@@ -127,13 +129,6 @@ namespace _ARK_
                 Mathf.LerpUnclamped(r.yMin, r.yMax, lpos.y),
                 lpos.z
             );
-        }
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        private void OnDestroy()
-        {
-            IArkTexts.RemoveUser(this);
         }
     }
 }

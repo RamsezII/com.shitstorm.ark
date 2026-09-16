@@ -2,7 +2,7 @@
 
 namespace _ARK_
 {
-    public abstract class OS : ArkComponent1
+    public abstract class OS : ArkComponent2
     {
 
         //--------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed partial class NUCLEOR : MonoBehaviour
+    public sealed partial class NUCLEOR : ArkComponent2
     {
         public static NUCLEOR instance;
 
@@ -80,10 +80,12 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        private void Awake()
+        protected override void Awake()
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+
+            base.Awake();
 
             players.AddElement(this);
 
@@ -95,8 +97,6 @@ namespace _ARK_
             timeScale_raw.AddListener(value => Time.timeScale = value);
 
             AwakeUser();
-
-            IHomeTexts.AddUser(this);
 
             Util.InstantiateOrCreateIfAbsent<ArkUI>();
         }
@@ -139,9 +139,9 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            IHomeTexts.RemoveUser(this);
+            base.OnDestroy();
 
             lock (mainThreadLock)
             {

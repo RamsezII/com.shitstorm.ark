@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed partial class ArkGUI : ArkComponent1
+    public sealed partial class ArkGUI : ArkComponent2
     {
         public static ArkGUI instance;
 
