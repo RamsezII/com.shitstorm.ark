@@ -5,6 +5,15 @@ namespace _ARK_
 {
     partial class ArkComponent2
     {
+        [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+        protected sealed class HTextAttribute : Attribute { }
+
+        [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+        protected sealed class UTextAttribute : Attribute { }
+
+        [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+        protected sealed class RTextAttribute : Attribute { }
+
         [AttributeUsage(AttributeTargets.Field)]
         protected class HFieldAttribute : NJFieldAttribute
         {
@@ -36,9 +45,9 @@ namespace _ARK_
         public void SaveArkTexts(bool log = true, in bool reloadAllTextsAfterSave = false)
         {
             NJDict
-                rjobjs = new(),
-                hjobjs = new(),
-                ujobjs = new();
+                rjobjs = new(typeof(ArkComponent2)),
+                hjobjs = new(typeof(ArkComponent2)),
+                ujobjs = new(typeof(ArkComponent2));
 
             OnBeforeSaveFields(log);
             OnBeforeSaveFields(rjobjs, hjobjs, ujobjs, log);
@@ -61,22 +70,28 @@ namespace _ARK_
         {
         }
 
-        public void LoadArkTexts(bool log = true)
+        public void LoadArkTexts(bool log = true, bool rtexts = true, bool htexts = true, bool utexts = true)
         {
             NJDict
-                rjobjs = new(),
-                hjobjs = new(),
-                ujobjs = new();
+                rjobjs = new(typeof(ArkComponent2)),
+                hjobjs = new(typeof(ArkComponent2)),
+                ujobjs = new(typeof(ArkComponent2));
 
-            rjobjs.LoadRTexts<RFieldAttribute>(GetType(), log);
-            rjobjs.SetFields<RFieldAttribute>(this);
-
-            LoadAndSetFields<HFieldAttribute>(hjobjs, type => NUCLEOR.GetHomeJSonPath(type));
-            LoadAndSetFields<UFieldAttribute>(ujobjs, type => NUCLEOR.instance.GetCurrentUserTextPath(type));
-
-            void LoadAndSetFields<TAttribute>(NJDict jobjs, Func<Type, string> getPath) where TAttribute : Attribute
+            if (rtexts)
             {
-                jobjs.LoadTexts<TAttribute>(GetType(), getPath, log);
+                rjobjs.LoadRTexts<RFieldAttribute, RTextAttribute>(GetType(), log);
+                rjobjs.SetFields<RFieldAttribute>(this);
+            }
+
+            if (htexts)
+                LoadAndSetFields<HFieldAttribute, HTextAttribute>(hjobjs, type => NUCLEOR.GetHomeJSonPath(type));
+
+            if (utexts)
+                LoadAndSetFields<UFieldAttribute, UTextAttribute>(ujobjs, type => NUCLEOR.instance.GetCurrentUserTextPath(type));
+
+            void LoadAndSetFields<TAttribute, TTextAttribute>(NJDict jobjs, Func<Type, string> getPath) where TAttribute : Attribute where TTextAttribute : Attribute
+            {
+                jobjs.LoadTexts<TAttribute, TTextAttribute>(GetType(), getPath, log);
                 jobjs.SetFields<TAttribute>(this);
             }
 

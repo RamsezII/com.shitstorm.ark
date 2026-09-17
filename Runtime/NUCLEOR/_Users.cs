@@ -21,7 +21,7 @@ namespace _ARK_
 
         void AwakeUser()
         {
-            this.LoadArkTexts(log: true);
+            LoadArkTexts(log: false, utexts: false);
 
             if (UserExists(last_user_name))
                 SetUserName(last_user_name);

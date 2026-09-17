@@ -85,6 +85,8 @@ namespace _ARK_
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
+            AwakeUser();
+
             base.Awake();
 
             players.AddElement(this);
@@ -95,8 +97,6 @@ namespace _ARK_
             routinizer.sequencables.Reset();
 
             timeScale_raw.AddListener(value => Time.timeScale = value);
-
-            AwakeUser();
 
             Util.InstantiateOrCreateIfAbsent<ArkUI>();
         }
