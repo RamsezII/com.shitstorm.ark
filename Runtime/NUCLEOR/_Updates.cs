@@ -37,6 +37,7 @@ namespace _ARK_
                 Update_PlayerInputs,
                 Update_PawnInputs,
                 Update_MuonInputs,
+                Update_ControlSeatInputs,
                 Update_MuonVisuals,
 
                 Update_Players1,
@@ -165,6 +166,7 @@ namespace _ARK_
                 delegates.Update_GetInputs?.Invoke();
                 delegates.Update_PlayerInputs?.Invoke();
                 delegates.Update_PawnInputs?.Invoke();
+                delegates.Update_ControlSeatInputs?.Invoke();
                 delegates.Update_MuonInputs?.Invoke();
                 delegates.Update_MuonVisuals?.Invoke();
 
