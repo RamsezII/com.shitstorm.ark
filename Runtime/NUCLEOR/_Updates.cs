@@ -14,17 +14,12 @@ namespace _ARK_
                 onFixedUpdate1, onFixedUpdate2, onFixedUpdate3,
                 onUpdate1, onUpdate2, onUpdate3;
 
-            internal bool fixedupdate_flag;
-
             public Action
                 FixedUpdate_OnStartOfFrame,
                 FixedUpdate_OnMuonRigidbodies,
                 FixedUpdate_ragdoll,
                 FixedUpdate_OnVehiclePhysics,
                 FixedUpdate,
-                FixedUpdate_BeforeAnimator,
-
-                LateFixedUpdate_AfterAnimator,
 
                 Update_OnStartOfFrame_once,
                 Update_OnStartOfFrame,
@@ -125,8 +120,6 @@ namespace _ARK_
                 delegates.FixedUpdate?.Invoke();
 
                 is_nucleor_fixedUpdate = false;
-
-                delegates.fixedupdate_flag = true;
             }
         }
 
@@ -153,9 +146,6 @@ namespace _ARK_
                 delegates.Update_OnStartOfFrame_once = null;
 
                 delegates.Update_OnStartOfFrame?.Invoke();
-
-                if (delegates.fixedupdate_flag.PullValue())
-                    delegates.FixedUpdate_BeforeAnimator?.Invoke();
 
                 delegates.Update_ShellTick_before?.Invoke();
                 delegates.Update_ShellTick?.Invoke();

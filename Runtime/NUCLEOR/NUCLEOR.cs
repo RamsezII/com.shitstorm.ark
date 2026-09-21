@@ -61,6 +61,9 @@ namespace _ARK_
         static void OnQuitEditor()
         {
             delegates.OnEditorQuit?.Invoke();
+#if ENABLE_INPUT_SYSTEM
+            UnityEngine.InputSystem.InputSystem.DisableAllEnabledActions();
+#endif
         }
 
         static void OnPlayModeStateChange(UnityEditor.PlayModeStateChange state)
