@@ -60,7 +60,6 @@ namespace _ARK_
 #if UNITY_EDITOR
         static void OnQuitEditor()
         {
-            delegates.OnEditorQuit?.Invoke();
 #if ENABLE_INPUT_SYSTEM
             UnityEngine.InputSystem.InputSystem.DisableAllEnabledActions();
 #endif

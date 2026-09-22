@@ -29,8 +29,6 @@ namespace _ARK_
                 Update_ShellTick_after,
                 Update_NetworkPull,
                 Update_OnResetIntents,
-                Update_GetInputs,
-                Update_PlayerInputs,
                 Update_PawnInputs,
                 Update_ControlSeatInputs,
                 Update_OnMuonIntents,
@@ -42,7 +40,6 @@ namespace _ARK_
                 Update_Players2,
                 Update,
                 Update_BeforeAnimator,
-                Update_BeforeLateUpdate,
 
                 LateUpdate_AfterAnimator,
                 LateUpdate_Players_BeforeCameraPosition,
@@ -57,11 +54,6 @@ namespace _ARK_
                 OnApplicationFocus,
                 OnApplicationUnfocus,
                 OnApplicationQuit;
-
-#if UNITY_EDITOR
-            public Action
-                OnEditorQuit;
-#endif
         }
 
         public static Delegates delegates;
@@ -155,8 +147,6 @@ namespace _ARK_
                 isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
 
                 delegates.Update_OnResetIntents?.Invoke();
-                delegates.Update_GetInputs?.Invoke();
-                delegates.Update_PlayerInputs?.Invoke();
                 delegates.Update_PawnInputs?.Invoke();
                 delegates.Update_ControlSeatInputs?.Invoke();
                 delegates.Update_OnMuonIntents?.Invoke();
@@ -172,7 +162,6 @@ namespace _ARK_
                 delegates.Update_Players2?.Invoke();
                 delegates.Update?.Invoke();
                 delegates.Update_BeforeAnimator?.Invoke();
-                delegates.Update_BeforeLateUpdate?.Invoke();
 
                 routinizer.Tick();
                 monolith.Tick();
