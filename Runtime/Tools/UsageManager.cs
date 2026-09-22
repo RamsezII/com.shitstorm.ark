@@ -33,6 +33,7 @@ namespace _ARK_
         public static Action on_double_alt, on_usages_change;
 
         public static readonly ValueNotifier<MouseStatus> mouse_status = new();
+        public static bool BlockPlayerInputs => !AllAreEmpty(UsageGroups.BlockPlayer, UsageGroups.GameMouse, UsageGroups.TrueMouse);
 
         //----------------------------------------------------------------------------------------------------------
 
