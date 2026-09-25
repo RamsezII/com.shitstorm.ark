@@ -1,5 +1,6 @@
 ﻿using _UTIL_;
 using System;
+using UnityEngine;
 
 namespace _ARK_
 {
@@ -42,6 +43,8 @@ namespace _ARK_
 
         //--------------------------------------------------------------------------------------------------------------
 
+        [ContextMenu(nameof(SaveArkTexts))]
+        void _SaveArkTexts() => SaveArkTexts();
         public void SaveArkTexts(bool log = true, in bool reloadAllTextsAfterSave = false)
         {
             NJDict
@@ -70,6 +73,8 @@ namespace _ARK_
         {
         }
 
+        [ContextMenu(nameof(LoadArkTexts))]
+        void _LoadArkTexts() => LoadArkTexts();
         public void LoadArkTexts(bool log = true, bool rtexts = true, bool htexts = true, bool utexts = true)
         {
             NJDict
