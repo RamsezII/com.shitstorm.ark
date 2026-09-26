@@ -1,25 +1,20 @@
 ﻿using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
     public sealed class OnWillRenderHandler : MonoBehaviour
     {
-        public static readonly Dictionary<Camera, HashSet<OnWillRenderHandler>> all_visible_handlers = new();
+        [AutoStaticsCleanup] public static readonly Dictionary<Camera, HashSet<OnWillRenderHandler>> all_visible_handlers = new();
 
 #if HAS_RP
-        static Camera current_camera;
+        [AutoStaticsCleanup] static Camera current_camera;
 #endif
 
-        public new Renderer renderer;
+        public Renderer renderer;
 
         //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics()
-        {
-            all_visible_handlers.Clear();
-        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()

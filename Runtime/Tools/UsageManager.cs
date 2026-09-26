@@ -1,6 +1,7 @@
 ﻿using _UTIL_;
 using System;
 using System.Text;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
@@ -25,14 +26,14 @@ namespace _ARK_
 
     public static class UsageManager
     {
-        public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
+        [AutoStaticsCleanup] public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
-        static float last_ALT;
+        [AutoStaticsCleanup] static float last_ALT;
 
-        static readonly object mouse_user = new();
-        public static Action on_double_alt, on_usages_change;
+        [AutoStaticsCleanup] static readonly object mouse_user = new();
+        [AutoStaticsCleanup] public static Action on_double_alt, on_usages_change;
 
-        public static readonly ValueNotifier<MouseStatus> mouse_status = new();
+        [AutoStaticsCleanup] public static readonly ValueNotifier<MouseStatus> mouse_status = new();
         public static bool BlockPlayerInputs => !AllAreEmpty(UsageGroups.BlockPlayer, UsageGroups.GameMouse, UsageGroups.TrueMouse);
 
         //----------------------------------------------------------------------------------------------------------
@@ -60,12 +61,6 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
-            on_usages_change = null;
-            on_double_alt = null;
-            last_ALT = 0;
-
-            mouse_status.Reset();
-
             for (int i = 0; i < (int)UsageGroups._last_; i++)
             {
                 usages[i] = new ListListener();

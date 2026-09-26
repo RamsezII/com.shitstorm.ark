@@ -1,6 +1,7 @@
 ﻿using _UTIL_;
 using System;
 using TMPro;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -56,7 +57,7 @@ namespace _ARK_
                 OnApplicationQuit;
         }
 
-        public static Delegates delegates;
+        [AutoStaticsCleanup] public static Delegates delegates;
         public bool is_nucleor_fixedUpdate, is_nucleor_update, is_nucleor_lateUpdate;
 
         public readonly SequencerMono

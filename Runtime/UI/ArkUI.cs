@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Unity.Scripting.LifecycleManagement;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace _ARK_
 {
     public sealed partial class ArkUI : ArkComponent2
     {
-        public static ArkUI instance;
+        [AutoStaticsCleanup] public static ArkUI instance;
 
         public Camera cameraUI;
         [SerializeField] Canvas canvas;

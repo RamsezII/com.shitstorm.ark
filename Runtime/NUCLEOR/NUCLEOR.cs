@@ -1,23 +1,24 @@
 using _UTIL_;
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
     public sealed partial class NUCLEOR : ArkComponent2
     {
-        public static NUCLEOR instance;
+        [AutoStaticsCleanup] public static NUCLEOR instance;
 
-        public DateTimeOffset timestamp_app;
+        [NonSerialized] public DateTimeOffset timestamp_app;
 
         public readonly ValueNotifier<bool> isFocused = new();
         public readonly ValueNotifier<bool> isTyping = new();
         public readonly HashSetListener<object> players = new();
 
-        public static bool application_closed;
+        [AutoStaticsCleanup] public static bool application_closed;
 
 #if UNITY_EDITOR
-        public static DateTimeOffset timestamp_editorStart;
+        [AutoStaticsCleanup] public static DateTimeOffset timestamp_editorStart;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -43,9 +44,6 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            delegates = default;
-            application_closed = false;
-
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.quitting -= OnQuitEditor;
             UnityEditor.EditorApplication.quitting += OnQuitEditor;

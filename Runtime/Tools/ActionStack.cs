@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Unity.Scripting.LifecycleManagement;
 
 namespace _ARK_
 {
@@ -26,16 +26,8 @@ namespace _ARK_
         readonly List<Command> history = new();
         int pointer;
 
-        public static ActionStack focused;
+        [AutoStaticsCleanup] public static ActionStack focused;
         public Func<bool> hasFocus;
-
-        //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics()
-        {
-            focused = null;
-        }
 
         //----------------------------------------------------------------------------------------------------------
 

@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
     public abstract partial class ArkComponent1 : MonoBehaviour
     {
-        public static readonly HashSet<ArkComponent1> instances1 = new();
+        [AutoStaticsCleanup] public static readonly HashSet<ArkComponent1> instances1 = new();
 
         public Action onStart, onEnable, onDisable, onDestroy;
         public bool _destroyed;
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void OnResetStatics()
-        {
-            instances1.Clear();
-        }
 
         //--------------------------------------------------------------------------------------------------------------
 

@@ -2,6 +2,7 @@ using _UTIL_;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
@@ -47,9 +48,9 @@ namespace _ARK_
 
     public sealed class Traductable : MonoBehaviour
     {
-        static readonly HashSet<Traductable> instances = new();
+        [AutoStaticsCleanup] static readonly HashSet<Traductable> instances = new();
 
-        public static readonly ValueNotifier<Languages> language = new();
+        [AutoStaticsCleanup] public static readonly ValueNotifier<Languages> language = new();
 
         [Min(0)] public float autowidth_min;
         public RectTransform autowidth_target;
@@ -66,7 +67,6 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void OnResetStatics()
         {
-            language.Reset();
             language.Value = Application.systemLanguage switch
             {
                 SystemLanguage.French => Languages.French,

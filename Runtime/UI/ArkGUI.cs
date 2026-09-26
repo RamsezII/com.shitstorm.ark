@@ -1,12 +1,13 @@
 ﻿using _UTIL_;
 using System.Text;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
     public sealed partial class ArkGUI : ArkComponent2
     {
-        public static ArkGUI instance;
+        [AutoStaticsCleanup] public static ArkGUI instance;
 
         readonly DictListener<object, Traductions> users = new();
 

@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
     public abstract partial class ArkComponent2 : ArkComponent1
     {
-        public static readonly HashSet<ArkComponent2> instances2 = new();
+        [AutoStaticsCleanup] public static readonly HashSet<ArkComponent2> instances2 = new();
 
         //--------------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void OnResetStatics()
-        {
-            instances2.Clear();
-        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
@@ -9,7 +10,7 @@ namespace _ARK_
         [Serializable]
         public readonly struct LogInfos
         {
-            internal static ulong _id;
+            [AutoStaticsCleanup] internal static ulong _id;
             public readonly ulong id;
             public readonly string message;
             public readonly string stackTrace;
@@ -26,8 +27,8 @@ namespace _ARK_
             }
         }
 
-        static readonly Queue<LogInfos> last_logs = new(max_log);
-        static Action<LogInfos> on_log;
+        [AutoStaticsCleanup] static readonly Queue<LogInfos> last_logs = new(max_log);
+        [AutoStaticsCleanup] static Action<LogInfos> on_log;
 
         const byte max_log = 250;
 
@@ -36,8 +37,6 @@ namespace _ARK_
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
-            on_log = null;
-
             Application.logMessageReceivedThreaded -= OnLogMessage;
             Application.logMessageReceivedThreaded += OnLogMessage;
 

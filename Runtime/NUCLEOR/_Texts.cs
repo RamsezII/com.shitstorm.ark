@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Unity.Scripting.LifecycleManagement;
+using UnityEngine;
 
 namespace _ARK_
 {
     partial class NUCLEOR
     {
         [HField(editable: false)] string last_user_name;
-        [UField]
+        [AutoStaticsCleanup, UField]
         static Languages language = Application.systemLanguage switch
         {
             SystemLanguage.French => Languages.French,

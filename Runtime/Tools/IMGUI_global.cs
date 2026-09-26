@@ -1,5 +1,6 @@
 ﻿using _UTIL_;
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
@@ -18,7 +19,7 @@ namespace _ARK_
             void OnPressedEscape();
         }
 
-        public static IMGUI_global instance;
+        [AutoStaticsCleanup] public static IMGUI_global instance;
 
         public readonly ListListener<IEscapeUser>
             escape_users = new();
@@ -35,12 +36,6 @@ namespace _ARK_
 #endif
 
         //--------------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics()
-        {
-            instance = null;
-        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
