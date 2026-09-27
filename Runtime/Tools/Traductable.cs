@@ -46,7 +46,7 @@ namespace _ARK_
         }
     }
 
-    public sealed class Traductable : MonoBehaviour
+    public sealed partial class Traductable : MonoBehaviour
     {
         [AutoStaticsCleanup] static readonly HashSet<Traductable> instances = new();
 
@@ -63,16 +63,6 @@ namespace _ARK_
         public Action onRefresh;
 
         //----------------------------------------------------------------------------------------------------------
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void OnResetStatics()
-        {
-            language.Value = Application.systemLanguage switch
-            {
-                SystemLanguage.French => Languages.French,
-                _ => Languages.English,
-            };
-        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void AfterSceneLoad()
