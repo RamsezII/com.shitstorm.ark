@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.LowLevel;
 
 namespace _ARK_
 {
-    public static class ArkShortcuts
+    public static partial class ArkShortcuts
     {
         readonly struct ShortcutInfos
         {
@@ -36,13 +36,23 @@ namespace _ARK_
 
         [AutoStaticsCleanup] static readonly Dictionary<InputAction, ShortcutInfos> shortcuts = new();
 
-        [AutoStaticsCleanup] public static readonly IA_ArkShortcuts IA_main = new();
+        [NoAutoStaticsCleanup] public static IA_ArkShortcuts IA_main = new();
 
         public static bool Ctrl => IA_main.ArkShortcuts.control.IsPressed();
         public static bool Alt => IA_main.ArkShortcuts.alt.IsPressed();
         public static bool Shift => IA_main.ArkShortcuts.shift.IsPressed();
         public static bool Ctrl_Alt_Shift_or => Ctrl || Alt || Shift;
         public static bool Ctrl_Alt_Shift_and => Ctrl && Alt && Shift;
+
+        //----------------------------------------------------------------------------------------------------------
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnResetStatics()
+        {
+            IA_main?.Disable();
+            IA_main?.Dispose();
+            IA_main = new();
+        }
 
         //----------------------------------------------------------------------------------------------------------
 

@@ -48,7 +48,7 @@ namespace _ARK_
 
     public sealed partial class Traductable : MonoBehaviour
     {
-        [AutoStaticsCleanup] static readonly HashSet<Traductable> instances = new();
+        [AutoStaticsCleanup] static readonly HashSet<Traductable> active_instances = new();
 
         [AutoStaticsCleanup] public static readonly ValueNotifier<Languages> language = new();
 
@@ -69,7 +69,7 @@ namespace _ARK_
         {
             language.AddListener(langage =>
             {
-                foreach (Traductable self in instances)
+                foreach (Traductable self in active_instances)
                     self.Refresh();
             });
         }
@@ -87,7 +87,6 @@ namespace _ARK_
         private void Awake()
         {
             tmpro = GetComponentInChildren<TextMeshProUGUI>(includeInactive: true);
-            instances.Add(this);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -95,6 +94,7 @@ namespace _ARK_
         private void Start()
         {
             Refresh();
+            active_instances.Add(this);
         }
 
         //----------------------------------------------------------------------------------------------------------
@@ -147,6 +147,9 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
-        private void OnDestroy() => instances.Remove(this);
+        private void OnDestroy()
+        {
+            active_instances.Remove(this);
+        }
     }
 }

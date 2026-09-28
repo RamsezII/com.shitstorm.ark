@@ -4,7 +4,7 @@ using Unity.Scripting.LifecycleManagement;
 
 namespace _ARK_
 {
-    public sealed class ActionStack : ArkComponent2
+    public sealed partial class ActionStack : ArkComponent2
     {
         readonly struct Command
         {

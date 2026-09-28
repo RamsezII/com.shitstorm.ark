@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed class IMGUI_global : MonoBehaviour
+    public sealed partial class IMGUI_global : MonoBehaviour
     {
         public enum ClipboardOperations : byte
         {

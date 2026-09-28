@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public static class LogManager
+    public static partial class LogManager
     {
         [Serializable]
-        public readonly struct LogInfos
+        public readonly partial struct LogInfos
         {
             [AutoStaticsCleanup] internal static ulong _id;
             public readonly ulong id;

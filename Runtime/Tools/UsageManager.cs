@@ -24,13 +24,13 @@ namespace _ARK_
         TrueMouse,
     }
 
-    public static class UsageManager
+    public static partial class UsageManager
     {
-        [AutoStaticsCleanup] public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
+        [NoAutoStaticsCleanup] public static readonly ListListener[] usages = new ListListener[(int)UsageGroups._last_];
 
         [AutoStaticsCleanup] static float last_ALT;
 
-        [AutoStaticsCleanup] static readonly object mouse_user = new();
+        [NoAutoStaticsCleanup] static readonly object mouse_user = new();
         [AutoStaticsCleanup] public static Action on_double_alt, on_usages_change;
 
         [AutoStaticsCleanup] public static readonly ValueNotifier<MouseStatus> mouse_status = new();

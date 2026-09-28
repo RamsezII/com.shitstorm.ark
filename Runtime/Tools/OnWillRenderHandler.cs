@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _ARK_
 {
-    public sealed class OnWillRenderHandler : MonoBehaviour
+    public sealed partial class OnWillRenderHandler : MonoBehaviour
     {
         [AutoStaticsCleanup] public static readonly Dictionary<Camera, HashSet<OnWillRenderHandler>> all_visible_handlers = new();
 
