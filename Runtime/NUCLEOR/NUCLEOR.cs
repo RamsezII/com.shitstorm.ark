@@ -93,9 +93,6 @@ namespace _ARK_
 
             timestamp_app = DateTimeOffset.UtcNow;
 
-            monolith.sequencables.Reset();
-            routinizer.sequencables.Reset();
-
             timeScale_raw.AddListener(value => Time.timeScale = value);
 
             Util.InstantiateOrCreateIfAbsent<ArkUI>();
