@@ -83,7 +83,7 @@ namespace _ARK_
         protected override void Awake()
         {
             instance = this;
-            DontDestroyOnLoad(transform.root.gameObject);
+            DontDestroyOnLoad(gameObject);
 
             AwakeUser();
 
