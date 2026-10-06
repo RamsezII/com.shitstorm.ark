@@ -23,6 +23,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382101520527236022}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -58,6 +59,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2567051482271508353}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -93,6 +95,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3886750108078451739}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -128,6 +131,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4003664765286068090}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -292,6 +296,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4967836740037123914}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -331,6 +336,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5784967867103252198}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
@@ -489,26 +495,16 @@ MonoBehaviour:
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: 0}
-  m_PointAction: {fileID: -1654692200621890270, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: d0dd672ff531b864a8a80a924957c1c5,
-    type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: d0dd672ff531b864a8a80a924957c1c5, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
@@ -559,17 +555,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b30371935dd634da5f67230b6fd1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: shitstorm._ARK_::_ARK_.ArkUI
+  _destroyed: 0
   cameraUI: {fileID: 5896637777350652095}
   canvas: {fileID: 3021966150772208480}
   canvasScaler: {fileID: 5837432896305971696}
   graphic_raycaster: {fileID: 8836383474644836417}
   canvasGroup: {fileID: 94028628015930177}
   rt_canvas: {fileID: 2255468859860506225}
-  rt_current_mode: {fileID: 0}
   rt_mode_manager: {fileID: 8858346454094698623}
   rt_OS_overlay: {fileID: 1468306732659330795}
   rt_player_ui: {fileID: 9014842619628013767}
   rt_player_prompt: {fileID: 7856645010508330987}
   rt_telemetry: {fileID: 7390190036074583438}
-  hsettings:
-    UI_scale: 1
+  UI_scale: 2

@@ -4,7 +4,7 @@ namespace _ARK_
 {
     partial class ArkUI
     {
-        [UField, SerializeField] float UI_scale = 1;
+        [UField, SerializeField] float UI_scale = 2;
 
         //----------------------------------------------------------------------------------------------------------
 
