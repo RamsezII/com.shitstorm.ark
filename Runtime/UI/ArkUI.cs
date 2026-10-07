@@ -1,4 +1,5 @@
-﻿using Unity.Scripting.LifecycleManagement;
+﻿using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,10 @@ namespace _ARK_
             rt_player_ui,
             rt_player_prompt,
             rt_telemetry;
+
+#if UNITY_EDITOR
+        public List<GameObject> _REFERENCES = new();
+#endif
 
         public interface IPlayerPrompt { }
         public interface IGuiGlobal { }

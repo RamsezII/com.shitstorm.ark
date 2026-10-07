@@ -8,12 +8,18 @@ namespace _ARK_
     [Serializable]
     public sealed partial class CodeInterpreter
     {
-        [AutoStaticsCleanup] public static readonly Dictionary<string, CodeInterpreter> instances = new(StringComparer.OrdinalIgnoreCase);
+        [AutoStaticsCleanup] public static readonly HashSet<CodeInterpreter> instances = new();
 
         public delegate void Linter(in string text, in int index, in LintTheme lint_theme, out string lint_text, out string error);
         public Linter linter;
+        public readonly string name, extension;
 
         //--------------------------------------------------------------------------------------------------------------
 
+        public CodeInterpreter(in string name, in string extension)
+        {
+            this.name = name;
+            this.extension = extension;
+        }
     }
 }
