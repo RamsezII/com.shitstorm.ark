@@ -24,7 +24,8 @@ namespace _ARK_
             rt_telemetry;
 
 #if UNITY_EDITOR
-        public List<GameObject> _REFERENCES = new();
+        [AutoStaticsCleanup] public static readonly List<GameObject> _VisibleInEditor = new();
+        [SerializeField] List<GameObject> _VISIBLE_IN_EDITOR = _VisibleInEditor;
 #endif
 
         public interface IPlayerPrompt { }
