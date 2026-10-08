@@ -1,5 +1,4 @@
-﻿using _UTIL_;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 
@@ -12,6 +11,7 @@ namespace _ARK_
 
         public delegate void Linter(in string text, in int index, in LintTheme lint_theme, out string lint_text, out string error);
         public Linter linter;
+        public Func<string, object> execution;
         public readonly string name, extension;
 
         //--------------------------------------------------------------------------------------------------------------
