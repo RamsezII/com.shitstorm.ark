@@ -8,6 +8,9 @@ namespace _ARK_
     {
         [AutoStaticsCleanup] public static readonly HashSet<ArkComponent2> instances2 = new();
 
+        [AutoStaticsCleanup] static int static_ark_id;
+        public int ark_id = ++static_ark_id;
+
         //--------------------------------------------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
