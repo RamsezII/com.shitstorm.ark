@@ -12,6 +12,7 @@ namespace _ARK_
 
         public Color
             background = Color.beige,
+            placeholder = Color.gray,
             buttons = Color.black,
             cursor = Color.black,
             argument = Color.deepPink,
@@ -40,6 +41,9 @@ namespace _ARK_
             constants = Color.deepSkyBlue,
             strings = Color.orange,
             quotes = Color.yellowNice,
+            hidden = Color.gray4,
+            info = Color.gray6,
+            warning = Color.yellow,
             error = Color.red,
             fallback_default = Color.gray
             ;
