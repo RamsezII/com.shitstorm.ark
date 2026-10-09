@@ -10,6 +10,7 @@ namespace _ARK_
 
         [AutoStaticsCleanup] static int static_ark_id;
         public int ark_id = ++static_ark_id;
+        public string GetArkName() => $"{GetType().FullName}[{ark_id}]";
 
         //--------------------------------------------------------------------------------------------------------------
 

@@ -19,6 +19,7 @@ namespace _ARK_
     {
         public string english, french;
         public readonly bool IsDefault => string.IsNullOrEmpty(english) && string.IsNullOrEmpty(french);
+        public readonly Traductions SelfOrFallback(in Traductions fallback) => IsDefault ? fallback : this;
 
         //--------------------------------------------------------------------------------------------------------------
 
