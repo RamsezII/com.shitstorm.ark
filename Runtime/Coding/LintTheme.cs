@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace _ARK_
 {
-    [Serializable]
-    public sealed partial class LintTheme
+    [Serializable, CreateAssetMenu(fileName = "LintTheme", menuName = "ARK/Lint Theme")]
+    public sealed partial class LintTheme : ScriptableObject
     {
-        public Traductions name;
+        public new Traductions name;
 
         public Color
             background = Color.beige,
@@ -48,15 +47,6 @@ namespace _ARK_
             fallback_default = Color.gray
             ;
 
-        [NoAutoStaticsCleanup]
-        public static readonly LintTheme
-            theme_dark = new()
-            {
-            },
-            theme_light = new()
-            {
-            };
-
         [Serializable]
         struct Pair
         {
@@ -75,9 +65,17 @@ namespace _ARK_
 
         //----------------------------------------------------------------------------------------------------------
 
+        void OnEnable() => RebuildDictionary();
+
+#if UNITY_EDITOR
+        void OnValidate() => RebuildDictionary();
+#endif
+
         public void RebuildDictionary()
         {
             lints.Clear();
+            if (pairs == null)
+                return;
             foreach (var pair in pairs)
                 if (pair.type.TryCastType(out Type type, include_abstracts: true))
                     lints[type] = pair.color;
