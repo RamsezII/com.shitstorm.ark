@@ -25,13 +25,11 @@ namespace _ARK_
                 Update_OnStartOfFrame_once,
                 Update_OnStartOfFrame,
 
-                Update_ShellTick_before,
-                Update_ShellTick,
-                Update_ShellTick_after,
                 Update_NetworkPull,
                 Update_OnResetIntents,
                 Update_PawnIntents,
                 Update_ControlSeatIntents,
+                Update_BoaTick,
                 Update_MuonInputs,
                 Update_MuonVisuals,
 
@@ -140,9 +138,6 @@ namespace _ARK_
 
                 delegates.Update_OnStartOfFrame?.Invoke();
 
-                delegates.Update_ShellTick_before?.Invoke();
-                delegates.Update_ShellTick?.Invoke();
-                delegates.Update_ShellTick_after?.Invoke();
                 delegates.Update_NetworkPull?.Invoke();
 
                 isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
@@ -150,6 +145,7 @@ namespace _ARK_
                 delegates.Update_OnResetIntents?.Invoke();
                 delegates.Update_PawnIntents?.Invoke();
                 delegates.Update_ControlSeatIntents?.Invoke();
+                delegates.Update_BoaTick?.Invoke();
                 delegates.Update_MuonInputs?.Invoke();
                 delegates.Update_MuonVisuals?.Invoke();
 
