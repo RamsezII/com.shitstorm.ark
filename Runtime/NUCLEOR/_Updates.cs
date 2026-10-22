@@ -27,9 +27,9 @@ namespace _ARK_
 
                 Update_NetworkPull,
                 Update_OnResetIntents,
-                Update_PawnIntents,
                 Update_ControlSeatIntents,
                 Update_BoaTick,
+                Update_PawnIntents,
                 Update_MuonInputs,
                 Update_MuonVisuals,
 
@@ -143,9 +143,9 @@ namespace _ARK_
                 isTyping.Value = EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null;
 
                 delegates.Update_OnResetIntents?.Invoke();
-                delegates.Update_PawnIntents?.Invoke();
                 delegates.Update_ControlSeatIntents?.Invoke();
                 delegates.Update_BoaTick?.Invoke();
+                delegates.Update_PawnIntents?.Invoke();
                 delegates.Update_MuonInputs?.Invoke();
                 delegates.Update_MuonVisuals?.Invoke();
 
